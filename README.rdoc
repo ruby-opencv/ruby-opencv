@@ -58,9 +58,12 @@ Follow INSTALLATION but use this command when compiling the gem:
   make
   make install
 
+Installing ffcall might not work (that's because ffcall at the mment can't be compiled on 64bit systems).
+That's ok.
+
 == SYNOPSIS:
 
-Once installed it is possible to show images via GUI Window.
+Once installed - including ffcall - it is possible to show images via GUI Window.
 
   require "opencv"
 

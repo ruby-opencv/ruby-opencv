@@ -16,3 +16,4 @@ ext/opencv/test.txt
 pkg/
 log.txt
 *.avi
+examples/rotated-boxes-with-detected-bounding-rectangles.jpg
