@@ -1,6 +1,7 @@
 # -*- ruby -*-
 
 require 'rubygems'
+require 'bundler'
 require 'hoe'
 
 require 'rake/extensiontask'
