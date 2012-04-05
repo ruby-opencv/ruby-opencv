@@ -200,6 +200,8 @@ VALUE rb_flood_fill(int argc, VALUE *argv, VALUE self);
 VALUE rb_flood_fill_bang(int argc, VALUE *argv, VALUE self);
 VALUE rb_find_contours(int argc, VALUE *argv, VALUE self);
 VALUE rb_find_contours_bang(int argc, VALUE *argv, VALUE self);
+VALUE rb_draw_contours(int argc, VALUE *argv, VALUE self);
+VALUE rb_draw_contours_bang(int argc, VALUE *argv, VALUE self);
 VALUE rb_pyr_segmentation(VALUE self, VALUE level, VALUE threshold1, VALUE threshold2);
 VALUE rb_pyr_mean_shift_filtering(int argc, VALUE *argv, VALUE self);
 VALUE rb_watershed(VALUE self, VALUE markers);

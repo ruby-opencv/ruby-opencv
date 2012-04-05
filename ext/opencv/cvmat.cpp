@@ -347,6 +347,8 @@ void define_ruby_class()
   rb_define_method(rb_klass, "flood_fill!", RUBY_METHOD_FUNC(rb_flood_fill_bang), -1);
   rb_define_method(rb_klass, "find_contours", RUBY_METHOD_FUNC(rb_find_contours), -1);
   rb_define_method(rb_klass, "find_contours!", RUBY_METHOD_FUNC(rb_find_contours_bang), -1);
+  rb_define_method(rb_klass, "draw_contours", RUBY_METHOD_FUNC(rb_draw_contours), -1);
+  rb_define_method(rb_klass, "draw_contours!", RUBY_METHOD_FUNC(rb_draw_contours_bang), -1);
   rb_define_method(rb_klass, "pyr_segmentation", RUBY_METHOD_FUNC(rb_pyr_segmentation), 3);
   rb_define_method(rb_klass, "pyr_mean_shift_filtering", RUBY_METHOD_FUNC(rb_pyr_mean_shift_filtering), -1);
   rb_define_method(rb_klass, "watershed", RUBY_METHOD_FUNC(rb_watershed), 1);
@@ -4732,6 +4734,51 @@ rb_find_contours_bang(int argc, VALUE *argv, VALUE self)
     return Qnil;
   else
     return cCvSeq::new_sequence(klass, contour, element_klass, storage);
+}
+
+/*
+ * call-seq:
+ *   draw_contours(contour, external_color, hole_color, max_level, options) -> cvmat
+ *
+ * Draws contour outlines or interiors in an image.
+ *
+ * * <i>contour</i> (CvContour) - Pointer to the first contour
+ * * <i>external_color</i> (CvScalar) -  Color of the external contours
+ * * <i>hole_color</i> (CvScalar) - Color of internal contours (holes)
+ * * <i>max_level</i> (Integer) - Maximal level for drawn contours. If 0, only contour is drawn. If 1, the contour and all contours following it on the same level are drawn. If 2, all contours following and all contours one level below the contours are drawn, and so forth. If the value is negative, the function does not draw the contours following after contour but draws the child contours of contour up to the |max_level| - 1 level.
+ * * <i>options</i> (Hash) - Drawing options.
+ *   * :thickness (Integer) - Thickness of lines the contours are drawn with. If it is negative, the contour interiors are drawn (default: 1).
+ *   * :line_type (Integer or Symbol) - Type of the contour segments, see CvMat#line description (default: 8).
+ */
+VALUE
+rb_draw_contours(int argc, VALUE *argv, VALUE self)
+{
+  return rb_draw_contours_bang(argc, argv, copy(self));
+}
+
+/*
+ * call-seq:
+ *   draw_contours!(contour, external_color, hole_color, max_level, options) -> cvmat
+ *
+ * Draws contour outlines or interiors in an image.
+ *
+ * see CvMat#draw_contours
+ */
+VALUE
+rb_draw_contours_bang(int argc, VALUE *argv, VALUE self)
+{
+  VALUE contour, external_color, hole_color, max_level, options;
+  rb_scan_args(argc, argv, "41", &contour, &external_color, &hole_color, &max_level, &options);
+  options = DRAWING_OPTION(options);
+  try {
+    cvDrawContours(CVARR(self), CVSEQ_WITH_CHECK(contour), VALUE_TO_CVSCALAR(external_color),
+		   VALUE_TO_CVSCALAR(hole_color), NUM2INT(max_level),
+		   DO_THICKNESS(options), DO_LINE_TYPE(options));
+  }
+  catch (cv::Exception& e) {
+    raise_cverror(e);
+  }
+  return self;
 }
 
 /*

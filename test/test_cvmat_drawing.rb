@@ -129,7 +129,7 @@ class TestCvMat_drawing < OpenCVTestCase
     }
     assert_raise(TypeError) {
       m1.ellipse(CvPoint.new(m0.width / 2, m0.height / 2), CvSize.new(100, 60), 30, 0, 360,
-                  :color => DUMMY_OBJ)
+                 :color => DUMMY_OBJ)
     }
     # assert_raise(CvError) {
     #   m1.ellipse(CvPoint.new(m0.width / 2, m0.height / 2), CvSize.new(100, 60), 30, 0, 360,
@@ -244,6 +244,49 @@ class TestCvMat_drawing < OpenCVTestCase
     #   m1.poly_line(pt, :thickness => DUMMY_OBJ)
     # }
     # m1.poly_line(pt, :line_type => DUMMY_OBJ)
+  end
+
+  def test_draw_contours
+    mat0 = CvMat.load(FILENAME_CONTOURS, CV_LOAD_IMAGE_GRAYSCALE)
+
+    mat0 = mat0.threshold(128, 255, CV_THRESH_BINARY)
+    contours = mat0.find_contours(:mode => CV_RETR_TREE, :method => CV_CHAIN_APPROX_SIMPLE)
+    dst0 = mat0.clone.clear
+    dst1 = mat0.clone.clear.GRAY2BGR
+    begin
+      dst0 = dst0.draw_contours!(contours, CvColor::Black, CvColor::White, -1)
+      dst1.draw_contours!(contours, CvColor::Red, CvColor::Blue, 2,
+                          :thickness => -1, :line_type => :aa)
+    end while (contours = contours.h_next)
+
+    [dst0, dst1].each { |dst|
+      assert_equal(mat0.class, dst.class)
+      assert_equal(mat0.rows, dst.rows)
+      assert_equal(mat0.cols, dst.cols)
+      assert_equal(mat0.depth, dst.depth)
+    }
+
+    assert_raise(TypeError) {
+      dst0.draw_contours(DUMMY_OBJ, CvColor::Black, CvColor::White, -1)
+    }
+    assert_raise(TypeError) {
+      dst0.draw_contours(contours, DUMMY_OBJ, CvColor::White, -1)
+    }
+    assert_raise(TypeError) {
+      dst0.draw_contours(contours, CvColor::Black, DUMMY_OBJ, -1)
+    }
+    assert_raise(TypeError) {
+      dst0.draw_contours(contours, CvColor::Black, CvColor::White, DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      dst0.draw_contours(contours, CvColor::Black, CvColor::White, -1, :thickness => DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      dst0.draw_contours(contours, CvColor::Black, CvColor::White, -1, :line_type => DUMMY_OBJ)
+    }
+
+    # Uncomment the following line to show the results
+    # snap ['src', mat0], ['result0', dst0], ['result1', dst1]
   end
 
   def test_put_text

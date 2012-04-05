@@ -12,9 +12,10 @@ class OpenCVTestCase < Test::Unit::TestCase
   FILENAME_LENA32x32 = SAMPLE_DIR + 'lena-32x32.jpg'
   FILENAME_LENA_EYES = File.expand_path(File.dirname(__FILE__)) + '/samples/lena-eyes.jpg'
   FILENAME_FRUITS = SAMPLE_DIR + 'fruits.jpg'
+  FILENAME_CONTOURS = File.expand_path(File.dirname(__FILE__)) + '/samples/contours.jpg'
   HAARCASCADE_FRONTALFACE_ALT = SAMPLE_DIR + 'haarcascade_frontalface_alt.xml.gz'
   AVI_SAMPLE = SAMPLE_DIR + 'movie_sample.avi'
-  
+
   DUMMY_OBJ = Digest::MD5.new # dummy object for argument type check test
 
   def snap(*images)
