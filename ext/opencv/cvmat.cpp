@@ -261,6 +261,7 @@ void define_ruby_class()
   rb_define_method(rb_klass, "ne", RUBY_METHOD_FUNC(rb_ne), 1);
   rb_define_method(rb_klass, "in_range", RUBY_METHOD_FUNC(rb_in_range), 2);
   rb_define_method(rb_klass, "abs_diff", RUBY_METHOD_FUNC(rb_abs_diff), 1);
+  rb_define_method(rb_klass, "normalize", RUBY_METHOD_FUNC(rb_normalize), -1);
   rb_define_method(rb_klass, "count_non_zero", RUBY_METHOD_FUNC(rb_count_non_zero), 0);
   rb_define_method(rb_klass, "sum", RUBY_METHOD_FUNC(rb_sum), 0);
   rb_define_method(rb_klass, "avg", RUBY_METHOD_FUNC(rb_avg), -1);
@@ -2387,6 +2388,35 @@ rb_abs_diff(VALUE self, VALUE val)
       cvAbsDiffS(self_ptr, CVARR(dest), VALUE_TO_CVSCALAR(val));
   }
   catch (cv::Exception& e) {
+    raise_cverror(e);
+  }
+  return dest;
+}
+
+/*
+ * call-seq:
+ *   normalize(...) -> cvmat
+ *
+ * Normalizes the norm or value range of an array
+ */
+VALUE
+rb_normalize(int argc, VALUE *argv, VALUE self)
+{
+  VALUE alphaVal, betaVal, normTypeVal;
+  rb_scan_args(argc, argv, "03", &alphaVal, &betaVal, &normTypeVal);
+  
+  const double alpha = alphaVal != Qnil ? NUM2DBL(alphaVal) : 1.0;
+  const double beta = betaVal != Qnil ? NUM2DBL(betaVal) : 0.0;
+  const int normType = normTypeVal != Qnil ? NUM2INT(normTypeVal) : cv::NORM_L2;
+  
+  VALUE dest = new_mat_kind_object(cvGetSize(CVARR(self)), self);
+  try {
+    const cv::Mat selfMat(CVMAT(self));
+    cv::Mat destMat(CVMAT(dest));
+    
+    cv::normalize(selfMat, destMat, alpha, beta, normType);
+    
+  } catch (cv::Exception& e) {
     raise_cverror(e);
   }
   return dest;

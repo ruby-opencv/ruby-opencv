@@ -109,6 +109,7 @@ VALUE rb_le(VALUE self, VALUE val);
 VALUE rb_ne(VALUE self, VALUE val);
 VALUE rb_in_range(VALUE self, VALUE min, VALUE max);
 VALUE rb_abs_diff(VALUE self, VALUE val);
+VALUE rb_normalize(int argc, VALUE *argv, VALUE self);
 VALUE rb_add_weighted(VALUE klass, VALUE src1, VALUE alpha, VALUE src2, VALUE beta, VALUE gamma);
 /* Statistics */
 VALUE rb_count_non_zero(VALUE self);

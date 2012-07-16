@@ -304,6 +304,12 @@ define_ruby_module()
   rb_define_const(rb_module, "CV_SVD_U_T", INT2FIX(CV_SVD_U_T));
   rb_define_const(rb_module, "CV_SVD_V_T", INT2FIX(CV_SVD_V_T));
 
+  /* Norm types */
+  rb_define_const(rb_module, "CV_NORM_INF", INT2FIX(cv::NORM_INF));
+  rb_define_const(rb_module, "CV_NORM_L1", INT2FIX(cv::NORM_L1));
+  rb_define_const(rb_module, "CV_NORM_L2", INT2FIX(cv::NORM_L2));
+  rb_define_const(rb_module, "CV_NORM_MINMAX", INT2FIX(cv::NORM_MINMAX));
+
   /* Histogram representation format */
   rb_define_const(rb_module, "CV_HIST_ARRAY", INT2FIX(CV_HIST_ARRAY));
   rb_define_const(rb_module, "CV_HIST_SPARSE", INT2FIX(CV_HIST_SPARSE));
