@@ -220,6 +220,8 @@ VALUE rb_equalize_hist(VALUE self);
 /* Matching*/
 VALUE rb_match_template(int argc, VALUE *argv, VALUE self);
 VALUE rb_match_shapes(int argc, VALUE *argv, VALUE self);
+VALUE rb_match_descriptors(int argc, VALUE *argv, VALUE self);
+
 /* Object Tracking */
 VALUE rb_mean_shift(VALUE self, VALUE window, VALUE criteria);
 VALUE rb_cam_shift(VALUE self, VALUE window, VALUE criteria);
