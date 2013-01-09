@@ -40,6 +40,7 @@ define_ruby_class()
   
   rb_klass = rb_define_class_under(opencv, "CvCircle32f", rb_cObject);
   rb_define_alloc_func(rb_klass, rb_allocate);
+  rb_define_private_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), -1);
   rb_define_method(rb_klass, "center", RUBY_METHOD_FUNC(rb_center), 0);
   rb_define_method(rb_klass, "radius", RUBY_METHOD_FUNC(rb_radius), 0);
   rb_define_method(rb_klass, "[]", RUBY_METHOD_FUNC(rb_aref), 1);
@@ -52,6 +53,30 @@ rb_allocate(VALUE klass)
 {
   CvCircle32f *ptr;
   return Data_Make_Struct(klass, CvCircle32f, 0, -1, ptr);
+}
+
+VALUE
+rb_initialize(int argc, VALUE *argv, VALUE self)
+{
+  CvCircle32f* self_ptr = CVCIRCLE32F(self);
+  switch (argc) {
+  case 0:
+    break;
+  case 2: {
+    CvPoint2D32f point = VALUE_TO_CVPOINT2D32F(argv[0]);
+    self_ptr->center = point;
+    self_ptr->radius = NUM2INT(argv[1]);
+    break;
+  }
+  case 3:
+    self_ptr->center = cvPoint2D32f(NUM2DBL(argv[0]), NUM2DBL(argv[1]));
+    self_ptr->radius = NUM2INT(argv[2]);
+    break;
+  default:
+    rb_raise(rb_eArgError, "wrong number of arguments (%d for 2..3)", argc);
+    break;
+  }
+  return self;
 }
 
 /*
