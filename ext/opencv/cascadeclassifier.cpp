@@ -7,7 +7,7 @@
 #include "error.hpp"
 
 /*
- * Document-class: OpenCV::CascadeClassifier
+ * Document-class: Cv::CascadeClassifier
  */
 namespace rubyopencv {
   namespace CascadeClassifier {

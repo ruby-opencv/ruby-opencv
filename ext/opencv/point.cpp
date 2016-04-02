@@ -53,8 +53,8 @@ namespace rubyopencv {
 
     /*
      * call-seq:
-     *   new -> OpenCV::Point.new(0, 0)
-     *   new(obj) -> OpenCV::Point.new(obj.x.to_i, obj.y.to_i)
+     *   new -> Cv::Point.new(0, 0)
+     *   new(obj) -> Cv::Point.new(obj.x.to_i, obj.y.to_i)
      *   new(x, y)
      *
      * Create new 2D-coordinate, (x, y). It is dropped below the decimal point.

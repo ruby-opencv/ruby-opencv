@@ -1,7 +1,7 @@
 #ifndef RUBY_OPENCV_RECT_H
 #define RUBY_OPENCV_RECT_H
 /*
- * Document-class: OpenCV::Rect
+ * Document-class: Cv::Rect
  */
 namespace rubyopencv {
   namespace Rect {

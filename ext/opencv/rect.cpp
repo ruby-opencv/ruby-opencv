@@ -5,7 +5,7 @@
 #include "error.hpp"
 
 /*
- * Document-class: OpenCV::Rect
+ * Document-class: Cv::Rect
  */
 namespace rubyopencv {
   namespace Rect {

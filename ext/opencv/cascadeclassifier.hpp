@@ -2,7 +2,7 @@
 #define RUBY_OPENCV_CASCADECLASSIFIER_H
 
 /*
- * Document-class: OpenCV::CascadeClassifier
+ * Document-class: Cv::CascadeClassifier
  */
 namespace rubyopencv {
   namespace CascadeClassifier {

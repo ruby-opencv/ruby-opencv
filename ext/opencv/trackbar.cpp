@@ -4,7 +4,7 @@
 #include "trackbar.hpp"
 
 /*
- * Document-class: OpenCV::Trackbar
+ * Document-class: Cv::Trackbar
  */
 namespace rubyopencv {
   namespace Trackbar {

@@ -8,7 +8,7 @@
 #include "error.hpp"
 
 /*
- * Document-class: OpenCV::VideoCapture
+ * Document-class: Cv::VideoCapture
  */
 namespace rubyopencv {
   namespace VideoCapture {

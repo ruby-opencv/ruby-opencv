@@ -6,7 +6,7 @@
 #include "error.hpp"
 
 /*
- * Document-class: OpenCV::Mat
+ * Document-class: Cv::Mat
  */
 namespace rubyopencv {
   namespace Mat {
