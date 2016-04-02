@@ -2,7 +2,7 @@
 # -*- mode: ruby; coding: utf-8 -*-
 require 'test/unit'
 require 'digest/md5'
-require 'opencv'
+require File.expand_path(File.dirname(__FILE__)) + '/../lib/opencv'
 include Cv
 
 class OpenCVTestCase < Test::Unit::TestCase
