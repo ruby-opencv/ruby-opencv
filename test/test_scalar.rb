@@ -53,7 +53,7 @@ class TestScalar < OpenCVTestCase
   def test_to_ary
     [[10, 20, 30, 40], [0.1, 0.2, 0.3, 0.4]].each { |a|
       s = Scalar.new(*a)
-      x = s.to_a # Alias
+      x = s.to_a
       assert_equal(Array, x.class)
       assert_in_delta(a, x, 0.01)
     }
