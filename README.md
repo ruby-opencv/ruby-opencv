@@ -91,7 +91,7 @@ For more samples, see examples/*.rb
 
 ## LICENSE:
 
-The BSD Liscense
+The MIT Liscense
 
 see LICENSE.txt
 
