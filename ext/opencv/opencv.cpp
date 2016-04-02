@@ -105,5 +105,11 @@ namespace rubyopencv {
     rb_define_singleton_method(rb_module, "add_weighted", RUBY_METHOD_FUNC(Mat::rb_add_weighted), -1); // in ext/opencv/mat.cpp
 
     rb_define_singleton_method(rb_module, "CV_MAKETYPE", RUBY_METHOD_FUNC(rb_maketype), 2);
+
+    int state = 0;
+    VALUE ret = rb_eval_string_protect("OpenCV = Cv", &state);
+    if (NIL_P(ret)) {
+      rb_warn("An exception occured: %d", state);
+    }
   }
 }
