@@ -16,6 +16,8 @@ class OpenCVTestCase < Test::Unit::TestCase
 
   DUMMY_OBJ = Digest::MD5.new # dummy object for argument type check test
 
+  alias original_assert_in_delta assert_in_delta
+
   def snap(*images)
     n = -1
     images.map! { |val|
@@ -66,7 +68,7 @@ class OpenCVTestCase < Test::Unit::TestCase
       0.upto(expected.cols - 1) { |c|
         0.upto(expected.channels - 1) { |i|
           msg = "Failed at #{actual.class.to_s}<depth=#{actual.depth},channels=#{actual.channels}>(#{r}, #{c})[#{i}]"
-          assert_in_delta(expected[r, c][i], actual[r, c][i], delta, msg)
+          original_assert_in_delta(expected[r, c][i], actual[r, c][i], delta, msg)
         }
       }
     }
@@ -83,6 +85,21 @@ class OpenCVTestCase < Test::Unit::TestCase
       }
     }
     m
+  end
+
+  def assert_in_delta(expected, actual, delta, msg = nil)
+    if expected.is_a? Scalar or actual.is_a? Scalar
+      expected = expected.to_a if expected.is_a? Scalar
+      actual = actual.to_a if actual.is_a? Scalar
+      assert_in_delta(expected, actual, delta, msg)
+    elsif expected.is_a? Array and actual.is_a? Array
+      assert_equal(expected.size, actual.size)
+      expected.zip(actual) { |e, a|
+        original_assert_in_delta(e, a, delta, msg)
+      }
+    else
+      original_assert_in_delta(expected, actual, delta, msg)
+    end
   end
 end
 

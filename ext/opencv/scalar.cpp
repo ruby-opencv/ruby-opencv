@@ -1,4 +1,5 @@
 // -*- mode: c++; coding: utf-8 -*-
+#include <sstream>
 #include "ruby.h"
 #include "opencv2/core.hpp"
 
@@ -43,6 +44,16 @@ namespace rubyopencv {
       return TypedData_Make_Struct(klass, cv::Scalar, &opencv_scalar_type, ptr);
     }
 
+    /*
+     * Creates a new Scalar.
+     *
+     * @overload new(v0 = 0, v1 = 0, v2 = 0, v3 = 0)
+     * @param v0 [Number] Value 0
+     * @param v1 [Number] Value 1
+     * @param v2 [Number] Value 2
+     * @param v3 [Number] Value 3
+     * @return [Scalar] +self+
+     */
     VALUE rb_initialize(int argc, VALUE *argv, VALUE self) {
       const int SIZE = 4;
       VALUE values[SIZE];
@@ -82,16 +93,17 @@ namespace rubyopencv {
      * @return [String] String representation of the scalar
      */
     VALUE rb_to_s(VALUE self) {
-      const int i = 6;
-      VALUE str[i];
-      str[0] = rb_str_new2("<%s: [%g,%g,%g,%g]>");
-      str[1] = rb_str_new2(rb_class2name(CLASS_OF(self)));
-      str[2] = rb_aref(self, INT2FIX(0));
-      str[3] = rb_aref(self, INT2FIX(1));
-      str[4] = rb_aref(self, INT2FIX(2));
-      str[5] = rb_aref(self, INT2FIX(3));
+      std::stringstream s;
+      cv::Scalar* selfptr = obj2scalar(self);
+      s << *selfptr;
 
-      return rb_f_sprintf(i, str);
+      VALUE param[3];
+      param[0] = rb_str_new2("#<%s:%s>");
+      param[1] = rb_str_new2(rb_class2name(CLASS_OF(self)));
+      param[2] = rb_str_new2(s.str().c_str());
+
+      int n = sizeof(param) / sizeof(param[0]);
+      return rb_f_sprintf(n, param);
     }
 
     /*
