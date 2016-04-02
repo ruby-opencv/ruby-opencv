@@ -1,6 +1,5 @@
 .DS_Store
 .project
-examples/data
 *.o
 *.so
 *.obj
@@ -12,17 +11,14 @@ GPATH
 GRTAGS
 GSYMS
 GTAGS
-OpenCV-*
+opencv-*
 ruby-*.*.*
-ext/opencv/test.txt
 pkg/
 doc/
 log.txt
 videowriter_result.avi
-examples/contours/rotated-boxes-with-detected-bounding-rectangles.jpg
 Gemfile.lock
 .yardoc
 .RUBYLIBDIR.*
 .RUBYARCHDIR.*
 .bundle
-
