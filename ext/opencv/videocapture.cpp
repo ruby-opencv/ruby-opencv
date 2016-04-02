@@ -45,6 +45,7 @@ namespace rubyopencv {
 
     /*
      * Open video file or a capturing device for video capturing
+     *
      * @scope class
      * @overload new(device = 0)
      *   @param device [String, Fixnum, nil] Video capturing device
@@ -96,6 +97,13 @@ namespace rubyopencv {
       return Mat::mat2obj(m);
     }
 
+    /*
+     * Returns true if video capturing has been initialized already.
+     *
+     * @overload opened?
+     * @return [Boolean] The video capturing has been initialized already or not.
+     * @opencv_func cv::VideoCapture::isOpened
+     */
     VALUE rb_is_opened(VALUE self) {
       cv::VideoCapture* selfptr = obj2videocapture(self);
       bool is_opened = false;
@@ -111,6 +119,30 @@ namespace rubyopencv {
 
     /*
      * Returns the specified VideoCapture property.
+     *
+     * @overload get(prop_id)
+     * @param prop_id [Integer] Property identifier. It can be one of the following:
+     *   - CAP_PROP_POS_MSEC - Current position of the video file in milliseconds.
+     *   - CAP_PROP_POS_FRAMES - 0-based index of the frame to be decoded/captured next.
+     *   - CAP_PROP_POS_AVI_RATIO - Relative position of the video file: 0 - start of the film, 1 - end of the film.
+     *   - CAP_PROP_FRAME_WIDTH - Width of the frames in the video stream.
+     *   - CAP_PROP_FRAME_HEIGHT - Height of the frames in the video stream.
+     *   - CAP_PROP_FPS - Frame rate.
+     *   - CAP_PROP_FOURCC - 4-character code of codec.
+     *   - CAP_PROP_FRAME_COUNT - Number of frames in the video file.
+     *   - CAP_PROP_FORMAT - Format of the Mat objects returned by retrieve() .
+     *   - CAP_PROP_MODE - Backend-specific value indicating the current capture mode.
+     *   - CAP_PROP_BRIGHTNESS - Brightness of the image (only for cameras).
+     *   - CAP_PROP_CONTRAST - Contrast of the image (only for cameras).
+     *   - CAP_PROP_SATURATION - Saturation of the image (only for cameras).
+     *   - CAP_PROP_HUE - Hue of the image (only for cameras).
+     *   - CAP_PROP_GAIN - Gain of the image (only for cameras).
+     *   - CAP_PROP_EXPOSURE - Exposure (only for cameras).
+     *   - CAP_PROP_CONVERT_RGB - Boolean flags indicating whether images should be converted to RGB.
+     *   - CAP_PROP_WHITE_BALANCE - Currently unsupported
+     *   - CAP_PROP_RECTIFICATION - Rectification flag for stereo cameras (note: only supported by DC1394 v 2.x backend currently)
+     * @return [Number] VideoCapture property
+     * @opencv_func cv::VideoCapture::get
      */
     VALUE rb_get(VALUE self, VALUE prop_id) {
       cv::VideoCapture* selfptr = obj2videocapture(self);
@@ -127,6 +159,31 @@ namespace rubyopencv {
 
     /*
      * Sets a property in the VideoCapture.
+     *
+     * @overload set(prop_id, value)
+     * @param prop_id [Integer] Property identifier. It can be one of the following:
+     *   - CAP_PROP_POS_MSEC - Current position of the video file in milliseconds.
+     *   - CAP_PROP_POS_FRAMES - 0-based index of the frame to be decoded/captured next.
+     *   - CAP_PROP_POS_AVI_RATIO - Relative position of the video file: 0 - start of the film, 1 - end of the film.
+     *   - CAP_PROP_FRAME_WIDTH - Width of the frames in the video stream.
+     *   - CAP_PROP_FRAME_HEIGHT - Height of the frames in the video stream.
+     *   - CAP_PROP_FPS - Frame rate.
+     *   - CAP_PROP_FOURCC - 4-character code of codec.
+     *   - CAP_PROP_FRAME_COUNT - Number of frames in the video file.
+     *   - CAP_PROP_FORMAT - Format of the Mat objects returned by retrieve() .
+     *   - CAP_PROP_MODE - Backend-specific value indicating the current capture mode.
+     *   - CAP_PROP_BRIGHTNESS - Brightness of the image (only for cameras).
+     *   - CAP_PROP_CONTRAST - Contrast of the image (only for cameras).
+     *   - CAP_PROP_SATURATION - Saturation of the image (only for cameras).
+     *   - CAP_PROP_HUE - Hue of the image (only for cameras).
+     *   - CAP_PROP_GAIN - Gain of the image (only for cameras).
+     *   - CAP_PROP_EXPOSURE - Exposure (only for cameras).
+     *   - CAP_PROP_CONVERT_RGB - Boolean flags indicating whether images should be converted to RGB.
+     *   - CAP_PROP_WHITE_BALANCE - Currently unsupported
+     *   - CAP_PROP_RECTIFICATION - Rectification flag for stereo cameras (note: only supported by DC1394 v 2.x backend currently)
+     * @param value [Number] Value of the property
+     * @return [Boolean] Result
+     * @opencv_func cv::VideoCapture::set
      */
     VALUE rb_set(VALUE self, VALUE prop_id, VALUE value) {
       cv::VideoCapture* selfptr = obj2videocapture(self);
@@ -143,6 +200,7 @@ namespace rubyopencv {
 
     /*
      * Grabs the next frame from video file or capturing device.
+     *
      * @overload grab
      * @return [Boolean] If grabbing a frame successed, returns true, otherwise returns false.
      * @opencv_func cv::VideCapture.grab
@@ -162,6 +220,7 @@ namespace rubyopencv {
 
     /*
      * Decodes and returns the grabbed video frame.
+     *
      * @overload retrieve
      * @return [Mat] Grabbed video frame
      * @return [nil] Failed to grabbing a frame

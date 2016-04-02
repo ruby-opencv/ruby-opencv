@@ -278,9 +278,9 @@ namespace rubyopencv {
      * Saves an image to a specified file.
      * The image format is chosen based on the filename extension.
      *
-     * @overload save(filename, params = [])
+     * @overload save(filename, params = nil)
      *   @param filename [String] Name of the file
-     *   @return [Boolean]
+     *   @return [Boolean] Result
      * @opencv_func cv::imwrite
      */
     VALUE rb_save(int argc, VALUE* argv, VALUE self) {
@@ -317,6 +317,15 @@ namespace rubyopencv {
       return array;
     }
 
+    /*
+     * Encodes an image into a memory buffer.
+     *
+     * @overload imencode(ext, params = nil)
+     *   @param ext [String] File extension that defines the output format.
+     *   @param params [Array<int>] Format-specific parameters.
+     *   @return [Array<Fixnum>] Encoded result
+     * @opencv_func cv::imwrite
+     */
     VALUE rb_imencode(int argc, VALUE* argv, VALUE self) {
       VALUE ext, params;
       rb_scan_args(argc, argv, "11", &ext, &params);
@@ -577,6 +586,14 @@ namespace rubyopencv {
       return self;
     }
 
+    /*
+     * Computes the per-element sum of two arrays or an array and a scalar.
+     *
+     * @overload +(value)
+     *   @param value [Mat, Scalar] Array or scalar to add
+     *   @return [Mat] Result array
+     * @opencv_func cv::Mat::operator+
+     */
     VALUE rb_add(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
       cv::Mat* retptr = empty_mat();
@@ -605,6 +622,14 @@ namespace rubyopencv {
       return mat2obj(retptr, CLASS_OF(self));
     }
 
+    /*
+     * Computes the per-element difference of two arrays or an array and a scalar.
+     *
+     * @overload -(value)
+     *   @param value [Mat, Scalar] Array or scalar to subtract
+     *   @return [Mat] Result array
+     * @opencv_func cv::Mat::operator-
+     */
     VALUE rb_sub(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
       cv::Mat* retptr = empty_mat();
@@ -633,6 +658,14 @@ namespace rubyopencv {
       return mat2obj(retptr, CLASS_OF(self));
     }
 
+    /*
+     * Computes the per-element product of two arrays or an array and a scalar.
+     *
+     * @overload -(value)
+     *   @param value [Mat, Scalar] Array or scalar to multiply
+     *   @return [Mat] Result array
+     * @opencv_func cv::Mat::operator*
+     */
     VALUE rb_mul(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
       cv::Mat* retptr = empty_mat();
@@ -657,6 +690,14 @@ namespace rubyopencv {
       return mat2obj(retptr, CLASS_OF(self));
     }
 
+    /*
+     * Computes the per-element division of two arrays or an array and a scalar.
+     *
+     * @overload /(value)
+     *   @param value [Mat, Scalar] Array or scalar to divide
+     *   @return [Mat] Result array
+     * @opencv_func cv::Mat::operator/
+     */
     VALUE rb_div(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
       cv::Mat* retptr = empty_mat();

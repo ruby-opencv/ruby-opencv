@@ -30,17 +30,47 @@ namespace rubyopencv {
     return 0;
   }
 
+  /*
+   * Returns full configuration time cmake output.
+   * Returned value is raw cmake output including version control system revision,
+   * compiler version, compiler flags, enabled modules and third party libraries, etc.
+   * Output format depends on target architecture.
+   *
+   * @overload rb_build_information()
+   * @return [String] Full configuration time cmake output.
+   * @opencv_func cv::getBuildInformation
+   */
   VALUE rb_build_information(VALUE klass) {
     const char* ptr = cv::getBuildInformation().c_str();
     return rb_str_new(ptr, strlen(ptr));
   }
 
+  /*
+   * Saves an image to a specified file.
+   *
+   * @overload imwrite(filename, img, params = nil)
+   *   @param filename [String] Name of the file.
+   *   @param img [Mat] Image to be saved.
+   *   @param params [Array<int>]
+   *	 Format-specific parameters encoded as pairs (paramId_1, paramValue_1, paramId_2, paramValue_2, ...)
+   *   @return [Bool] Result
+   * @opencv_func cv::imwrite
+   */
   VALUE rb_imwrite(int argc, VALUE* argv, VALUE self) {
     VALUE filename, img, params;
     rb_scan_args(argc, argv, "21", &filename, &img, &params);
     return Mat::rb_imwrite_internal(filename, img, params);
   }
 
+  /*
+   * Makes a type from depth and channels
+   *
+   * @overload CV_MAKETYPE(depth, cn)
+   *   @param depth [String] Depth
+   *   @param cn [Mat] Number of channels
+   *   @return [Integer] Type
+   * @opencv_func CV_MAKETYPE
+   */
   VALUE rb_maketype(VALUE self, VALUE depth, VALUE channels) {
     int type = CV_MAKETYPE(NUM2INT(depth), NUM2INT(channels));
     return INT2NUM(type);

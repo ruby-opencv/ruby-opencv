@@ -41,19 +41,45 @@ namespace rubyopencv {
       return TypedData_Wrap_Struct(klass, &opencv_size_type, ptr);
     }
 
+    /*
+     * Return width
+     *
+     * @overload width
+     * @return [Integer] Width
+     */
     VALUE rb_width(VALUE self) {
       return INT2NUM(obj2size(self)->width);
     }
 
+    /*
+     * Set width
+     *
+     * @overload width=(value)
+     * @param value [Integer] Width
+     * @return [Mat] +self+
+     */
     VALUE rb_set_width(VALUE self, VALUE width) {
       obj2size(self)->width = NUM2INT(width);
       return self;
     }
 
+    /*
+     * Return height
+     *
+     * @overload height
+     * @return [Integer] Height
+     */
     VALUE rb_height(VALUE self) {
       return INT2NUM(obj2size(self)->height);
     }
 
+    /*
+     * Set height
+     *
+     * @overload height=(value)
+     * @param value [Integer] Height
+     * @return [Mat] +self+
+     */
     VALUE rb_set_height(VALUE self, VALUE height) {
       obj2size(self)->height = NUM2INT(height);
       return self;

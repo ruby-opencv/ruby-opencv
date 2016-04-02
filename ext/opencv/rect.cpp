@@ -44,6 +44,16 @@ namespace rubyopencv {
       return TypedData_Wrap_Struct(klass, &opencv_rect_type, ptr);
     }
 
+    /*
+     * Create a rectangle
+     *
+     * @overload new(x = 0, y = 0, width = 0, height = 0)
+     * @param x [Integer] x coordinate
+     * @param y [Integer] y coordinate
+     * @param width [Integer] Width
+     * @param height [Integer] Height
+     * @return [Rect] new rectangle
+     */
     VALUE rb_initialize(int argc, VALUE *argv, VALUE self) {
       const int SIZE = 4;
       VALUE values[SIZE];
@@ -100,19 +110,45 @@ namespace rubyopencv {
       return self;
     }
 
+    /*
+     * Return width
+     *
+     * @overload width
+     * @return [Integer] Width
+     */
     VALUE rb_width(VALUE self) {
       return INT2NUM(obj2rect(self)->width);
     }
 
+    /*
+     * Set width
+     *
+     * @overload width=(value)
+     * @param value [Integer] Width
+     * @return [Rect] +self+
+     */
     VALUE rb_set_width(VALUE self, VALUE width) {
       obj2rect(self)->width = NUM2INT(width);
       return self;
     }
 
+    /*
+     * Return height
+     *
+     * @overload height
+     * @return [Integer] Height
+     */
     VALUE rb_height(VALUE self) {
       return INT2NUM(obj2rect(self)->height);
     }
 
+    /*
+     * Set height
+     *
+     * @overload height=(value)
+     * @param value [Integer] Height
+     * @return [Rect] +self+
+     */
     VALUE rb_set_height(VALUE self, VALUE height) {
       obj2rect(self)->height = NUM2INT(height);
       return self;
