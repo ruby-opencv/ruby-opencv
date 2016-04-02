@@ -1,4 +1,5 @@
 // -*- mode: c++; coding: utf-8 -*-
+#include <sstream>
 #include "ruby.h"
 #include "opencv2/core.hpp"
 
@@ -99,9 +100,32 @@ namespace rubyopencv {
 	selfptr->width = NUM2INT(v1);
 	selfptr->height = NUM2INT(v2);
 	break;
+      default:
+	rb_raise(rb_eArgError, "wrong number of arguments (%d for 0 or 2)", argc);
+	break;
       }
 
       return self;
+    }
+
+    /*
+     * Return size as an +String+.
+     *
+     * @overload to_s
+     * @return [String] String representation of the size
+     */
+    VALUE rb_to_s(VALUE self) {
+      std::stringstream s;
+      cv::Size* selfptr = obj2size(self);
+      s << *selfptr;
+
+      VALUE param[3];
+      param[0] = rb_str_new2("#<%s:%s>");
+      param[1] = rb_str_new2(rb_class2name(CLASS_OF(self)));
+      param[2] = rb_str_new2(s.str().c_str());
+
+      int n = sizeof(param) / sizeof(param[0]);
+      return rb_f_sprintf(n, param);
     }
 
     void init() {
@@ -115,6 +139,8 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "width=", RUBY_METHOD_FUNC(rb_set_width), 1);
       rb_define_method(rb_klass, "height", RUBY_METHOD_FUNC(rb_height), 0);
       rb_define_method(rb_klass, "height=", RUBY_METHOD_FUNC(rb_set_height), 1);
+
+      rb_define_method(rb_klass, "to_s", RUBY_METHOD_FUNC(rb_to_s), 0);
     }
   }
 }
