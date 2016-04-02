@@ -47,12 +47,14 @@ namespace rubyopencv {
     /*
      * Create a rectangle
      *
-     * @overload new(x = 0, y = 0, width = 0, height = 0)
-     * @param x [Integer] x coordinate
-     * @param y [Integer] y coordinate
-     * @param width [Integer] Width
-     * @param height [Integer] Height
-     * @return [Rect] new rectangle
+     * @overload new()
+     *   @return [Rect] new rectangle
+     * @overload new(x, y, width, height)
+     *   @param x [Integer] x coordinate
+     *   @param y [Integer] y coordinate
+     *   @param width [Integer] Width
+     *   @param height [Integer] Height
+     *   @return [Rect] new rectangle
      */
     VALUE rb_initialize(int argc, VALUE *argv, VALUE self) {
       const int SIZE = 4;
@@ -72,6 +74,9 @@ namespace rubyopencv {
 	selfptr->y = NUM2INT(values[1]);
 	selfptr->width = NUM2INT(values[2]);
 	selfptr->height = NUM2INT(values[3]);
+	break;
+      default:
+	rb_raise(rb_eArgError, "wrong number of arguments (%d for 0 or 4)", argc);
 	break;
       }
 
