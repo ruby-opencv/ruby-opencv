@@ -1,4 +1,4 @@
-module OpenCV
+module Cv
   class CvMat < Mat
     @@depth_table = {
       cv8u: CV_8U,

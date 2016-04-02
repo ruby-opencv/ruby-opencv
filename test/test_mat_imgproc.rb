@@ -3,11 +3,11 @@
 require 'opencv'
 require File.expand_path(File.dirname(__FILE__)) + '/helper'
 
-include OpenCV
+include Cv
 
 class TestCvMat < OpenCVTestCase
   def test_sobel
-    m0 = OpenCV::imread(FILENAME_LENA256x256, 0)
+    m0 = Cv::imread(FILENAME_LENA256x256, 0)
 
     sobel = []
     sobel << m0.sobel(CV_32F, 1, 1)
@@ -44,11 +44,11 @@ class TestCvMat < OpenCVTestCase
 
     # w = Window.new('Sobel')
     # w.show(m0.sobel(CV_32F, 1, 1))
-    # OpenCV::wait_key
+    # Cv::wait_key
   end
 
   def test_canny
-    m0 = OpenCV::imread(FILENAME_LENA256x256, 0)
+    m0 = Cv::imread(FILENAME_LENA256x256, 0)
 
     canny = []
     canny << m0.canny(50, 200)
@@ -76,11 +76,11 @@ class TestCvMat < OpenCVTestCase
 
     # w = Window.new('Canny')
     # w.show(m0.canny(50, 200))
-    # OpenCV::wait_key
+    # Cv::wait_key
   end
 
   def test_laplacian
-    m0 = OpenCV::imread(FILENAME_LENA256x256, 0)
+    m0 = Cv::imread(FILENAME_LENA256x256, 0)
 
     laplacian = []
     laplacian << m0.laplacian(CV_32F)
@@ -111,7 +111,7 @@ class TestCvMat < OpenCVTestCase
 
     # w = Window.new('Laplacian')
     # w.show(m0.laplacian(CV_32F))
-    # OpenCV::wait_key
+    # Cv::wait_key
   end
 
   def test_add_weighted
@@ -119,8 +119,8 @@ class TestCvMat < OpenCVTestCase
     m1 = Mat.ones(3, 3, CV_32F) * 64
 
     results = []
-    results << OpenCV::add_weighted(m0, 0.5, m1, 0.5, 0)
-    results << OpenCV::add_weighted(m0, 0.5, m1, 0.5, 32, CV_32F)
+    results << Cv::add_weighted(m0, 0.5, m1, 0.5, 0)
+    results << Cv::add_weighted(m0, 0.5, m1, 0.5, 32, CV_32F)
     results.each { |m|
       assert_equal(m0.rows, m.rows)
       assert_equal(m0.cols, m.cols)
@@ -130,22 +130,22 @@ class TestCvMat < OpenCVTestCase
     }
 
     assert_raise(TypeError) {
-      OpenCV::add_weighted(DUMMY_OBJ, 0.5, m1, 0.5, 32, CV_32F)
+      Cv::add_weighted(DUMMY_OBJ, 0.5, m1, 0.5, 32, CV_32F)
     }
     assert_raise(TypeError) {
-      OpenCV::add_weighted(m0, DUMMY_OBJ, m1, 0.5, 32, CV_32F)
+      Cv::add_weighted(m0, DUMMY_OBJ, m1, 0.5, 32, CV_32F)
     }
     assert_raise(TypeError) {
-      OpenCV::add_weighted(m0, 0.5, DUMMY_OBJ, 0.5, 32, CV_32F)
+      Cv::add_weighted(m0, 0.5, DUMMY_OBJ, 0.5, 32, CV_32F)
     }
     assert_raise(TypeError) {
-      OpenCV::add_weighted(m0, 0.5, m1, DUMMY_OBJ, 32, CV_32F)
+      Cv::add_weighted(m0, 0.5, m1, DUMMY_OBJ, 32, CV_32F)
     }
     assert_raise(TypeError) {
-      OpenCV::add_weighted(m0, 0.5, m1, 0.5, DUMMY_OBJ, CV_32F)
+      Cv::add_weighted(m0, 0.5, m1, 0.5, DUMMY_OBJ, CV_32F)
     }
     assert_raise(TypeError) {
-      OpenCV::add_weighted(m0, 0.5, m1, 0.5, 32, DUMMY_OBJ)
+      Cv::add_weighted(m0, 0.5, m1, 0.5, 32, DUMMY_OBJ)
     }
   end
 end

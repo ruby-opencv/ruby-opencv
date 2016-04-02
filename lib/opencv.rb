@@ -3,4 +3,4 @@ require "opencv.so"
 require_relative "opencv/basic_structs"
 require_relative "opencv/cvmat"
 
-Cv = OpenCV
+OpenCV = Cv

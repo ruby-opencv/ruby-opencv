@@ -5,7 +5,7 @@ require 'opencv/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "ruby-opencv"
-  spec.version       = OpenCV::VERSION
+  spec.version       = Cv::VERSION
   spec.authors       = ["ser1zw"]
   spec.email         = ["azariahsawtikes@gmail.com"]
 

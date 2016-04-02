@@ -116,7 +116,7 @@ namespace rubyopencv {
     }
 
     void init() {
-      VALUE opencv = rb_define_module("Cv");
+      VALUE opencv = rb_define_module("OpenCV");
       rb_klass = rb_define_class_under(opencv, "Trackbar", rb_cData);
       rb_define_alloc_func(rb_klass, rb_allocate);
       rb_define_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), -1);

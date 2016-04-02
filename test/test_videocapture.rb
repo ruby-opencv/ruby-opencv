@@ -4,9 +4,9 @@ require 'test/unit'
 require 'opencv'
 require File.expand_path(File.dirname(__FILE__)) + '/helper'
 
-include OpenCV
+include Cv
 
-# Tests for OpenCV::VideoCapture
+# Tests for Cv::VideoCapture
 class TestVideoCapture < OpenCVTestCase
   def setup
     @cap = VideoCapture.new(AVI_SAMPLE)

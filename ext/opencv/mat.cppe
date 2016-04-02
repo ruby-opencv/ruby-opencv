@@ -817,7 +817,7 @@ namespace rubyopencv {
     }
     
     void init() {
-      VALUE opencv = rb_define_module("Cv");
+      VALUE opencv = rb_define_module("OpenCV");
 
       rb_klass = rb_define_class_under(opencv, "Mat", rb_cData);
       rb_define_alloc_func(rb_klass, rb_allocate);

@@ -3,7 +3,7 @@
 require 'opencv'
 require File.expand_path(File.dirname(__FILE__)) + '/helper'
 
-include OpenCV
+include Cv
 
 class TestCascadeClassifier < OpenCVTestCase
   def test_initialize
@@ -34,7 +34,7 @@ class TestCascadeClassifier < OpenCVTestCase
 
   def test_detect_multi_scale
     c = CascadeClassifier.new(HAARCASCADE_FRONTALFACE_ALT)
-    m = OpenCV::imread(FILENAME_GIRLS_PLAY_AND_PLANT_FLOWERS_IN_THE_PARK, IMREAD_ANYDEPTH | IMREAD_ANYCOLOR)
+    m = Cv::imread(FILENAME_GIRLS_PLAY_AND_PLANT_FLOWERS_IN_THE_PARK, IMREAD_ANYDEPTH | IMREAD_ANYCOLOR)
 
     rects = c.detect_multi_scale(m)
     assert_equal(3, rects.size)

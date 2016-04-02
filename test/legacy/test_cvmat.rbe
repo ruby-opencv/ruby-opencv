@@ -6,7 +6,7 @@ require File.expand_path(File.dirname(__FILE__)) + '/../helper'
 
 include Cv
 
-# Tests for Cv::CvMat
+# Tests for OpenCV::CvMat
 module Legacy
   class TestCvMat < OpenCVTestCase
     def test_initialize
@@ -179,7 +179,7 @@ module Legacy
     end
 
     def test_decode
-      data = Cv::imread(FILENAME_CAT, -1).imencode('.jpg')
+      data = OpenCV::imread(FILENAME_CAT, -1).imencode('.jpg')
       expected = CvMat.load(FILENAME_CAT)
 
       mat1 = CvMat.decode(data)

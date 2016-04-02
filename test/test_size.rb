@@ -4,9 +4,9 @@ require 'test/unit'
 require 'opencv'
 require File.expand_path(File.dirname(__FILE__)) + '/helper'
 
-include OpenCV
+include Cv
 
-# Tests for OpenCV::Size
+# Tests for Cv::Size
 class TestSize < OpenCVTestCase
   def test_width
     size = Size.new
@@ -49,6 +49,6 @@ class TestSize < OpenCVTestCase
 
   def test_to_s
     size = Size.new(10, 20)
-    assert_equal('#<OpenCV::Size:[10 x 20]>', size.to_s)
+    assert_equal('#<Cv::Size:[10 x 20]>', size.to_s)
   end
 end

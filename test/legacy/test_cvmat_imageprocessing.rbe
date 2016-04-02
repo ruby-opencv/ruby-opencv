@@ -6,7 +6,7 @@ require File.expand_path(File.dirname(__FILE__)) + '/../helper'
 
 include Cv
 
-# Tests for image processing functions of Cv::CvMat
+# Tests for image processing functions of OpenCV::CvMat
 module Legacy
   class TestCvMat_imageprocessing < OpenCVTestCase
     DEPTH = [:cv8u, :cv8s, :cv16u, :cv16s, :cv32s, :cv32f, :cv64f]
@@ -24,7 +24,7 @@ module Legacy
       assert_equal(:cv32f, CvMat.new(16, 16, :cv32f, 1).sobel(1, 1).depth)
 
       (DEPTH - [:cv8u, :cv16u, :cv16s, :cv32f]).each { |depth|
-        assert_raise(Cv::Error::StsNotImplemented) {
+        assert_raise(OpenCV::Error::StsNotImplemented) {
           CvMat.new(3, 3, depth).sobel(1, 1)
         }
       }
@@ -51,11 +51,11 @@ module Legacy
       assert_equal(:cv32f, CvMat.new(16, 16, :cv32f, 1).laplace.depth)
 
       (DEPTH - [:cv8u, :cv16u, :cv16s, :cv32f, :cv64f]).each { |depth|
-        assert_raise(Cv::Error::StsNotImplemented) {
+        assert_raise(OpenCV::Error::StsNotImplemented) {
           CvMat.new(3, 3, depth).laplace
         }
       }
-      assert_raise(Cv::Error::StsAssert) {
+      assert_raise(OpenCV::Error::StsAssert) {
         CvMat.new(3, 3, :cv64f).laplace
       }
 

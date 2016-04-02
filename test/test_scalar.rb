@@ -4,9 +4,9 @@ require 'test/unit'
 require 'opencv'
 require File.expand_path(File.dirname(__FILE__)) + '/helper'
 
-include OpenCV
+include Cv
 
-# Tests for OpenCV::Scalar
+# Tests for Cv::Scalar
 class TestScalar < OpenCVTestCase
   def test_initialize
     s = Scalar.new
@@ -46,8 +46,8 @@ class TestScalar < OpenCVTestCase
   end
 
   def test_to_s
-    assert_equal('#<OpenCV::Scalar:[10, 20, 30, 40]>', Scalar.new(10, 20, 30, 40).to_s)
-    assert_equal('#<OpenCV::Scalar:[0.1, 0.2, 0.3, 0.4]>', Scalar.new(0.1, 0.2, 0.3, 0.4).to_s)
+    assert_equal('#<Cv::Scalar:[10, 20, 30, 40]>', Scalar.new(10, 20, 30, 40).to_s)
+    assert_equal('#<Cv::Scalar:[0.1, 0.2, 0.3, 0.4]>', Scalar.new(0.1, 0.2, 0.3, 0.4).to_s)
   end
 
   def test_to_ary

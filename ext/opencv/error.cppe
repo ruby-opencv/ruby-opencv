@@ -29,7 +29,7 @@ namespace rubyopencv {
     }
 
     void init() {
-      VALUE opencv = rb_define_module("Cv");
+      VALUE opencv = rb_define_module("OpenCV");
       rb_klass = rb_define_class_under(opencv, "Error", rb_eStandardError);
 
       REGISTER_CVERROR("StsOk", cv::Error::StsOk);

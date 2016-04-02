@@ -4,9 +4,9 @@ require 'test/unit'
 require 'opencv'
 require File.expand_path(File.dirname(__FILE__)) + '/helper'
 
-include OpenCV
+include Cv
 
-# Tests for OpenCV::Rect
+# Tests for Cv::Rect
 class TestRect < OpenCVTestCase
   def test_x
     rect = Rect.new
@@ -81,6 +81,6 @@ class TestRect < OpenCVTestCase
 
   def test_to_s
     rect = Rect.new(1, 2, 3, 4)
-    assert_equal('#<OpenCV::Rect:[3 x 4 from (1, 2)]>', rect.to_s)
+    assert_equal('#<Cv::Rect:[3 x 4 from (1, 2)]>', rect.to_s)
   end
 end

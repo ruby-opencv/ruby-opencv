@@ -4,9 +4,9 @@ require 'test/unit'
 require 'opencv'
 require File.expand_path(File.dirname(__FILE__)) + '/helper'
 
-include OpenCV
+include Cv
 
-# Tests for OpenCV::Point
+# Tests for Cv::Point
 class TestPoint < OpenCVTestCase
   def test_x
     point = Point.new
@@ -61,7 +61,7 @@ class TestPoint < OpenCVTestCase
 
   def test_to_s
     point = Point.new(10, 20)
-    assert_equal('#<OpenCV::Point:[10, 20]>', point.to_s)
+    assert_equal('#<Cv::Point:[10, 20]>', point.to_s)
   end
 
   def test_to_a

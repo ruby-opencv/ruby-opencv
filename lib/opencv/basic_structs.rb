@@ -1,4 +1,4 @@
-module OpenCV
+module Cv
   class CvScalar < Scalar; end
   class CvPoint < Point; end
   class CvRect < Rect; end

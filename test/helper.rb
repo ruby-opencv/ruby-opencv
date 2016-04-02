@@ -3,7 +3,7 @@
 require 'test/unit'
 require 'digest/md5'
 require 'opencv'
-include OpenCV
+include Cv
 
 class OpenCVTestCase < Test::Unit::TestCase
   SAMPLE_DIR = File.expand_path(File.dirname(__FILE__)) + '/samples/'
@@ -43,7 +43,7 @@ class OpenCVTestCase < Test::Unit::TestCase
       end
     }
 
-    OpenCV::wait_key
+    Cv::wait_key
     Window::destroy_all
   end
 

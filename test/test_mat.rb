@@ -3,7 +3,7 @@
 require 'opencv'
 require File.expand_path(File.dirname(__FILE__)) + '/helper'
 
-include OpenCV
+include Cv
 
 class TestMat < OpenCVTestCase
   DEPTH = [CV_8U, CV_8S, CV_16U, CV_16S, CV_32F, CV_32S, CV_64F]
@@ -20,7 +20,7 @@ class TestMat < OpenCVTestCase
 
     [CV_8U, CV_8S, CV_16U, CV_16S, CV_32S, CV_32F, CV_64F].each { |depth|
       [1, 2, 3, 4].each { |channel|
-        type = OpenCV::CV_MAKETYPE(depth, channel)
+        type = Cv::CV_MAKETYPE(depth, channel)
         m = Mat.new(10, 20, type)
         assert_equal(10, m.rows)
         assert_equal(20, m.cols)
@@ -60,7 +60,7 @@ class TestMat < OpenCVTestCase
 
       # Alias
       File.delete filename_jpg if File.exists? filename_jpg
-      OpenCV::imwrite(filename_jpg, m)
+      Cv::imwrite(filename_jpg, m)
       assert(File.exists? filename_jpg)
       
       assert_raise(TypeError) {
@@ -163,7 +163,7 @@ class TestMat < OpenCVTestCase
     }
     DEPTH.each { |depth|
       (1..4).each { |channel|
-        m = Mat.eye(3, 3, OpenCV::CV_MAKETYPE(depth, channel))
+        m = Mat.eye(3, 3, Cv::CV_MAKETYPE(depth, channel))
         0.upto(m.rows - 1) { |r|
           0.upto(m.cols - 1) { |c|
             s = m[r, c]
@@ -192,7 +192,7 @@ class TestMat < OpenCVTestCase
     }
     DEPTH.each { |depth|
       (1..4).each { |channel|
-        type = OpenCV::CV_MAKETYPE(depth, channel)
+        type = Cv::CV_MAKETYPE(depth, channel)
         m = Mat.zeros(3, 3, type)
         0.upto(m.rows - 1) { |r|
           0.upto(m.cols - 1) { |c|
@@ -364,18 +364,18 @@ class TestMat < OpenCVTestCase
   end
 
   def test_imencode
-    m = OpenCV::imread(FILENAME_LENA32x32, -1)
+    m = Cv::imread(FILENAME_LENA32x32, -1)
 
     results = []
     results << m.imencode('.jpg')
-    results << m.imencode('.jpg', [OpenCV::IMWRITE_JPEG_QUALITY, 10])
+    results << m.imencode('.jpg', [Cv::IMWRITE_JPEG_QUALITY, 10])
     results.each { |jpg|
       assert_equal('JFIF', jpg[6, 4].map(&:chr).join)
     }
 
     results = []
     results << m.imencode('.png')
-    results << m.imencode('.png', [OpenCV::IMWRITE_PNG_COMPRESSION, 9])
+    results << m.imencode('.png', [Cv::IMWRITE_PNG_COMPRESSION, 9])
     results.each { |png|
       assert_equal('PNG', png[1, 3].map(&:chr).join)
     }
@@ -393,7 +393,7 @@ class TestMat < OpenCVTestCase
     s1 = Scalar.new(1, 1, 1, 1)
     DEPTH.each { |depth|
       (1..4).each { |channel|
-        type = OpenCV::CV_MAKETYPE(depth, channel)
+        type = Cv::CV_MAKETYPE(depth, channel)
         m = Mat::zeros(3, 3, type)
 
         a = m.set_to(s1)
@@ -423,7 +423,7 @@ class TestMat < OpenCVTestCase
     }
     DEPTH.each { |depth|
       (1..4).each { |channel|
-        type = OpenCV::CV_MAKETYPE(depth, channel)
+        type = Cv::CV_MAKETYPE(depth, channel)
         m = Mat::zeros(3, 3, type)
 
         a = m.set_to(s1, mask)
