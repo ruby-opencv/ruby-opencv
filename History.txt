@@ -1,5 +1,0 @@
-=== 0.0.6 / 2008-06-27
-
-* First gem release.
-
-  * Some OpenCV function wrapped.

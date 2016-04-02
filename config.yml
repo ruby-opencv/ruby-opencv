@@ -1,7 +1,0 @@
-platform: mingw32
-rubies:
-  - C:/ruby-1.9.3-p392-mingw32/bin/ruby.exe
-  - C:/ruby-2.0.0-p0-mingw32/bin/ruby.exe
-extopts:
-  - --with-opencv-include=C:/opencv/build/include
-  - --with-opencv-lib=C:/opencv/build/x86/mingw/lib

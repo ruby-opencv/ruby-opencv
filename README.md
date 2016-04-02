@@ -3,7 +3,7 @@
 An OpenCV wrapper for Ruby.
 
 * Web site: <https://github.com/ruby-opencv/ruby-opencv>
-* Ruby 1.9.3, 2.x and OpenCV 2.4.10 are supported.
+* Ruby 2.x and OpenCV 3.1.0 are supported.
 
 ## Requirement
 
@@ -41,7 +41,6 @@ A sample to load and display an image. An equivalent code of [this tutorial](htt
 
 ```ruby
 require 'opencv'
-include OpenCV
 
 if ARGV.size == 0
   puts "Usage: ruby #{__FILE__} ImageToLoadAndDisplay"
@@ -50,15 +49,15 @@ end
 
 image = nil
 begin
-  image = CvMat.load(ARGV[0], CV_LOAD_IMAGE_COLOR) # Read the file.
+  image = Cv::imread(ARGV[0], Cv::CV_LOAD_IMAGE_COLOR) # Read the file.
 rescue
   puts 'Could not open or find the image.'
   exit
 end
 
-window = GUI::Window.new('Display window') # Create a window for display.
+window = Cv::Window.new('Display window') # Create a window for display.
 window.show(image) # Show our image inside it.
-GUI::wait_key # Wait for a keystroke in the window.
+Cv::wait_key # Wait for a keystroke in the window.
 ```
 
 ### Face Detection
@@ -67,25 +66,25 @@ A sample to detect faces from an image.
 
 ```ruby
 require 'opencv'
-include OpenCV
 
-if ARGV.length < 2
-  puts "Usage: ruby #{__FILE__} source dest"
+if ARGV.length < 1
+  puts "Usage: ruby #{__FILE__} image"
   exit
 end
 
-data = './data/haarcascades/haarcascade_frontalface_alt.xml'
-detector = CvHaarClassifierCascade::load(data)
-image = CvMat.load(ARGV[0])
-detector.detect_objects(image).each do |region|
-  color = CvColor::Blue
-  image.rectangle! region.top_left, region.bottom_right, :color => color
+classifier = Cv::CascadeClassifier.new('examples/haarcascade_frontalface_alt.xml')
+image = Cv::imread(ARGV[0], -1)
+
+color = Cv::Scalar.new(0, 255, 255)
+classifier.detect_multi_scale(image).each do |r|
+  pt1 = Cv::Point.new(r.x, r.y)
+  pt2 = Cv::Point.new(r.x + r.width, r.y + r.height)
+  image.rectangle!(pt1, pt2, color, thickness: 3, line_type: Cv::CV_AA)
 end
 
-image.save_image(ARGV[1])
-window = GUI::Window.new('Face detection')
+window = Cv::Window.new('Face detection')
 window.show(image)
-GUI::wait_key
+Cv::wait_key
 ```
 
 For more samples, see examples/*.rb

@@ -1,70 +1,30 @@
-#!/usr/bin/env ruby
-# paint.rb
-require "rubygems"
-require "opencv"
+require 'opencv'
 
-include OpenCV
+w = Cv::Window.new('Paint')
+canvas = Cv::Mat.new(500, 500, Cv::CV_8UC3).set_to(Cv::Scalar.new(255, 255, 255))
+w.show(canvas)
 
-window = GUI::Window.new("free canvas")
-canvas = CvMat.new(500, 500, CV_8U, 3).fill!(CvColor::White) # create white canvas
-window.show canvas
-
-colors = CvColor::constants.collect{ |i| i.to_s }
-
-usage =<<USAGE
-[mouse]
-drag            - draw
-right button    - fill by color
-[keyborad]
-1 to 9          - change thickness of line
-type color name - change color
-esc             - exit
-USAGE
-puts usage
-
-# drawing option
+# Drawing option
 opt = {
-  :color => CvColor::Black,
-  :tickness => 1
+  color: Cv::Scalar.new(0),
+  tickness: 1,
+  line_type: Cv::CV_AA
 }
 
 point = nil
-window.on_mouse{ |m|
-  case m.event
-  when :move
-    if m.left_button?
-      canvas.line!(point, m, opt) if point
-      point = m
+w.set_mouse_callback { |event, x, y, flags|
+  case event
+  when Cv::EVENT_MOUSEMOVE
+    if flags & Cv::EVENT_FLAG_LBUTTON > 0
+      p2 = Cv::Point.new(x, y)
+      canvas.line!(point, p2, opt[:color], opt) if point
+      point = p2
     end
-  when :left_button_down
-    canvas.line!(m, m, opt)
-    point = m
-  when :left_button_up
-    point = nil
-  when :right_button_down
-    mask = canvas.flood_fill!(m, opt[:color])    
+  when Cv::EVENT_LBUTTONDOWN
+    point = Cv::Point.new(x, y)
+    canvas.line!(point, point, opt[:color], opt)
   end
-  window.show canvas
+  w.show(canvas)
 }
 
-color_name = ''
-while key = GUI.wait_key
-  next if key < 0 or key > 255
-  case key.chr
-  when "\e" # [esc] - exit
-    exit
-  when '1'..'9'
-    puts "change thickness to #{key.chr.to_i}."
-    opt[:thickness] = key.chr.to_i
-  when /[A-Za-z]/
-    color_name << key.chr
-    choice = colors.find_all{ |i| i =~ /\A#{color_name}/i }
-    if choice.size == 1
-      color,= choice
-      puts "change color to #{color}."
-      opt[:color] = CvColor::const_get(color)
-    end
-    color_name = '' if choice.size < 2
-  end
-end
-
+Cv::wait_key
