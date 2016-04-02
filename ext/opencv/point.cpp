@@ -1,3 +1,4 @@
+#include <sstream>
 #include "ruby.h"
 #include "opencv2/core.hpp"
 
@@ -36,7 +37,9 @@ namespace rubyopencv {
 	return cv::Point(NUM2INT(rb_funcall(obj, rb_intern("x"), 0)),
 			 NUM2INT(rb_funcall(obj, rb_intern("y"), 0)));
       }
-      rb_raise(rb_eArgError, "x y");
+      rb_raise(rb_eTypeError, "wrong argument type %s (expected %s or compatible object)",
+	       rb_obj_classname(obj), rb_class2name(rb_klass));
+      throw;
     }
 
     void free_point(void* ptr) {
@@ -70,9 +73,9 @@ namespace rubyopencv {
 	selfptr->y = 0;
 	break;
       case 1: {
-	// cv::Point point = VALUE_TO_CVPOINT(argv[0]);
-	// selfptr->x = point.x;
-	// selfptr->y = point.y;
+	cv::Point point = conpatible_obj2point(v1);
+	selfptr->x = point.x;
+	selfptr->y = point.y;
 	break;
       }
       case 2:
@@ -120,26 +123,30 @@ namespace rubyopencv {
     }
 
     /*
-     * call-seq:
-     *   to_s -> string
+     * Return x and y as an +String+.
      *
-     * Return x and y by String.
+     * @overload to_s
+     * @return [String] String representation of the point
      */
     VALUE rb_to_s(VALUE self) {
-      const int i = 4;
-      VALUE str[i];
-      str[0] = rb_str_new2("<%s:(%d,%d)>");
-      str[1] = rb_str_new2(rb_class2name(CLASS_OF(self)));
-      str[2] = rb_x(self);
-      str[3] = rb_y(self);
-      return rb_f_sprintf(i, str);
+      std::stringstream s;
+      cv::Point* selfptr = obj2point(self);
+      s << *selfptr;
+
+      VALUE param[3];
+      param[0] = rb_str_new2("#<%s:%s>");
+      param[1] = rb_str_new2(rb_class2name(CLASS_OF(self)));
+      param[2] = rb_str_new2(s.str().c_str());
+
+      int n = sizeof(param) / sizeof(param[0]);
+      return rb_f_sprintf(n, param);
     }
 
     /*
-     * call-seq:
-     *   to_a -> [x, y]
+     * Return x and y as an +Array+.
      *
-     * Return x and y by Array.
+     * @overload to_a
+     * @return [Array<Integer>] Array representation of the point
      */
     VALUE rb_to_a(VALUE self) {
       cv::Point* selfptr = obj2point(self);
@@ -151,7 +158,6 @@ namespace rubyopencv {
 
       rb_klass = rb_define_class_under(opencv, "Point", rb_cData);
       rb_define_alloc_func(rb_klass, rb_allocate);
-      // rb_define_singleton_method(rb_klass, "compatible?", RUBY_METHOD_FUNC(rb_compatible_q), 1);
       rb_define_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), -1);
       rb_define_method(rb_klass, "x", RUBY_METHOD_FUNC(rb_x), 0);
       rb_define_method(rb_klass, "x=", RUBY_METHOD_FUNC(rb_set_x), 1);
@@ -160,7 +166,6 @@ namespace rubyopencv {
 
       rb_define_method(rb_klass, "to_s", RUBY_METHOD_FUNC(rb_to_s), 0);
       rb_define_method(rb_klass, "to_a", RUBY_METHOD_FUNC(rb_to_a), 0);
-      // rb_define_alias(rb_klass, "to_a", "to_ary");
     }
   }
 }
