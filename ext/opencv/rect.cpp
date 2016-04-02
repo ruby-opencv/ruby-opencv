@@ -1,3 +1,4 @@
+#include <sstream>
 #include "ruby.h"
 #include "opencv2/core.hpp"
 
