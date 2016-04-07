@@ -21,6 +21,12 @@
 #include <version.h>
 #endif
 
+// Workaround for https://bugs.ruby-lang.org/issues/11962
+#undef RB_OBJ_WB_UNPROTECT_FOR
+#define RB_OBJ_WB_UNPROTECT_FOR(type, obj)		\
+  (RGENGC_WB_PROTECTED_##type ?				\
+   OBJ_WB_UNPROTECT((VALUE)(obj)) : ((VALUE)(obj)))
+
 #ifdef RUBY_WIN32_H
 #ifdef write
 #undef write
