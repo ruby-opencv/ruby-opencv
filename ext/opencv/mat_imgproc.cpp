@@ -183,7 +183,7 @@ namespace rubyopencv {
      * Blurs an image using the normalized box filter.
      *
      * @overload blur(ksize, anchor = Point.new(-1, -1), border_type = BORDER_DEFAULT)
-     *   @param ksize [Integer] Blurring kernel size.
+     *   @param ksize [Size] Blurring kernel size.
      *   @param border_type [Integer] Border mode used to extrapolate pixels outside of the image.
      *   @return [Mat] Output array
      *   @opencv_func cv::blur
