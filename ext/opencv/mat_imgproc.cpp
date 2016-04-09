@@ -173,6 +173,7 @@ namespace rubyopencv {
 	cv::resize(*selfptr, *destptr, *sizeptr, sx, sy, method);
       }
       catch (cv::Exception& e) {
+	delete destptr;
 	Error::raise(e);
       }
 
@@ -200,6 +201,7 @@ namespace rubyopencv {
 	cv::blur(*selfptr, *dstptr, *(Size::obj2size(ksize)), anchor_value, border_type_value);
       }
       catch (cv::Exception& e) {
+	delete dstptr;
 	Error::raise(e);
       }
 
@@ -233,6 +235,7 @@ namespace rubyopencv {
 			 sigma_y_value, border_type_value);
       }
       catch (cv::Exception& e) {
+	delete dstptr;
 	Error::raise(e);
       }
 
