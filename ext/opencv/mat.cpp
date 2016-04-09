@@ -818,7 +818,7 @@ namespace rubyopencv {
       VALUE value, mask;
       rb_scan_args(argc, argv, "11", &value, &mask);
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = new cv::Mat();
+      cv::Mat* dstptr = NULL;
       try {
 	cv::Mat tmp;
 	cv::Scalar* s = Scalar::obj2scalar(value);
