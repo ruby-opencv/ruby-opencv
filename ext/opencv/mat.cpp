@@ -44,7 +44,7 @@ namespace rubyopencv {
     void free_mat(void* ptr) {
       if (ptr) {
 	cv::Mat* dataptr = (cv::Mat*)ptr;
-	dataptr->release();
+	delete dataptr;
       }
     }
 
