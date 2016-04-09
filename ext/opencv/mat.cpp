@@ -6,7 +6,7 @@
 #include "mat_imgproc.hpp"
 #include "mat_drawing.hpp"
 #include "scalar.hpp"
-
+#include "rect.hpp"
 #include "error.hpp"
 
 /*
@@ -73,25 +73,39 @@ namespace rubyopencv {
      *   @param type [Integer]
      *	   The type of the matrix elements in the form of constant <b><tt>CV_<bit depth><S|U|F></tt></b>.
      *   @return [Mat] Created matrix
+     * @overload new(m, roi)
+     *   @param m [Mat] Array that (as a whole or partly) is assigned to the constructed matrix.
+     *     No data is copied by these constructors. Instead, the header pointing to m data or its sub-array
+     *     is constructed and associated with it. The reference counter, if any, is incremented.
+     *     So, when you modify the matrix formed using such a constructor, you also modify the corresponding
+     *     elements of m.
+     *   @param roi [Rect] Regeion of interest.
+     *   @return [Mat] Created matrix
      * @opencv_func cv::Mat
      * @example
      *   mat1 = Mat.new(3, 4) # Creates a 3-channels 3x4 matrix whose elements are 8bit unsigned.
      *   mat2 = Mat.new(5, 6, CV_32F) # Creates a 1-channel 5x6 matrix whose elements are 32bit float.
      */
     VALUE rb_initialize(int argc, VALUE *argv, VALUE self) {
-      VALUE row, column, type;
-      rb_scan_args(argc, argv, "21", &row, &column, &type);
+      VALUE v1, v2, type;
+      rb_scan_args(argc, argv, "21", &v1, &v2, &type);
 
       cv::Mat* dataptr = NULL;
       try {
-	cv::Mat tempdata(NUM2INT(row), NUM2INT(column), (NIL_P(type) ? CV_8UC1 : NUM2INT(type)));
-	if (tempdata.empty()) {
+	if (RTEST(rb_obj_is_kind_of(v1, rb_cNumeric))) {
+	  dataptr = new cv::Mat(NUM2INT(v1), NUM2INT(v2), (NIL_P(type) ? CV_8UC1 : NUM2INT(type)));
+	}
+	else {
+	  cv::Mat* matptr = obj2mat(v1);
+	  cv::Rect* rectptr = Rect::obj2rect(v2);
+	  dataptr = new cv::Mat(*matptr, *rectptr);
+	}
+
+	if (dataptr->empty()) {
+	  delete dataptr;
 	  rb_raise(rb_eNoMemError, "Failed to create matrix");
 	  return Qnil;
 	}
-
-	dataptr = new cv::Mat();
-	tempdata.copyTo(*dataptr);
 
 	RTYPEDDATA_DATA(self) = dataptr;
       }

@@ -7,6 +7,7 @@ namespace rubyopencv {
   namespace Rect {
     void init();
     VALUE rect2obj (cv::Rect rect);
+    cv::Rect* obj2rect(VALUE obj);
   }
 }
 

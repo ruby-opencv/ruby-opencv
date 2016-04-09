@@ -29,6 +29,18 @@ class TestMat < OpenCVTestCase
       }
     }
 
+    # ROI
+    m0 = Mat.zeros(5, 5, CV_8U)
+    roi = Rect.new(0, 0, 2, 3)
+    m = Mat.new(m0, roi)
+    assert_equal(roi.height, m.rows)
+    assert_equal(roi.width, m.cols)
+    assert_equal(m0.depth, m.depth)
+    assert_equal(m0.dims, m.dims)
+    assert_equal(m0.channels, m.channels)
+    m.set_to(Scalar.new(1))
+    assert_equal(m[0, 0][0], m0[0, 0][0])
+
     assert_raise(TypeError) {
       m = Mat.new(DUMMY_OBJ, 20, CV_8U)
     }
