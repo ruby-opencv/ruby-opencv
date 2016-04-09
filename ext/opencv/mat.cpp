@@ -130,9 +130,8 @@ namespace rubyopencv {
     VALUE rb_zeros(VALUE self, VALUE rows, VALUE cols, VALUE type) {
       cv::Mat* destptr = NULL;
       try {
-	destptr = new cv::Mat();
-	cv::Mat z = cv::Mat::zeros(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
-	z.copyTo(*destptr);
+	cv::Mat tmp = cv::Mat::zeros(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
+	destptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete destptr;
@@ -155,9 +154,8 @@ namespace rubyopencv {
     VALUE rb_ones(VALUE self, VALUE rows, VALUE cols, VALUE type) {
       cv::Mat* destptr = NULL;
       try {
-	destptr = new cv::Mat();
-	cv::Mat z = cv::Mat::ones(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
-	z.copyTo(*destptr);
+	cv::Mat tmp = cv::Mat::ones(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
+	destptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete destptr;
@@ -180,9 +178,8 @@ namespace rubyopencv {
     VALUE rb_eye(VALUE self, VALUE rows, VALUE cols, VALUE type) {
       cv::Mat* destptr = NULL;
       try {
-	destptr = new cv::Mat();
-	cv::Mat z = cv::Mat::eye(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
-	z.copyTo(*destptr);
+	cv::Mat tmp = cv::Mat::eye(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
+	destptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete destptr;
@@ -224,8 +221,7 @@ namespace rubyopencv {
 	  return Qnil;
 	}
 
-	dataptr = new cv::Mat();
-	tmp.copyTo(*dataptr);
+	dataptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete dataptr;
@@ -604,7 +600,7 @@ namespace rubyopencv {
      */
     VALUE rb_add(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* retptr = new cv::Mat();
+      cv::Mat* retptr = NULL;
       cv::Mat tmp;
 
       try {
@@ -620,7 +616,7 @@ namespace rubyopencv {
 	  double scale = NUM2DBL(other);
 	  tmp = (*selfptr) + scale;
 	}
-	tmp.copyTo(*retptr);
+	retptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete retptr;
@@ -640,7 +636,7 @@ namespace rubyopencv {
      */
     VALUE rb_sub(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* retptr = new cv::Mat();
+      cv::Mat* retptr = NULL;
       cv::Mat tmp;
 
       try {
@@ -656,7 +652,7 @@ namespace rubyopencv {
 	  double scale = NUM2DBL(other);
 	  tmp = (*selfptr) - scale;
 	}
-	tmp.copyTo(*retptr);
+	retptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete retptr;
@@ -676,7 +672,7 @@ namespace rubyopencv {
      */
     VALUE rb_mul(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* retptr = new cv::Mat();
+      cv::Mat* retptr = NULL;
       cv::Mat tmp;
 
       try {
@@ -688,7 +684,7 @@ namespace rubyopencv {
 	  double scale = NUM2DBL(other);
 	  tmp = (*selfptr) * scale;
 	}
-	tmp.copyTo(*retptr);
+	retptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete retptr;
@@ -708,7 +704,7 @@ namespace rubyopencv {
      */
     VALUE rb_div(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* retptr = new cv::Mat();
+      cv::Mat* retptr = NULL;
       cv::Mat tmp;
 
       try {
@@ -720,7 +716,7 @@ namespace rubyopencv {
 	  double scale = NUM2DBL(other);
 	  tmp = (*selfptr) / scale;
 	}
-	tmp.copyTo(*retptr);
+	retptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete retptr;
@@ -751,9 +747,8 @@ namespace rubyopencv {
       cv::Mat* retptr = NULL;
 
       try {
-	retptr = new cv::Mat();
 	cv::Mat tmp = selfptr->diag(d_value);
-	tmp.copyTo(*retptr);
+	retptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete retptr;
@@ -799,10 +794,9 @@ namespace rubyopencv {
       cv::Mat* retptr = NULL;
 
       try {
-	retptr = new cv::Mat();
 	cv::Mat* mat = obj2mat(other);
 	cv::Mat tmp = selfptr->cross(*mat);
-	tmp.copyTo(*retptr);
+	retptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete retptr;
@@ -835,7 +829,7 @@ namespace rubyopencv {
 	  cv::Mat* maskptr = obj2mat(mask);
 	  tmp = selfptr->setTo(*s, *maskptr);
 	}
-	tmp.copyTo(*dstptr);
+	dstptr = new cv::Mat(tmp);
       }
       catch (cv::Exception& e) {
 	delete dstptr;
