@@ -794,6 +794,8 @@ namespace rubyopencv {
      * Scales, computes absolute values, and converts the result to 8-bit.
      *
      * @overload convert_scale_abs(alpha = 1, beta = 0)
+     * @param alpha [Number] Optional scale factor.
+     * @param beta [Number] Optional delta added to the scaled values.
      * @return [Mat] Output array
      * @opencv_func cv::convertScaleAbs
      */
@@ -825,7 +827,7 @@ namespace rubyopencv {
      *   if rtype is negative, the output matrix will have the same type as the input.
      * @param alpha [Number] Optional scale factor.
      * @param beta [Number] Optional delta added to the scaled values.
-     * @return [Mat] +self+
+     * @return [Mat] Output array
      * @opencv_func cv::convertTo
      */
     VALUE rb_convert_to(int argc, VALUE *argv, VALUE self) {
