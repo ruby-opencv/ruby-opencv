@@ -815,7 +815,38 @@ namespace rubyopencv {
 
       return mat2obj(dstptr, CLASS_OF(self));
     }
-    
+
+    /*
+     * Converts an array to another data type with optional scaling.
+     *
+     * @overload convert_to(rtype, alpha = 1, beta = 0)
+     * @param rtype [Integer] Desired output matrix type or, rather, the depth
+     *   since the number of channels are the same as the input has;
+     *   if rtype is negative, the output matrix will have the same type as the input.
+     * @param alpha [Number] Optional scale factor.
+     * @param beta [Number] Optional delta added to the scaled values.
+     * @return [Mat] +self+
+     * @opencv_func cv::convertTo
+     */
+    VALUE rb_convert_to(int argc, VALUE *argv, VALUE self) {
+      VALUE rtype, alpha, beta;
+      rb_scan_args(argc, argv, "12", &rtype, &alpha, &beta);
+      double alpha_value = NIL_P(alpha) ? 1.0 : NUM2DBL(alpha);
+      double beta_value = NIL_P(beta) ? 0 : NUM2DBL(beta);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* dstptr = empty_mat();
+      try {
+	selfptr->convertTo(*dstptr, NUM2INT(rtype), alpha_value, beta_value);
+      }
+      catch (cv::Exception& e) {
+	delete dstptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(dstptr, CLASS_OF(self));
+    }
+
     void init() {
       VALUE opencv = rb_define_module("Cv");
 
@@ -870,6 +901,7 @@ namespace rubyopencv {
       rb_define_singleton_method(rb_klass, "imdecode_as", RUBY_METHOD_FUNC(rb_imdecode_as), 3);
 
       rb_define_method(rb_klass, "convert_scale_abs", RUBY_METHOD_FUNC(rb_convert_scale_abs), -1);
+      rb_define_method(rb_klass, "convert_to", RUBY_METHOD_FUNC(rb_convert_to), -1);
     }
   }
 }

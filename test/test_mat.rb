@@ -363,6 +363,40 @@ class TestMat < OpenCVTestCase
     }
   end
 
+  def test_convert_to
+    m0 = Mat.ones(3, 3, CV_32F) * 1.1
+    DEPTH.each { |depth|
+      m = m0.convert_to(depth)
+      assert_equal(m0.rows, m.rows)
+      assert_equal(m0.cols, m.cols)
+      assert_equal(m0.channels, m.channels)
+      assert_equal(depth, m.depth)
+      assert_equal(m0[0, 0][0].to_i, m[0, 0][0].to_i)
+    }
+
+    alpha = 3.0
+    beta = 1.0
+    m1 = (Mat.ones(3, 3, CV_32F) * alpha) + beta
+    DEPTH.each { |depth|
+      m = m0.convert_to(depth, alpha, beta)
+      assert_equal(m1.rows, m.rows)
+      assert_equal(m1.cols, m.cols)
+      assert_equal(m1.channels, m.channels)
+      assert_equal(depth, m.depth)
+      assert_equal(m1[0, 0][0].to_i, m[0, 0][0].to_i)
+    }
+
+    assert_raise(TypeError) {
+      m0.convert_to(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.convert_to(CV_8U, DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.convert_to(CV_8U, 0.1, DUMMY_OBJ)
+    }
+  end
+
   def test_imencode
     m = Cv::imread(FILENAME_LENA32x32, -1)
 
