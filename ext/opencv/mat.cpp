@@ -716,6 +716,26 @@ namespace rubyopencv {
       return mat2obj(retptr, CLASS_OF(self));
     }
 
+    VALUE rb_diag(int argc, VALUE *argv, VALUE self) {
+      VALUE d;
+      rb_scan_args(argc, argv, "01", &d);
+      int d_value = NIL_P(d) ? 0 : NUM2INT(d);
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* retptr = NULL;
+
+      try {
+	retptr = new cv::Mat();
+	cv::Mat tmp = selfptr->diag(d_value);
+	tmp.copyTo(*retptr);
+      }
+      catch (cv::Exception& e) {
+	delete retptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(retptr, CLASS_OF(self));
+    }
+
     /*
      * Sets all or some of the array elements to the specified value.
      *
@@ -858,7 +878,8 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "-", RUBY_METHOD_FUNC(rb_sub), 1);
       rb_define_method(rb_klass, "*", RUBY_METHOD_FUNC(rb_mul), 1);
       rb_define_method(rb_klass, "/", RUBY_METHOD_FUNC(rb_div), 1);
-      
+      rb_define_method(rb_klass, "diag", RUBY_METHOD_FUNC(rb_diag), -1);
+
       rb_define_method(rb_klass, "clone", RUBY_METHOD_FUNC(rb_clone), 0);
 
       rb_define_method(rb_klass, "rows", RUBY_METHOD_FUNC(rb_rows), 0);

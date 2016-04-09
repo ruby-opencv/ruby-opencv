@@ -322,6 +322,37 @@ class TestMat < OpenCVTestCase
     }
   end 
 
+  def test_diag
+    m0 = Mat.new(3, 3, CV_8U)
+    i = 1
+    m0.rows.times { |r|
+      m0.cols.times { |c|
+        m0[r, c] = Scalar.new(i)
+        i += 1
+      }
+    }
+
+    m1 = m0.diag
+    elems = m1.to_s.scan(/(\[[^\]]+\])/m).flatten[0]
+    assert_equal("[  1;\n   5;\n   9]", elems)
+
+    m2 = m0.diag(0)
+    elems = m2.to_s.scan(/(\[[^\]]+\])/m).flatten[0]
+    assert_equal("[  1;\n   5;\n   9]", elems)
+
+    m3 = m0.diag(1)
+    elems = m3.to_s.scan(/(\[[^\]]+\])/m).flatten[0]
+    assert_equal("[  2;\n   6]", elems)
+
+    m4 = m0.diag(-1)
+    elems = m4.to_s.scan(/(\[[^\]]+\])/m).flatten[0]
+    assert_equal("[  4;\n   8]", elems)
+
+    assert_raise(TypeError) {
+      m0.diag(DUMMY_OBJ)
+    }
+  end
+
   def test_cvt_color
     m = Mat.new(1, 1, CV_32FC3)
     m[0, 0] = Scalar.new(1.0, 2.0, 3.0)
