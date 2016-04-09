@@ -205,5 +205,38 @@ namespace rubyopencv {
 
       return mat2obj(dstptr, CLASS_OF(self));
     }
+
+    /*
+     * Blurs an image using a Gaussian filter.
+     *
+     * @overload gaussian_blur(ksize, sigma_x, sigma_y = 0, border_type = BORDER_DEFAULT)
+     *   @param ksize [Size] Gaussian kernel size. ksize.width and ksize.height can differ
+     *     but they both must be positive and odd. Or, they can be zero's and then they are computed from sigma.
+     *   @param sigma_x [Number] Gaussian kernel standard deviation in X direction.
+     *   @param sigma_y [Number] Gaussian kernel standard deviation in Y direction; if sigmaY is zero,
+     *     it is set to be equal to sigmaX, if both sigmas are zeros, they are computed from ksize.width
+     *     and ksize.height, respectively.
+     *   @param border_type [Integer] Pixel extrapolation method.
+     *   @return [Mat] Output array
+     *   @opencv_func cv::GaussianBlur
+     */
+    VALUE rb_gaussian_blur(int argc, VALUE *argv, VALUE self) {
+      VALUE ksize, sigma_x, sigma_y, border_type;
+      rb_scan_args(argc, argv, "22", &ksize, &sigma_x, &sigma_y, &border_type);
+      double sigma_y_value = NIL_P(sigma_y) ? 0 : NUM2DBL(sigma_y);
+      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* dstptr = empty_mat();
+      try {
+	cv::GaussianBlur(*selfptr, *dstptr, *(Size::obj2size(ksize)), NUM2DBL(sigma_x),
+			 sigma_y_value, border_type_value);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return mat2obj(dstptr, CLASS_OF(self));
+    }
   }
 }

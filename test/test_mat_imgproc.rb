@@ -180,4 +180,35 @@ class TestCvMat < OpenCVTestCase
     # w.show(m0.blur(ksize, anchor, Cv::BORDER_REPLICATE))
     # Cv::wait_key
   end
+
+  def test_gaussian_blur
+    m0 = Cv::imread(FILENAME_LENA256x256, -1)
+
+    ksize = Cv::Size.new(3, 3)
+    gaussian_blurs = []
+    gaussian_blurs << m0.gaussian_blur(ksize, 3)
+    gaussian_blurs << m0.gaussian_blur(ksize, 3, 5)
+    gaussian_blurs << m0.gaussian_blur(ksize, 3, 5, Cv::BORDER_REPLICATE)
+    gaussian_blurs.each { |m|
+      assert_equal(m0.rows, m.rows)
+      assert_equal(m0.cols, m.cols)
+      assert_equal(m0.depth, m.depth)
+      assert_equal(m0.dims, m.dims)
+      assert_equal(m0.channels, m.channels)
+    }
+
+    assert_raise(TypeError) {
+      m0.gaussian_blur(ksize, DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.gaussian_blur(ksize, 3, DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.gaussian_blur(ksize, 3, 5, DUMMY_OBJ)
+    }
+
+    # w = Window.new('Gaussian blur')
+    # w.show(m0.gaussian_blur(ksize, 3, 5, Cv::BORDER_REPLICATE))
+    # Cv::wait_key
+  end
 end

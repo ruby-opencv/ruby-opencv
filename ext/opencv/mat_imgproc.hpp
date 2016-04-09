@@ -12,6 +12,7 @@ namespace rubyopencv {
     VALUE rb_cvt_color(int argc, VALUE *argv, VALUE self);
     VALUE rb_resize(int argc, VALUE *argv, VALUE self);
     VALUE rb_blur(int argc, VALUE *argv, VALUE self);
+    VALUE rb_gaussian_blur(int argc, VALUE *argv, VALUE self);
   }
 }
 
