@@ -719,7 +719,7 @@ namespace rubyopencv {
     /*
      * Extracts a diagonal from a matrix.
      *
-     * @overload diag(d)
+     * @overload diag(d = 0)
      *   @param d [Integer] Index of the diagonal, with the following values:
      *     - +d=0+ is the main diagonal.
      *     - +d>0+ is a diagonal from the lower half. For example, +d=1+ means
