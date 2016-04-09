@@ -3,6 +3,7 @@
 
 #include "mat.hpp"
 #include "size.hpp"
+#include "point.hpp"
 #include "error.hpp"
 
 /*
@@ -176,6 +177,33 @@ namespace rubyopencv {
       }
 
       return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /*
+     * Blurs an image using the normalized box filter.
+     *
+     * @overload blur(ksize, anchor = Point.new(-1, -1), border_type = BORDER_DEFAULT)
+     *   @param ksize [Integer] Blurring kernel size.
+     *   @param border_type [Integer] Border mode used to extrapolate pixels outside of the image.
+     *   @return [Mat] Output array
+     *   @opencv_func cv::blur
+     */
+    VALUE rb_blur(int argc, VALUE *argv, VALUE self) {
+      VALUE ksize, anchor, border_type;
+      rb_scan_args(argc, argv, "12", &ksize, &anchor, &border_type);
+      cv::Point anchor_value = NIL_P(anchor) ? cv::Point(-1, -1) : *(Point::obj2point(anchor));
+      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* dstptr = empty_mat();
+      try {
+	cv::blur(*selfptr, *dstptr, *(Size::obj2size(ksize)), anchor_value, border_type_value);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return mat2obj(dstptr, CLASS_OF(self));
     }
   }
 }

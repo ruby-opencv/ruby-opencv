@@ -148,4 +148,36 @@ class TestCvMat < OpenCVTestCase
       Cv::add_weighted(m0, 0.5, m1, 0.5, 32, DUMMY_OBJ)
     }
   end
+
+  def test_blur
+    m0 = Cv::imread(FILENAME_LENA256x256, -1)
+
+    ksize = Cv::Size.new(3, 3)
+    anchor = Cv::Point.new(1, 1)
+    blurs = []
+    blurs << m0.blur(ksize)
+    blurs << m0.blur(ksize, anchor)
+    blurs << m0.blur(ksize, anchor, Cv::BORDER_REPLICATE)
+    blurs.each { |m|
+      assert_equal(m0.rows, m.rows)
+      assert_equal(m0.cols, m.cols)
+      assert_equal(m0.depth, m.depth)
+      assert_equal(m0.dims, m.dims)
+      assert_equal(m0.channels, m.channels)
+    }
+
+    assert_raise(TypeError) {
+      m0.blur(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.blur(ksize, DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.blur(ksize, anchor, DUMMY_OBJ)
+    }
+
+    # w = Window.new('Blur')
+    # w.show(m0.blur(ksize, anchor, Cv::BORDER_REPLICATE))
+    # Cv::wait_key
+  end
 end

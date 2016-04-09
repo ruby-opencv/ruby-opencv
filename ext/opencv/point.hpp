@@ -5,6 +5,7 @@ namespace rubyopencv {
   namespace Point {
     void init();
     cv::Point conpatible_obj2point(VALUE obj);
+    cv::Point* obj2point(VALUE obj);
   }
 }
 
