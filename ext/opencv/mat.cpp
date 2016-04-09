@@ -716,6 +716,19 @@ namespace rubyopencv {
       return mat2obj(retptr, CLASS_OF(self));
     }
 
+    /*
+     * Extracts a diagonal from a matrix.
+     *
+     * @overload diag(d)
+     *   @param d [Integer] Index of the diagonal, with the following values:
+     *     - +d=0+ is the main diagonal.
+     *     - +d>0+ is a diagonal from the lower half. For example, +d=1+ means
+     *       the diagonal is set immediately below the main one.
+     *     - +d<0+ is a diagonal from the upper half. For example, +d=-1+ means
+     *       the diagonal is set immediately above the main one.
+     *   @return [Mat] Diagonal matrix
+     * @opencv_func cv::Mat::diag
+     */
     VALUE rb_diag(int argc, VALUE *argv, VALUE self) {
       VALUE d;
       rb_scan_args(argc, argv, "01", &d);
