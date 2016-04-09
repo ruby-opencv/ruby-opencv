@@ -737,6 +737,29 @@ namespace rubyopencv {
     }
 
     /*
+     * Computes a dot-product of two vectors.
+     *
+     * @overload dot(value)
+     *   @param value [Mat] Another dot-product operand.
+     *   @return [Number] Dot product
+     * @opencv_func cv::Mat::dot
+     */
+    VALUE rb_dot(VALUE self, VALUE other) {
+      cv::Mat* selfptr = obj2mat(self);
+      VALUE ret = Qnil;
+
+      try {
+	cv::Mat* mat = obj2mat(other);
+	ret = DBL2NUM(selfptr->dot(*mat));
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return ret;
+    }
+
+    /*
      * Sets all or some of the array elements to the specified value.
      *
      * @overload set_to(value, mask = nil)
@@ -879,6 +902,7 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "*", RUBY_METHOD_FUNC(rb_mul), 1);
       rb_define_method(rb_klass, "/", RUBY_METHOD_FUNC(rb_div), 1);
       rb_define_method(rb_klass, "diag", RUBY_METHOD_FUNC(rb_diag), -1);
+      rb_define_method(rb_klass, "dot", RUBY_METHOD_FUNC(rb_dot), 1);
 
       rb_define_method(rb_klass, "clone", RUBY_METHOD_FUNC(rb_clone), 0);
 

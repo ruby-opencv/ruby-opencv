@@ -353,6 +353,22 @@ class TestMat < OpenCVTestCase
     }
   end
 
+  def test_dot
+    m0 = Mat.new(2, 1, CV_8U);
+    m0[0, 0] = Scalar.new(1)
+    m0[1, 0] = Scalar.new(2)
+    m1 = Mat.new(2, 1, CV_8U);
+    m1[0, 0] = Scalar.new(3)
+    m1[1, 0] = Scalar.new(4)
+
+    a = m0.dot(m1)
+    assert_in_delta(11.0, a, 0.01)
+
+    assert_raise(TypeError) {
+      m0.dot(DUMMY_OBJ)
+    }
+  end
+
   def test_cvt_color
     m = Mat.new(1, 1, CV_32FC3)
     m[0, 0] = Scalar.new(1.0, 2.0, 3.0)
