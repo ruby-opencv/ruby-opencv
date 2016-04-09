@@ -34,7 +34,7 @@ namespace rubyopencv {
       int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
 
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* destptr = empty_mat();
+      cv::Mat* destptr = new cv::Mat();
       try {
 	cv::Sobel(*selfptr, *destptr, NUM2INT(ddepth), NUM2INT(dx), NUM2INT(dy),
 		  ksize_value, scale_value, delta_value, border_type_value);
@@ -67,7 +67,7 @@ namespace rubyopencv {
       bool l2gradient_value = RTEST(l2gradient) ? true : false;
 
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* destptr = empty_mat();
+      cv::Mat* destptr = new cv::Mat();
       try {
 	cv::Canny(*selfptr, *destptr, NUM2DBL(threshold1), NUM2DBL(threshold2),
 		  aperture_size_value, l2gradient_value);
@@ -102,7 +102,7 @@ namespace rubyopencv {
       int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
 
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* destptr = empty_mat();
+      cv::Mat* destptr = new cv::Mat();
       try {
 	cv::Laplacian(*selfptr, *destptr, NUM2INT(ddepth), ksize_value, scale_value,
 		      delta_value, border_type_value);
@@ -130,7 +130,7 @@ namespace rubyopencv {
       rb_scan_args(argc, argv, "11", &code, &dcn);
       int dcn_value = NIL_P(dcn) ? 0 : NUM2INT(dcn);
 
-      cv::Mat* destptr = empty_mat();
+      cv::Mat* destptr = new cv::Mat();
       cv::Mat* selfptr = obj2mat(self);
       try {
 	cv::cvtColor(*selfptr, *destptr, NUM2INT(code), dcn_value);
@@ -164,7 +164,7 @@ namespace rubyopencv {
       rb_scan_args(argc, argv, "13", &size, &inv_scale_x, &inv_scale_y, &interpolation);
       cv::Size* sizeptr = Size::obj2size(size);
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* destptr = empty_mat();
+      cv::Mat* destptr = new cv::Mat();
       double sx = NIL_P(inv_scale_x) ? 0 : NUM2DBL(inv_scale_x);
       double sy = NIL_P(inv_scale_y) ? 0 : NUM2DBL(inv_scale_y);
       int method = NIL_P(interpolation) ? CV_INTER_LINEAR : NUM2INT(interpolation);
@@ -195,7 +195,7 @@ namespace rubyopencv {
       int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
 
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = empty_mat();
+      cv::Mat* dstptr = new cv::Mat();
       try {
 	cv::blur(*selfptr, *dstptr, *(Size::obj2size(ksize)), anchor_value, border_type_value);
       }
@@ -227,7 +227,7 @@ namespace rubyopencv {
       int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
 
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = empty_mat();
+      cv::Mat* dstptr = new cv::Mat();
       try {
 	cv::GaussianBlur(*selfptr, *dstptr, *(Size::obj2size(ksize)), NUM2DBL(sigma_x),
 			 sigma_y_value, border_type_value);

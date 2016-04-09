@@ -41,12 +41,6 @@ namespace rubyopencv {
       return mat2obj(ptr, rb_klass);
     }
 
-    cv::Mat* empty_mat() {
-      cv::Mat* m = new cv::Mat();
-      m->allocator = &allocator;
-      return m;
-    }
-
     void free_mat(void* ptr) {
       if (ptr) {
 	cv::Mat* dataptr = (cv::Mat*)ptr;
@@ -96,7 +90,7 @@ namespace rubyopencv {
 	  return Qnil;
 	}
 
-	dataptr = empty_mat();
+	dataptr = new cv::Mat();
 	tempdata.copyTo(*dataptr);
 
 	RTYPEDDATA_DATA(self) = dataptr;
@@ -122,7 +116,7 @@ namespace rubyopencv {
     VALUE rb_zeros(VALUE self, VALUE rows, VALUE cols, VALUE type) {
       cv::Mat* destptr = NULL;
       try {
-	destptr = empty_mat();
+	destptr = new cv::Mat();
 	cv::Mat z = cv::Mat::zeros(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
 	z.copyTo(*destptr);
       }
@@ -147,7 +141,7 @@ namespace rubyopencv {
     VALUE rb_ones(VALUE self, VALUE rows, VALUE cols, VALUE type) {
       cv::Mat* destptr = NULL;
       try {
-	destptr = empty_mat();
+	destptr = new cv::Mat();
 	cv::Mat z = cv::Mat::ones(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
 	z.copyTo(*destptr);
       }
@@ -172,7 +166,7 @@ namespace rubyopencv {
     VALUE rb_eye(VALUE self, VALUE rows, VALUE cols, VALUE type) {
       cv::Mat* destptr = NULL;
       try {
-	destptr = empty_mat();
+	destptr = new cv::Mat();
 	cv::Mat z = cv::Mat::eye(NUM2INT(rows), NUM2INT(cols), NUM2INT(type));
 	z.copyTo(*destptr);
       }
@@ -195,7 +189,7 @@ namespace rubyopencv {
       cv::Mat* selfptr = obj2mat(self);
       cv::Mat* dataptr = NULL;
       try {
-	dataptr = empty_mat();
+	dataptr = new cv::Mat();
 	selfptr->copyTo(*dataptr);
 	RTYPEDDATA_DATA(clone) = dataptr;
       }
@@ -216,7 +210,7 @@ namespace rubyopencv {
 	  return Qnil;
 	}
 
-	dataptr = empty_mat();
+	dataptr = new cv::Mat();
 	tmp.copyTo(*dataptr);
       }
       catch (cv::Exception& e) {
@@ -341,7 +335,7 @@ namespace rubyopencv {
 	data[i] = (uchar)(NUM2INT(RARRAY_AREF(buf, i)) & 0xff);
       }
 
-      cv::Mat* dstptr = empty_mat();
+      cv::Mat* dstptr = new cv::Mat();
       try {
 	cv::imdecode(data, NUM2INT(flags), dstptr);
       }
@@ -596,7 +590,7 @@ namespace rubyopencv {
      */
     VALUE rb_add(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* retptr = empty_mat();
+      cv::Mat* retptr = new cv::Mat();
       cv::Mat tmp;
 
       try {
@@ -632,7 +626,7 @@ namespace rubyopencv {
      */
     VALUE rb_sub(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* retptr = empty_mat();
+      cv::Mat* retptr = new cv::Mat();
       cv::Mat tmp;
 
       try {
@@ -668,7 +662,7 @@ namespace rubyopencv {
      */
     VALUE rb_mul(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* retptr = empty_mat();
+      cv::Mat* retptr = new cv::Mat();
       cv::Mat tmp;
 
       try {
@@ -700,7 +694,7 @@ namespace rubyopencv {
      */
     VALUE rb_div(VALUE self, VALUE other) {
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* retptr = empty_mat();
+      cv::Mat* retptr = new cv::Mat();
       cv::Mat tmp;
 
       try {
@@ -734,7 +728,7 @@ namespace rubyopencv {
       VALUE value, mask;
       rb_scan_args(argc, argv, "11", &value, &mask);
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = empty_mat();
+      cv::Mat* dstptr = new cv::Mat();
       try {
 	cv::Mat tmp;
 	cv::Scalar* s = Scalar::obj2scalar(value);
@@ -778,7 +772,7 @@ namespace rubyopencv {
 
       cv::Mat* src1ptr = obj2mat(src1);
       cv::Mat* src2ptr = obj2mat(src2);
-      cv::Mat* dstptr = empty_mat();
+      cv::Mat* dstptr = new cv::Mat();
       try {
 	cv::addWeighted(*src1ptr, NUM2DBL(alpha), *src2ptr, NUM2DBL(beta), NUM2DBL(gamma), *dstptr, dtype_value);
       }
@@ -806,7 +800,7 @@ namespace rubyopencv {
       double beta_value = NIL_P(beta) ? 0 : NUM2DBL(beta);
 
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = empty_mat();
+      cv::Mat* dstptr = new cv::Mat();
       try {
 	cv::convertScaleAbs(*selfptr, *dstptr, alpha_value, beta_value);
       }
@@ -837,7 +831,7 @@ namespace rubyopencv {
       double beta_value = NIL_P(beta) ? 0 : NUM2DBL(beta);
 
       cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = empty_mat();
+      cv::Mat* dstptr = new cv::Mat();
       try {
 	selfptr->convertTo(*dstptr, NUM2INT(rtype), alpha_value, beta_value);
       }

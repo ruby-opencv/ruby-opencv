@@ -17,7 +17,6 @@ namespace rubyopencv {
     cv::Mat* obj2mat(VALUE obj);
     VALUE mat2obj(cv::Mat* ptr);
     VALUE mat2obj(cv::Mat* ptr, VALUE klass);
-    cv::Mat* empty_mat();
     
     class RubyMatAllocator: public cv::MatAllocator {
     public:

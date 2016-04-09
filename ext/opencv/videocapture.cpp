@@ -84,7 +84,7 @@ namespace rubyopencv {
      */
     VALUE rb_read(VALUE self) {
       cv::VideoCapture* selfptr = obj2videocapture(self);
-      cv::Mat* m = Mat::empty_mat();
+      cv::Mat* m = new cv::Mat();
 
       try {
 	(*selfptr) >> (*m);
@@ -233,7 +233,7 @@ namespace rubyopencv {
 
       cv::VideoCapture* selfptr = obj2videocapture(self);
       bool ret = false;
-      cv::Mat* dstptr = Mat::empty_mat();
+      cv::Mat* dstptr = new cv::Mat();
       try {
 	ret = selfptr->retrieve(*dstptr, flag_value);
 	if (!ret) {

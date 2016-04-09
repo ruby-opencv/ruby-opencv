@@ -20,6 +20,7 @@
 
 namespace rubyopencv {
   VALUE rb_module = Qnil;
+  Mat::RubyMatAllocator allocator;
 
   VALUE rb_module_opencv() {
     return rb_module;
@@ -78,6 +79,7 @@ namespace rubyopencv {
 
   extern "C"
   void Init_opencv() {
+    cv::Mat::setDefaultAllocator(&allocator);
     cv::redirectError(error_callback, NULL, NULL);
 
     rb_module = rb_define_module("Cv");
