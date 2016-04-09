@@ -248,6 +248,25 @@ namespace rubyopencv {
       return (ret) ? Mat::mat2obj(dstptr) : Qnil;
     }
 
+    /*
+     * Closes video file or capturing device.
+     *
+     * @overload release
+     * @return [nil]
+     * @opencv_func cv::VideCapture::release
+     */
+    VALUE rb_release(VALUE self) {
+      cv::VideoCapture* selfptr = obj2videocapture(self);
+      try {
+	selfptr->release();
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return Qnil;
+    }
+
     void init() {
       VALUE opencv = rb_define_module("Cv");
 
@@ -261,6 +280,7 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "set", RUBY_METHOD_FUNC(rb_set), 2);
       rb_define_method(rb_klass, "grab", RUBY_METHOD_FUNC(rb_grab), 0);
       rb_define_method(rb_klass, "retrieve", RUBY_METHOD_FUNC(rb_retrieve), -1);
+      rb_define_method(rb_klass, "release", RUBY_METHOD_FUNC(rb_release), 0);
     }
   }
 }

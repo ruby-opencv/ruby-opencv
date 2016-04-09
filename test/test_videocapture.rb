@@ -56,4 +56,9 @@ class TestVideoCapture < OpenCVTestCase
     @cap.set(CAP_PROP_POS_MSEC, 1000)
     assert_equal(1000, @cap.get(CAP_PROP_POS_MSEC))
   end
+
+  def test_release
+    @cap.release
+    assert_false(@cap.opened?)
+  end
 end
