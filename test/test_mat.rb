@@ -369,6 +369,26 @@ class TestMat < OpenCVTestCase
     }
   end
 
+  def test_cross
+    m0 = Mat.new(3, 1, CV_32F)
+    m0[0, 0] = Scalar.new(1)
+    m0[1, 0] = Scalar.new(2)
+    m0[2, 0] = Scalar.new(0)
+
+    m1 = Mat.new(3, 1, CV_32F)
+    m1[0, 0] = Scalar.new(0)
+    m1[1, 0] = Scalar.new(1)
+    m1[2, 0] = Scalar.new(-1)
+
+    m = m0.cross(m1)
+    elems = m.to_s.scan(/(\[[^\]]+\])/m).flatten[0]
+    assert_equal("[-2;\n 1;\n 1]", elems)
+
+    assert_raise(TypeError) {
+      m0.cross(DUMMY_OBJ)
+    }
+  end
+
   def test_cvt_color
     m = Mat.new(1, 1, CV_32FC3)
     m[0, 0] = Scalar.new(1.0, 2.0, 3.0)

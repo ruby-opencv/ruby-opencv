@@ -773,6 +773,32 @@ namespace rubyopencv {
     }
 
     /*
+     * Computes a cross-product of two 3-element vectors.
+     *
+     * @overload cross(value)
+     *   @param value [Mat] Another cross-product operand.
+     *   @return [Mat] Cross product
+     * @opencv_func cv::Mat::cross
+     */
+    VALUE rb_cross(VALUE self, VALUE other) {
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* retptr = NULL;
+
+      try {
+	retptr = new cv::Mat();
+	cv::Mat* mat = obj2mat(other);
+	cv::Mat tmp = selfptr->cross(*mat);
+	tmp.copyTo(*retptr);
+      }
+      catch (cv::Exception& e) {
+	delete retptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(retptr, CLASS_OF(self));
+    }
+
+    /*
      * Sets all or some of the array elements to the specified value.
      *
      * @overload set_to(value, mask = nil)
@@ -916,6 +942,7 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "/", RUBY_METHOD_FUNC(rb_div), 1);
       rb_define_method(rb_klass, "diag", RUBY_METHOD_FUNC(rb_diag), -1);
       rb_define_method(rb_klass, "dot", RUBY_METHOD_FUNC(rb_dot), 1);
+      rb_define_method(rb_klass, "cross", RUBY_METHOD_FUNC(rb_cross), 1);
 
       rb_define_method(rb_klass, "clone", RUBY_METHOD_FUNC(rb_clone), 0);
 
