@@ -41,7 +41,7 @@ module Cv
     end
 
     def self.load(filename, iscolor = 1)
-      CvMat::imread_as(filename, iscolor, CvMat)
+      CvMat::imread_as(filename, iscolor, self)
     end
 
     def encode(ext, options = {})
@@ -50,7 +50,7 @@ module Cv
     end
 
     def self.decode(buf, iscolor = 1)
-      Mat::imdecode_as(buf, iscolor, CvMat)
+      Mat::imdecode_as(buf, iscolor, self)
     end
 
     def sobel(dx, dy, aperture_size = 3)
