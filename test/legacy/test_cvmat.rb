@@ -179,13 +179,16 @@ module Legacy
     end
 
     def test_decode
-      data = Cv::imread(FILENAME_CAT, -1).imencode('.jpg')
+      data = open(FILENAME_CAT, 'rb') { |f| f.read }
+      data_ary = data.unpack("c*")
       expected = CvMat.load(FILENAME_CAT)
 
       mat1 = CvMat.decode(data)
-      mat2 = CvMat.decode(data, CV_LOAD_IMAGE_COLOR)
+      mat2 = CvMat.decode(data_ary)
+      mat3 = CvMat.decode(data, CV_LOAD_IMAGE_COLOR)
+      mat4 = CvMat.decode(data_ary, CV_LOAD_IMAGE_COLOR)
 
-      [mat1, mat2].each { |mat|
+      [mat1, mat2, mat3, mat4].each { |mat|
         assert_equal(CvMat, mat.class)
         assert_equal(expected.rows, mat.rows)
         assert_equal(expected.cols, mat.cols)
@@ -194,8 +197,9 @@ module Legacy
 
       expected_c1 = CvMat.load(FILENAME_CAT, CV_LOAD_IMAGE_GRAYSCALE)
       mat1c1 = CvMat.decode(data, CV_LOAD_IMAGE_GRAYSCALE)
+      mat2c1 = CvMat.decode(data_ary, CV_LOAD_IMAGE_GRAYSCALE)
 
-      [mat1c1].each { |mat|
+      [mat1c1, mat2c1].each { |mat|
         assert_equal(CvMat, mat.class)
         assert_equal(expected_c1.rows, mat.rows)
         assert_equal(expected_c1.cols, mat.cols)
@@ -208,6 +212,9 @@ module Legacy
       assert_raise(TypeError) {
         CvMat.decode(data, DUMMY_OBJ)
       }
+
+      # Uncomment the following line to show the result images
+      # snap mat1, mat2, mat3
     end
   end
 end

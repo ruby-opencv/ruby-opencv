@@ -50,6 +50,7 @@ module Cv
     end
 
     def self.decode(buf, iscolor = 1)
+      buf = buf.unpack("c*") if buf.is_a? String
       Mat::imdecode_as(buf, iscolor, self)
     end
 
