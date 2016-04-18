@@ -117,6 +117,32 @@ namespace rubyopencv {
       return is_opened ? Qtrue : Qfalse;
     }
 
+    VALUE rb_get_internal(VALUE self, int prop_id) {
+      cv::VideoCapture* selfptr = obj2videocapture(self);
+      double ret = 0;
+      try {
+	ret = selfptr->get(prop_id);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return DBL2NUM(ret);
+    }
+
+    VALUE rb_set_internal(VALUE self, int prop_id, VALUE value) {
+      cv::VideoCapture* selfptr = obj2videocapture(self);
+      bool ret = 0;
+      try {
+	ret = selfptr->set(prop_id, NUM2DBL(value));
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return ret ? Qtrue : Qfalse;
+    }
+
     /*
      * Returns the specified VideoCapture property.
      *
@@ -145,16 +171,7 @@ namespace rubyopencv {
      * @opencv_func cv::VideoCapture::get
      */
     VALUE rb_get(VALUE self, VALUE prop_id) {
-      cv::VideoCapture* selfptr = obj2videocapture(self);
-      double ret = 0;
-      try {
-	ret = selfptr->get(NUM2INT(prop_id));
-      }
-      catch (cv::Exception& e) {
-	Error::raise(e);
-      }
-
-      return DBL2NUM(ret);
+      return rb_get_internal(self, NUM2INT(prop_id));
     }
 
     /*
@@ -186,16 +203,7 @@ namespace rubyopencv {
      * @opencv_func cv::VideoCapture::set
      */
     VALUE rb_set(VALUE self, VALUE prop_id, VALUE value) {
-      cv::VideoCapture* selfptr = obj2videocapture(self);
-      double ret = 0;
-      try {
-	ret = selfptr->set(NUM2INT(prop_id), NUM2DBL(value));
-      }
-      catch (cv::Exception& e) {
-	Error::raise(e);
-      }
-
-      return ret ? Qtrue : Qfalse;
+      return rb_set_internal(self, NUM2INT(prop_id), value);
     }
 
     /*
@@ -267,6 +275,48 @@ namespace rubyopencv {
       return Qnil;
     }
 
+    /*
+     * Get width of frames in the video stream.
+     * @overload width
+     * @return [Number] Width of frames in the video stream.
+     * @opencv_func cv::VideoCapture::get (propId=cv::CAP_FRAME_WIDTH)
+     */
+    VALUE rb_get_width(VALUE self) {
+      return rb_get_internal(self, cv::CAP_PROP_FRAME_WIDTH);
+    }
+
+    /*
+     * Set width of frames in the video stream.
+     * @overload width=(value)
+     *   @param value [Number] Width of frames
+     * @return [Number]
+     * @opencv_func cv::VideoCapture::set (propId=cv::CAP_PROP_FRAME_WIDTH)
+     */
+    VALUE rb_set_width(VALUE self, VALUE value) {
+      return rb_set_internal(self, cv::CAP_PROP_FRAME_WIDTH, value);
+    }
+
+    /*
+     * Get height of frames in the video stream.
+     * @overload height
+     * @return [Number] Height of frames in the video stream.
+     * @opencv_func cv::VideoCapture::get (propId=cv::CAP_PROP_FRAME_HEIGHT)
+     */
+    VALUE rb_get_height(VALUE self) {
+      return rb_get_internal(self, cv::CAP_PROP_FRAME_HEIGHT);
+    }
+
+    /*
+     * Set height of frames in the video stream.
+     * @overload height=(value)
+     *   @param value [Number] Height of frames
+     * @return [Number]
+     * @opencv_func cv::VideoCapture::set (propId=cv::CAP_PROP_FRAME_HEIGHT)
+     */
+    VALUE rb_set_height(VALUE self, VALUE value) {
+      return rb_set_internal(self, cv::CAP_PROP_FRAME_HEIGHT, value);
+    }
+
     void init() {
       VALUE opencv = rb_define_module("Cv");
 
@@ -281,6 +331,10 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "grab", RUBY_METHOD_FUNC(rb_grab), 0);
       rb_define_method(rb_klass, "retrieve", RUBY_METHOD_FUNC(rb_retrieve), -1);
       rb_define_method(rb_klass, "release", RUBY_METHOD_FUNC(rb_release), 0);
+      rb_define_method(rb_klass, "width", RUBY_METHOD_FUNC(rb_get_width), 0);
+      rb_define_method(rb_klass, "width=", RUBY_METHOD_FUNC(rb_set_width), 1);
+      rb_define_method(rb_klass, "height", RUBY_METHOD_FUNC(rb_get_height), 0);
+      rb_define_method(rb_klass, "height=", RUBY_METHOD_FUNC(rb_set_height), 1);
     }
   }
 }

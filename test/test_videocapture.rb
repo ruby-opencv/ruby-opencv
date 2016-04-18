@@ -61,4 +61,16 @@ class TestVideoCapture < OpenCVTestCase
     @cap.release
     assert_false(@cap.opened?)
   end
+
+  def test_width
+    @cap.width = 320
+    assert(@cap.width.is_a? Numeric)
+    # assert_equal(320, @cap.width) # Effective only when a camera is connected.
+  end
+
+  def test_height
+    @cap.height = 240
+    assert(@cap.height.is_a? Numeric)
+    # assert_equal(240, @cap.height) # Effective only when a camera is connected.
+  end
 end
