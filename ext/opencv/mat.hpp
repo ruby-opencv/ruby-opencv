@@ -14,6 +14,8 @@ namespace rubyopencv {
     VALUE rb_imwrite_internal(VALUE filename, VALUE img, VALUE params);
     VALUE rb_clone(VALUE self);
     VALUE rb_add_weighted(int argc, VALUE *argv, VALUE self);
+    VALUE rb_merge(VALUE self, VALUE mv);
+
     cv::Mat* obj2mat(VALUE obj);
     VALUE mat2obj(cv::Mat* ptr);
     VALUE mat2obj(cv::Mat* ptr, VALUE klass);

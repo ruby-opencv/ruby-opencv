@@ -579,4 +579,44 @@ class TestMat < OpenCVTestCase
       m.set_identity(DUMMY_OBJ)
     }
   end
+
+  def test_split
+    m = Mat::zeros(1, 1, CV_8UC3)
+    m[0, 0] = Scalar.new(1, 2, 3)
+
+    a = m.split
+    assert_equal(3, a.size)
+    a.each_with_index { |x, i|
+      assert_equal(m.class, x.class)
+      assert_equal(m.rows, x.rows)
+      assert_equal(m.cols, x.cols)
+      assert_equal(m.depth, x.depth)
+      assert_equal(1, x.channels)
+      assert_equal(m[0, 0][i], x[0, 0][0])
+    }
+  end
+
+  def test_merge
+    m = Mat::zeros(1, 1, CV_8U)
+    b = m + 1
+    g = m + 2
+    r = m + 3
+
+    a = Cv::merge([b, g, r])
+    assert_equal(b.class, a.class)
+    assert_equal(b.rows, a.rows)
+    assert_equal(b.cols, a.cols)
+    assert_equal(b.depth, a.depth)
+    assert_equal(3, a.channels)
+    assert_equal(b[0, 0][0], a[0, 0][0])
+    assert_equal(g[0, 0][0], a[0, 0][1])
+    assert_equal(r[0, 0][0], a[0, 0][2])
+
+    assert_raise(TypeError) {
+      Cv::merge(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      Cv::merge([DUMMY_OBJ])
+    }
+  end
 end

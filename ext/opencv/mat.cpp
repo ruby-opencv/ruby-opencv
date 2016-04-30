@@ -956,6 +956,67 @@ namespace rubyopencv {
       return self;
     }
 
+    /*
+     * Divides a multi-channel array into several single-channel arrays.
+     * The functions split split a multi-channel array into separate single-channel arrays.
+     *
+     * @overload split
+     * @return [Array<Mat>] Output array; the number of arrays must match self.channels
+     * @opencv_func cv::split
+     */
+    VALUE rb_split(VALUE self) {
+      cv::Mat* selfptr = obj2mat(self);
+      std::vector<cv::Mat> splitted;
+      try {
+	cv::split(*selfptr, splitted);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      const int size = selfptr->channels();
+      VALUE result = rb_ary_new2(size);
+      for (int i = 0; i < size; i++) {
+	cv::Mat* tmp = new cv::Mat(splitted[i]);
+	rb_ary_store(result, i, mat2obj(tmp));
+      }
+      return result;
+    }
+
+    /*
+     * Creates one multi-channel array out of several single-channel ones.
+     * The function merge merges several arrays to make a single multi-channel array.
+     *
+     * @overload merge(mv)
+     * @param mv [Array<Mat>] Input array of matrices to be merged; all the matrices in mv must have the same size and the same depth.
+     * @return [Mat] Output array of the same size and the same depth as mv[0]; The number of channels will be equal to the parameter count.
+     * @!scope class
+     * @opencv_func cv::merge
+     */
+    VALUE rb_merge(VALUE self, VALUE mv) {
+      Check_Type(mv, T_ARRAY);
+
+      const long size = RARRAY_LEN(mv);
+      std::vector<cv::Mat> matrixes;
+      for (long i = 0; i < size; i++) {
+	VALUE elt = RARRAY_AREF(mv, i);
+	cv::Mat* tmp = obj2mat(elt);
+	matrixes.push_back(*tmp);
+      }
+
+      cv::Mat* dstptr = NULL;
+      try {
+	dstptr = new cv::Mat();
+	cv::merge(matrixes, *dstptr);
+      }
+      catch (cv::Exception& e) {
+	delete dstptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(dstptr);
+    }
+
     void init() {
       VALUE opencv = rb_define_module("Cv");
 
@@ -1017,6 +1078,7 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "convert_scale_abs", RUBY_METHOD_FUNC(rb_convert_scale_abs), -1);
       rb_define_method(rb_klass, "convert_to", RUBY_METHOD_FUNC(rb_convert_to), -1);
       rb_define_method(rb_klass, "set_identity", RUBY_METHOD_FUNC(rb_set_identity), -1);
+      rb_define_method(rb_klass, "split", RUBY_METHOD_FUNC(rb_split), 0);
     }
   }
 }
