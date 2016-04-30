@@ -566,4 +566,17 @@ class TestMat < OpenCVTestCase
       m.set_to(s1, DUMMY_OBJ)
     }
   end
+
+  def test_set_identity
+    m = Mat::zeros(3, 3, CV_8U)
+    m.set_identity(Scalar.new(10))
+    expected = "<Cv::Mat:3x3,depth=0,channels=1,\n[ 10,   0,   0;\n   0,  10,   0;\n   0,   0,  10]>"
+    assert_equal(expected, m.to_s)
+    m.set_identity
+    expected = "<Cv::Mat:3x3,depth=0,channels=1,\n[  1,   0,   0;\n   0,   1,   0;\n   0,   0,   1]>"
+    assert_equal(expected, m.to_s)
+    assert_raise(TypeError) {
+      m.set_identity(DUMMY_OBJ)
+    }
+  end
 end

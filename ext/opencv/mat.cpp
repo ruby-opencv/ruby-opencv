@@ -933,6 +933,29 @@ namespace rubyopencv {
       return mat2obj(dstptr, CLASS_OF(self));
     }
 
+    /*
+     * Initializes a scaled identity matrix.
+     *
+     * @overload set_identity(s = Scalar.new(1))
+     * @param s [Scalar] Value to assign to diagonal elements.
+     * @return [Mat] +self+
+     * @opencv_func cv::setIdentity
+     */
+    VALUE rb_set_identity(int argc, VALUE *argv, VALUE self) {
+      VALUE s = Qnil;
+      rb_scan_args(argc, argv, "01", &s);
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Scalar s_value = NIL_P(s) ? cv::Scalar(1) : *(Scalar::obj2scalar(s));
+      try {
+	cv::setIdentity(*selfptr, s_value);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
+    }
+
     void init() {
       VALUE opencv = rb_define_module("Cv");
 
@@ -993,6 +1016,7 @@ namespace rubyopencv {
 
       rb_define_method(rb_klass, "convert_scale_abs", RUBY_METHOD_FUNC(rb_convert_scale_abs), -1);
       rb_define_method(rb_klass, "convert_to", RUBY_METHOD_FUNC(rb_convert_to), -1);
+      rb_define_method(rb_klass, "set_identity", RUBY_METHOD_FUNC(rb_set_identity), -1);
     }
   }
 }
