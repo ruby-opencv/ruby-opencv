@@ -56,8 +56,8 @@ namespace rubyopencv {
      * Set width
      *
      * @overload width=(value)
-     * @param value [Integer] Width
-     * @return [Mat] +self+
+     *   @param value [Integer] Width
+     *   @return [Mat] +self+
      */
     VALUE rb_set_width(VALUE self, VALUE width) {
       obj2size(self)->width = NUM2INT(width);
@@ -78,8 +78,8 @@ namespace rubyopencv {
      * Set height
      *
      * @overload height=(value)
-     * @param value [Integer] Height
-     * @return [Mat] +self+
+     *   @param value [Integer] Height
+     *   @return [Mat] +self+
      */
     VALUE rb_set_height(VALUE self, VALUE height) {
       obj2size(self)->height = NUM2INT(height);

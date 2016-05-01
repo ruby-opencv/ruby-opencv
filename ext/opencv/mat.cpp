@@ -878,9 +878,9 @@ namespace rubyopencv {
      * Scales, computes absolute values, and converts the result to 8-bit.
      *
      * @overload convert_scale_abs(alpha = 1, beta = 0)
-     * @param alpha [Number] Optional scale factor.
-     * @param beta [Number] Optional delta added to the scaled values.
-     * @return [Mat] Output array
+     *   @param alpha [Number] Optional scale factor.
+     *   @param beta [Number] Optional delta added to the scaled values.
+     *   @return [Mat] Output array
      * @opencv_func cv::convertScaleAbs
      */
     VALUE rb_convert_scale_abs(int argc, VALUE *argv, VALUE self) {
@@ -906,12 +906,12 @@ namespace rubyopencv {
      * Converts an array to another data type with optional scaling.
      *
      * @overload convert_to(rtype, alpha = 1, beta = 0)
-     * @param rtype [Integer] Desired output matrix type or, rather, the depth
-     *   since the number of channels are the same as the input has;
-     *   if rtype is negative, the output matrix will have the same type as the input.
-     * @param alpha [Number] Optional scale factor.
-     * @param beta [Number] Optional delta added to the scaled values.
-     * @return [Mat] Output array
+     *   @param rtype [Integer] Desired output matrix type or, rather, the depth
+     *     since the number of channels are the same as the input has;
+     *     if rtype is negative, the output matrix will have the same type as the input.
+     *   @param alpha [Number] Optional scale factor.
+     *   @param beta [Number] Optional delta added to the scaled values.
+     *   @return [Mat] Output array
      * @opencv_func cv::convertTo
      */
     VALUE rb_convert_to(int argc, VALUE *argv, VALUE self) {
@@ -937,8 +937,8 @@ namespace rubyopencv {
      * Initializes a scaled identity matrix.
      *
      * @overload set_identity(s = Scalar.new(1))
-     * @param s [Scalar] Value to assign to diagonal elements.
-     * @return [Mat] +self+
+     *   @param s [Scalar] Value to assign to diagonal elements.
+     *   @return [Mat] +self+
      * @opencv_func cv::setIdentity
      */
     VALUE rb_set_identity(int argc, VALUE *argv, VALUE self) {
@@ -988,8 +988,8 @@ namespace rubyopencv {
      * The function merge merges several arrays to make a single multi-channel array.
      *
      * @overload merge(mv)
-     * @param mv [Array<Mat>] Input array of matrices to be merged; all the matrices in mv must have the same size and the same depth.
-     * @return [Mat] Output array of the same size and the same depth as mv[0]; The number of channels will be equal to the parameter count.
+     *   @param mv [Array<Mat>] Input array of matrices to be merged; all the matrices in mv must have the same size and the same depth.
+     *   @return [Mat] Output array of the same size and the same depth as mv[0]; The number of channels will be equal to the parameter count.
      * @!scope class
      * @opencv_func cv::merge
      */

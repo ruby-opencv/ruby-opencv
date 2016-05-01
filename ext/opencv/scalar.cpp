@@ -48,11 +48,11 @@ namespace rubyopencv {
      * Creates a new Scalar.
      *
      * @overload new(v0 = 0, v1 = 0, v2 = 0, v3 = 0)
-     * @param v0 [Number] Value 0
-     * @param v1 [Number] Value 1
-     * @param v2 [Number] Value 2
-     * @param v3 [Number] Value 3
-     * @return [Scalar] +self+
+     *   @param v0 [Number] Value 0
+     *   @param v1 [Number] Value 1
+     *   @param v2 [Number] Value 2
+     *   @param v3 [Number] Value 3
+     *   @return [Scalar] +self+
      */
     VALUE rb_initialize(int argc, VALUE *argv, VALUE self) {
       const int SIZE = 4;
