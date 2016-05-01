@@ -211,4 +211,30 @@ class TestCvMat < OpenCVTestCase
     # w.show(m0.gaussian_blur(ksize, 3, 5, Cv::BORDER_REPLICATE))
     # Cv::wait_key
   end
+
+  def test_median_blur
+    m0 = Cv::Mat.ones(3, 3, Cv::CV_8U)
+    m0[1, 1] = Cv::Scalar.new(0)
+    m1 = m0.median_blur(3)
+
+    assert_equal(m0.class, m1.class)
+    assert_equal(m0.rows, m1.rows)
+    assert_equal(m0.cols, m1.cols)
+    assert_equal(m0.depth, m1.depth)
+    assert_equal(m0.dims, m1.dims)
+    assert_equal(m0.channels, m1.channels)
+    m1.rows.times { |r|
+      m1.cols.times { |c|
+        assert_equal(1, m1[r, c][0].to_i)
+      }
+    }
+
+    assert_raise(TypeError) {
+      m0.median_blur(DUMMY_OBJ)
+    }
+
+    # m = Cv::imread(FILENAME_LENA256x256, -1)
+    # m2 = m.median_blur(9)
+    # snap(['Original', m], ['Median blur', m2])
+  end
 end

@@ -241,5 +241,29 @@ namespace rubyopencv {
 
       return mat2obj(dstptr, CLASS_OF(self));
     }
+
+    /*
+     * Blurs an image using the median filter.
+     *
+     * @overload median_blur(ksize)
+     *   @param ksize [Integer] Aperture linear size; it must be odd and greater than 1,
+     *     for example: 3, 5, 7 ...
+     *   @return [Mat] Output array
+     *   @opencv_func cv::medianBlur
+     */
+    VALUE rb_median_blur(VALUE self, VALUE ksize) {
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* dstptr = NULL;
+      try {
+	dstptr = new cv::Mat();
+	cv::medianBlur(*selfptr, *dstptr, NUM2INT(ksize));
+      }
+      catch (cv::Exception& e) {
+	delete dstptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(dstptr, CLASS_OF(self));
+    }
   }
 }

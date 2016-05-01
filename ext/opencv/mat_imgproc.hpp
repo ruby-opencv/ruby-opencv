@@ -13,6 +13,7 @@ namespace rubyopencv {
     VALUE rb_resize(int argc, VALUE *argv, VALUE self);
     VALUE rb_blur(int argc, VALUE *argv, VALUE self);
     VALUE rb_gaussian_blur(int argc, VALUE *argv, VALUE self);
+    VALUE rb_median_blur(VALUE self, VALUE ksize);
   }
 }
 
