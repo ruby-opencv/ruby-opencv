@@ -741,28 +741,4 @@ class TestMat < OpenCVTestCase
       assert_equal(m[0, 0][i], x[0, 0][0])
     }
   end
-
-  def test_merge
-    m = Mat::zeros(1, 1, CV_8U)
-    b = m + 1
-    g = m + 2
-    r = m + 3
-
-    a = Cv::merge([b, g, r])
-    assert_equal(b.class, a.class)
-    assert_equal(b.rows, a.rows)
-    assert_equal(b.cols, a.cols)
-    assert_equal(b.depth, a.depth)
-    assert_equal(3, a.channels)
-    assert_equal(b[0, 0][0], a[0, 0][0])
-    assert_equal(g[0, 0][0], a[0, 0][1])
-    assert_equal(r[0, 0][0], a[0, 0][2])
-
-    assert_raise(TypeError) {
-      Cv::merge(DUMMY_OBJ)
-    }
-    assert_raise(TypeError) {
-      Cv::merge([DUMMY_OBJ])
-    }
-  end
 end

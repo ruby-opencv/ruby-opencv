@@ -1116,27 +1116,7 @@ namespace rubyopencv {
      * @opencv_func cv::merge
      */
     VALUE rb_merge(VALUE self, VALUE mv) {
-      Check_Type(mv, T_ARRAY);
-
-      const long size = RARRAY_LEN(mv);
-      std::vector<cv::Mat> matrixes;
-      for (long i = 0; i < size; i++) {
-	VALUE elt = RARRAY_AREF(mv, i);
-	cv::Mat* tmp = obj2mat(elt);
-	matrixes.push_back(*tmp);
-      }
-
-      cv::Mat* dstptr = NULL;
-      try {
-	dstptr = new cv::Mat();
-	cv::merge(matrixes, *dstptr);
-      }
-      catch (cv::Exception& e) {
-	delete dstptr;
-	Error::raise(e);
-      }
-
-      return mat2obj(dstptr);
+      return rb_merge_array_internal(self, mv, &cv::merge);
     }
 
     /*

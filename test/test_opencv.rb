@@ -65,6 +65,30 @@ class TestOpenCV < OpenCVTestCase
     # w.wait_key
   end
 
+  def test_merge
+    m = Mat::zeros(1, 1, CV_8U)
+    b = m + 1
+    g = m + 2
+    r = m + 3
+
+    a = Cv::merge([b, g, r])
+    assert_equal(b.class, a.class)
+    assert_equal(b.rows, a.rows)
+    assert_equal(b.cols, a.cols)
+    assert_equal(b.depth, a.depth)
+    assert_equal(3, a.channels)
+    assert_equal(b[0, 0][0], a[0, 0][0])
+    assert_equal(g[0, 0][0], a[0, 0][1])
+    assert_equal(r[0, 0][0], a[0, 0][2])
+
+    assert_raise(TypeError) {
+      Cv::merge(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      Cv::merge([DUMMY_OBJ])
+    }
+  end
+
   def test_hconcat
     m1 = Mat::ones(2, 2, CV_8U) + 1
     m2 = Mat::ones(2, 2, CV_8U) + 2
