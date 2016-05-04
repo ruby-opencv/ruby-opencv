@@ -726,6 +726,103 @@ namespace rubyopencv {
       return mat2obj(retptr, CLASS_OF(self));
     }
 
+    VALUE rb_bitwise_operation_internal(int argc, VALUE *argv, VALUE self,
+					void (*operation_func)(cv::InputArray, cv::InputArray,
+							       cv::OutputArray, cv::InputArray)) {
+      VALUE value, mask;
+      rb_scan_args(argc, argv, "11", &value, &mask);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* retptr = NULL;
+      try {
+	retptr = new cv::Mat();
+	if (rb_obj_is_kind_of(value, rb_klass)) {
+	  cv::Mat* m = obj2mat(value);
+	  operation_func(*selfptr, *m, *retptr, (NIL_P(mask) ? cv::noArray() : *obj2mat(mask)));
+	}
+	else {
+	  cv::Scalar* s = Scalar::obj2scalar(value);
+	  operation_func(*selfptr, *s, *retptr, (NIL_P(mask) ? cv::noArray() : *obj2mat(mask)));
+	}
+      }
+      catch (cv::Exception& e) {
+	delete retptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(retptr, CLASS_OF(self));
+    }
+
+    /*
+     * Computes bitwise conjunction of the two arrays.
+     * Calculates the per-element bit-wise conjunction of two arrays or an array and a scalar.
+     *
+     * @overload bitwise_and(value, mask = nil)
+     *   @param value [Mat, Scalar] Input array or scalar
+     *   @param mask [Mat] Optional operation mask, 8-bit single channel array,
+     *     that specifies elements of the output array to be changed.
+     *   @return [Mat] Output array
+     * @opencv_func cv::bitwise_and
+     */
+    VALUE rb_bitwise_and(int argc, VALUE *argv, VALUE self) {
+      return rb_bitwise_operation_internal(argc, argv, self, &cv::bitwise_and);
+    }
+
+    /*
+     * Calculates the per-element bit-wise disjunction of two arrays or an array and a scalar.
+     *
+     * @overload bitwise_or(value, mask = nil)
+     *   @param value [Mat, Scalar] Input array or scalar
+     *   @param mask [Mat] Optional operation mask, 8-bit single channel array,
+     *     that specifies elements of the output array to be changed.
+     *   @return [Mat] Output array
+     * @opencv_func cv::bitwise_or
+     */
+    VALUE rb_bitwise_or(int argc, VALUE *argv, VALUE self) {
+      return rb_bitwise_operation_internal(argc, argv, self, &cv::bitwise_or);
+    }
+
+    /*
+     * Calculates the per-element bit-wise "exclusive or" operation on two arrays or an array and a scalar.
+     *
+     * @overload bitwise_xor(value, mask = nil)
+     *   @param value [Mat, Scalar] Input array or scalar
+     *   @param mask [Mat] Optional operation mask, 8-bit single channel array,
+     *     that specifies elements of the output array to be changed.
+     *   @return [Mat] Output array
+     * @opencv_func cv::bitwise_xor
+     */
+    VALUE rb_bitwise_xor(int argc, VALUE *argv, VALUE self) {
+      return rb_bitwise_operation_internal(argc, argv, self, &cv::bitwise_xor);
+    }
+
+    /*
+     * Inverts every bit of an array.
+     *
+     * @overload bitwise_not(mask = nil)
+     *   @param mask [Mat] Optional operation mask, 8-bit single channel array,
+     *     that specifies elements of the output array to be changed.
+     *   @return [Mat] Output array
+     * @opencv_func cv::bitwise_not
+     */
+    VALUE rb_bitwise_not(int argc, VALUE *argv, VALUE self) {
+      VALUE mask;
+      rb_scan_args(argc, argv, "01", &mask);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* retptr = NULL;
+      try {
+	retptr = new cv::Mat();
+	cv::bitwise_not(*selfptr, *retptr, (NIL_P(mask) ? cv::noArray() : *obj2mat(mask)));
+      }
+      catch (cv::Exception& e) {
+	delete retptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(retptr, CLASS_OF(self));
+    }
+
     /*
      * Extracts a diagonal from a matrix.
      *
@@ -1032,6 +1129,14 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "-", RUBY_METHOD_FUNC(rb_sub), 1);
       rb_define_method(rb_klass, "*", RUBY_METHOD_FUNC(rb_mul), 1);
       rb_define_method(rb_klass, "/", RUBY_METHOD_FUNC(rb_div), 1);
+      rb_define_method(rb_klass, "bitwise_and", RUBY_METHOD_FUNC(rb_bitwise_and), -1);
+      rb_define_alias(rb_klass, "&", "bitwise_and");
+      rb_define_method(rb_klass, "bitwise_or", RUBY_METHOD_FUNC(rb_bitwise_or), -1);
+      rb_define_alias(rb_klass, "|", "bitwise_or");
+      rb_define_method(rb_klass, "bitwise_xor", RUBY_METHOD_FUNC(rb_bitwise_xor), -1);
+      rb_define_alias(rb_klass, "^", "bitwise_xor");
+      rb_define_method(rb_klass, "bitwise_not", RUBY_METHOD_FUNC(rb_bitwise_not), -1);
+      rb_define_alias(rb_klass, "~", "bitwise_not");
       rb_define_method(rb_klass, "diag", RUBY_METHOD_FUNC(rb_diag), -1);
       rb_define_method(rb_klass, "dot", RUBY_METHOD_FUNC(rb_dot), 1);
       rb_define_method(rb_klass, "cross", RUBY_METHOD_FUNC(rb_cross), 1);

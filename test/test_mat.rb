@@ -308,6 +308,152 @@ class TestMat < OpenCVTestCase
     }
   end
 
+  def test_bitwise_and
+    m0 = Mat.ones(3, 3, CV_8U) * 3
+    m1 = Mat.ones(3, 3, CV_8U)
+    m1[1, 1] = Scalar.new(0)
+    m2 = m0.bitwise_and(m1)
+
+    mask = Mat.ones(3, 3, CV_8U)
+    mask[2, 2] = Scalar.new(0)
+    m3 = m0.bitwise_and(m1, mask)
+
+    m0.rows.times { |r|
+      m0.cols.times { |c|
+        expected = m0[r, c][0].to_i & m1[r, c][0].to_i
+        assert_equal(expected, m2[r, c][0])
+
+        expected = (mask[r, c][0].to_i > 0) ? m0[r, c][0].to_i & m1[r, c][0].to_i : 0
+        assert_equal(expected, m3[r, c][0])
+      }
+    }
+
+    s = Scalar.new(5)
+    m4 = m0.bitwise_and(s)
+    m5 = m0.bitwise_and(s, mask)
+    m0.rows.times { |r|
+      m0.cols.times { |c|
+        expected = m0[r, c][0].to_i & s[0].to_i
+        assert_equal(expected, m4[r, c][0])
+
+        expected = (mask[r, c][0].to_i > 0) ? m0[r, c][0].to_i & s[0].to_i : 0
+        assert_equal(expected, m5[r, c][0])
+      }
+    }
+
+    assert_raise(TypeError) {
+      m0.bitwise_and(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.bitwise_and(m1, DUMMY_OBJ)
+    }
+  end
+
+  def test_bitwise_or
+    m0 = Mat.ones(3, 3, CV_8U) * 3
+    m1 = Mat.ones(3, 3, CV_8U)
+    m1[1, 1] = Scalar.new(0)
+    m2 = m0.bitwise_or(m1)
+
+    mask = Mat.ones(3, 3, CV_8U)
+    mask[2, 2] = Scalar.new(0)
+    m3 = m0.bitwise_or(m1, mask)
+
+    m0.rows.times { |r|
+      m0.cols.times { |c|
+        expected = m0[r, c][0].to_i | m1[r, c][0].to_i
+        assert_equal(expected, m2[r, c][0])
+
+        expected = (mask[r, c][0].to_i > 0) ? (m0[r, c][0].to_i | m1[r, c][0].to_i) : 0
+        assert_equal(expected, m3[r, c][0])
+      }
+    }
+
+    s = Scalar.new(5)
+    m4 = m0.bitwise_or(s)
+    m5 = m0.bitwise_or(s, mask)
+    m0.rows.times { |r|
+      m0.cols.times { |c|
+        expected = m0[r, c][0].to_i | s[0].to_i
+        assert_equal(expected, m4[r, c][0])
+
+        expected = (mask[r, c][0].to_i > 0) ? (m0[r, c][0].to_i | s[0].to_i) : 0
+        assert_equal(expected, m5[r, c][0])
+      }
+    }
+
+    assert_raise(TypeError) {
+      m0.bitwise_or(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.bitwise_or(m1, DUMMY_OBJ)
+    }
+  end
+
+  def test_bitwise_xor
+    m0 = Mat.ones(3, 3, CV_8U) * 3
+    m1 = Mat.ones(3, 3, CV_8U)
+    m1[1, 1] = Scalar.new(0)
+    m2 = m0.bitwise_xor(m1)
+
+    mask = Mat.ones(3, 3, CV_8U)
+    mask[2, 2] = Scalar.new(0)
+    m3 = m0.bitwise_xor(m1, mask)
+
+    m0.rows.times { |r|
+      m0.cols.times { |c|
+        expected = m0[r, c][0].to_i ^ m1[r, c][0].to_i
+        assert_equal(expected, m2[r, c][0])
+
+        expected = (mask[r, c][0].to_i > 0) ? (m0[r, c][0].to_i ^ m1[r, c][0].to_i) : 0
+        assert_equal(expected, m3[r, c][0])
+      }
+    }
+
+    s = Scalar.new(5)
+    m4 = m0.bitwise_xor(s)
+    m5 = m0.bitwise_xor(s, mask)
+    m0.rows.times { |r|
+      m0.cols.times { |c|
+        expected = m0[r, c][0].to_i ^ s[0].to_i
+        assert_equal(expected, m4[r, c][0])
+
+        expected = (mask[r, c][0].to_i > 0) ? (m0[r, c][0].to_i ^ s[0].to_i) : 0
+        assert_equal(expected, m5[r, c][0])
+      }
+    }
+
+    assert_raise(TypeError) {
+      m0.bitwise_xor(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.bitwise_xor(m1, DUMMY_OBJ)
+    }
+  end
+
+  def test_bitwise_not
+    m0 = Mat.ones(3, 3, CV_8S) * 3
+    m1 = m0.bitwise_not
+
+    mask = Mat.ones(3, 3, CV_8S)
+    mask[2, 2] = Scalar.new(0)
+    m2 = m0.bitwise_not(mask)
+
+    m0.rows.times { |r|
+      m0.cols.times { |c|
+        expected = ~(m0[r, c][0].to_i)
+        assert_equal(expected, m1[r, c][0])
+
+        expected = (mask[r, c][0].to_i > 0) ? ~(m0[r, c][0].to_i) : 0
+        assert_equal(expected, m2[r, c][0])
+      }
+    }
+
+    assert_raise(TypeError) {
+      m0.bitwise_not(DUMMY_OBJ)
+    }
+  end
+
   def test_resize
     m0 = Mat.ones(200, 300, CV_8U)
     s = Size.new(150, 100)
