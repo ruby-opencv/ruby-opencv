@@ -64,5 +64,66 @@ class TestOpenCV < OpenCVTestCase
     # w.show(m)
     # w.wait_key
   end
-end
 
+  def test_hconcat
+    m1 = Mat::ones(2, 2, CV_8U) + 1
+    m2 = Mat::ones(2, 2, CV_8U) + 2
+
+    m = Cv::hconcat([m1, m2]);
+    assert_equal(m1.class, m1.class)
+    assert_equal(m1.rows, m.rows)
+    assert_equal(m1.cols + m2.cols, m.cols)
+    assert_equal(m1.depth, m.depth)
+    assert_equal(m1.channels, m.channels)
+
+    m1.rows.times { |r|
+      (m1.cols + m2.cols).times { |c|
+        expected = (c < m1.cols) ? m1[r, c][0] : m2[r, c - m1.cols][0]
+        assert_equal(expected, m[r, c][0])
+      }
+    }
+
+    assert_raise(TypeError) {
+      Cv::hconcat(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      Cv::hconcat([DUMMY_OBJ])
+    }
+
+    # img = Cv::imread(FILENAME_LENA256x256, -1)
+    # dst = Cv::hconcat([img, img])
+    # Cv::Window.new('hconcat').show(dst)
+    # Cv::wait_key
+  end
+
+  def test_vconcat
+    m1 = Mat::ones(2, 2, CV_8U) + 1
+    m2 = Mat::ones(2, 2, CV_8U) + 2
+
+    m = Cv::vconcat([m1, m2]);
+    assert_equal(m1.class, m1.class)
+    assert_equal(m1.rows + m2.rows, m.rows)
+    assert_equal(m1.cols, m.cols)
+    assert_equal(m1.depth, m.depth)
+    assert_equal(m1.channels, m.channels)
+
+    (m1.rows + m2.rows).times { |r|
+      m1.cols.times { |c|
+        expected = (r < m1.rows) ? m1[r, c][0] : m2[r - m1.rows, c][0]
+        assert_equal(expected, m[r, c][0])
+      }
+    }
+
+    assert_raise(TypeError) {
+      Cv::vconcat(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      Cv::vconcat([DUMMY_OBJ])
+    }
+
+    # img = Cv::imread(FILENAME_LENA256x256, -1)
+    # dst = Cv::vconcat([img, img])
+    # Cv::Window.new('vconcat').show(dst)
+    # Cv::wait_key
+  end
+end

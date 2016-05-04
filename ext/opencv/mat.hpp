@@ -15,6 +15,8 @@ namespace rubyopencv {
     VALUE rb_clone(VALUE self);
     VALUE rb_add_weighted(int argc, VALUE *argv, VALUE self);
     VALUE rb_merge(VALUE self, VALUE mv);
+    VALUE rb_hconcat(VALUE self, VALUE src);
+    VALUE rb_vconcat(VALUE self, VALUE src);
 
     cv::Mat* obj2mat(VALUE obj);
     VALUE mat2obj(cv::Mat* ptr);

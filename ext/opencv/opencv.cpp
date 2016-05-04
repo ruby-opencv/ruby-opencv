@@ -106,6 +106,8 @@ namespace rubyopencv {
 
     rb_define_singleton_method(rb_module, "add_weighted", RUBY_METHOD_FUNC(Mat::rb_add_weighted), -1); // in ext/opencv/mat.cpp
     rb_define_singleton_method(rb_module, "merge", RUBY_METHOD_FUNC(Mat::rb_merge), 1); // in ext/opencv/mat.cpp
+    rb_define_singleton_method(rb_module, "hconcat", RUBY_METHOD_FUNC(Mat::rb_hconcat), 1); // in ext/opencv/mat.cpp
+    rb_define_singleton_method(rb_module, "vconcat", RUBY_METHOD_FUNC(Mat::rb_vconcat), 1); // in ext/opencv/mat.cpp
 
     rb_define_singleton_method(rb_module, "CV_MAKETYPE", RUBY_METHOD_FUNC(rb_maketype), 2);
 

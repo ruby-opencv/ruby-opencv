@@ -1080,6 +1080,31 @@ namespace rubyopencv {
       return result;
     }
 
+    VALUE rb_merge_array_internal(VALUE self, VALUE src,
+				  void (*merge_func)(cv::InputArrayOfArrays, cv::OutputArray)) {
+      Check_Type(src, T_ARRAY);
+
+      const long size = RARRAY_LEN(src);
+      std::vector<cv::Mat> matrixes;
+      for (long i = 0; i < size; i++) {
+	VALUE elt = RARRAY_AREF(src, i);
+	cv::Mat* tmp = obj2mat(elt);
+	matrixes.push_back(*tmp);
+      }
+
+      cv::Mat* dstptr = NULL;
+      try {
+	dstptr = new cv::Mat();
+	merge_func(matrixes, *dstptr);
+      }
+      catch (cv::Exception& e) {
+	delete dstptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(dstptr);
+    }
+
     /*
      * Creates one multi-channel array out of several single-channel ones.
      * The function merge merges several arrays to make a single multi-channel array.
@@ -1112,6 +1137,34 @@ namespace rubyopencv {
       }
 
       return mat2obj(dstptr);
+    }
+
+    /*
+     * Applies horizontal concatenation to given matrices.
+     * The function horizontally concatenates two or more <tt>Cv::Mat</tt> matrices (with the same number of rows).
+     *
+     * @overload hconcat(src)
+     *   @param src [Array<Mat>] Input array of matrices. all of the matrices must have the same number of rows and the same depth.
+     *   @return [Mat] Output array
+     * @!scope class
+     * @opencv_func cv::hconcat
+     */
+    VALUE rb_hconcat(VALUE self, VALUE src) {
+      return rb_merge_array_internal(self, src, &cv::hconcat);
+    }
+
+    /*
+     * Applies vertical concatenation to given matrices.
+     * The function vertically concatenates two or more <tt>cv::Mat</tt> matrices (with the same number of cols).
+     *
+     * @overload vconcat(src)
+     *   @param src [Array<Mat>] Input array of matrices. all of the matrices must have the same number of rows and the same depth.
+     *   @return [Mat] Output array
+     * @!scope class
+     * @opencv_func cv::vconcat
+     */
+    VALUE rb_vconcat(VALUE self, VALUE src) {
+      return rb_merge_array_internal(self, src, &cv::vconcat);
     }
 
     void init() {
