@@ -11,7 +11,7 @@ GPATH
 GRTAGS
 GSYMS
 GTAGS
-opencv-*
+ext/opencv/opencv-*.*.*
 ruby-*.*.*
 pkg/
 doc/
