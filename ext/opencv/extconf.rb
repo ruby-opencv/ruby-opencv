@@ -44,7 +44,11 @@ opencv_libraries.each { |lib| raise "#{lib} not found." unless have_library(lib)
 
 # Check the required headers
 puts ">> Check the required headers..."
-opencv_headers.each { |header| raise "#{header} not found." unless have_header(header) }
+
+# TODO: #77 Check this in some OS/compilers
+with_cflags("-x c++") do
+  opencv_headers.each { |header| raise "#{header} not found." unless have_header(header) }
+end
 
 if $warnflags
   $warnflags.slice!('-Wdeclaration-after-statement')
