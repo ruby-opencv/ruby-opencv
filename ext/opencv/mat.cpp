@@ -359,11 +359,12 @@ namespace rubyopencv {
 
     /*
      * Reads an image from a buffer in memory.
-     * @overload decode(buf, flags)
+     *
+     * @overload imdecode(buf, flags)
      *   @param buf [Array] Input array of bytes
      *   @param flags [Integer] Flags specifying the color type of a decoded image (the same flags as imread)
      *   @return [CvMat] Loaded matrix
-     * @opencv_func cvDecodeImageM
+     * @opencv_func cv::imdecode
      */
     VALUE rb_imdecode(VALUE self, VALUE buf, VALUE flags) {
       return rb_imdecode_internal(self, buf, flags, rb_klass);
