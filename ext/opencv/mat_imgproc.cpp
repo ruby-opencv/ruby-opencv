@@ -23,7 +23,7 @@ namespace rubyopencv {
      *   @param delta [Number] Optional delta value that is added to the results prior to storing them in the output image.
      *   @param border_type [Integer] Pixel extrapolation method.
      * @return [Mat] Output image.
-     * @opencv_func cv::Sovel
+     * @opencv_func cv::Sobel
      */
     VALUE rb_sobel(int argc, VALUE *argv, VALUE self) {
       VALUE ddepth, dx, dy, ksize, scale, delta, border_type;
