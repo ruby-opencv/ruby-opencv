@@ -825,6 +825,42 @@ namespace rubyopencv {
     }
 
     /*
+     * Calculates the per-element absolute difference between two
+     * or between an array and a scalar.
+     *
+     * @overload absdiff(other)
+     *   @param other [Mat, Scalar] Input array or scalar
+     *   @return [Mat] Output array that has the same size and type as input arrays.
+     * @opencv_func cv::absdiff
+     */
+    VALUE rb_absdiff(VALUE self, VALUE other) {
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* retptr = NULL;
+
+      try {
+	retptr = new cv::Mat();
+	if (rb_obj_is_kind_of(other, rb_klass)) {
+	  cv::Mat* tmp = obj2mat(other);
+	  cv::absdiff(*selfptr, *tmp, *retptr);
+	}
+	else if (rb_obj_is_kind_of(other, Scalar::klass())) {
+	  cv::Scalar* tmp = Scalar::obj2scalar(other);
+	  cv::absdiff(*selfptr, *tmp, *retptr);
+	}
+	else {
+	  rb_raise(rb_eTypeError, "no implicit conversion of %s into Cv::Mat or Cv::Scalar",
+		   rb_obj_classname(other));
+	}
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+	delete retptr;
+      }
+
+      return mat2obj(retptr, CLASS_OF(self));
+    }
+
+    /*
      * Extracts a diagonal from a matrix.
      *
      * @overload diag(d = 0)
@@ -1171,6 +1207,7 @@ namespace rubyopencv {
       rb_define_alias(rb_klass, "^", "bitwise_xor");
       rb_define_method(rb_klass, "bitwise_not", RUBY_METHOD_FUNC(rb_bitwise_not), -1);
       rb_define_alias(rb_klass, "~", "bitwise_not");
+      rb_define_method(rb_klass, "absdiff", RUBY_METHOD_FUNC(rb_absdiff), 1);
       rb_define_method(rb_klass, "diag", RUBY_METHOD_FUNC(rb_diag), -1);
       rb_define_method(rb_klass, "dot", RUBY_METHOD_FUNC(rb_dot), 1);
       rb_define_method(rb_klass, "cross", RUBY_METHOD_FUNC(rb_cross), 1);

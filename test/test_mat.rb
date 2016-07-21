@@ -454,6 +454,32 @@ class TestMat < OpenCVTestCase
     }
   end
 
+  def test_absdiff
+    m0 = Mat.ones(3, 3, CV_8U) * 3
+    m1 = Mat.ones(3, 3, CV_8U) * 4
+    s1 = Scalar.new(4)
+
+    m1 = m0.absdiff(m1)
+    m2 = m0.absdiff(s1)
+
+    [m1, m2].each { |m|
+      assert_equal(m0.class, m.class)
+      assert_equal(m0.rows, m.rows)
+      assert_equal(m0.cols, m.cols)
+      assert_equal(m0.depth, m.depth)
+      assert_equal(m0.channels, m.channels)
+      m.rows.times { |r|
+        m.cols.times { |c|
+          assert_equal(1, m[r, c][0])
+        }
+      }
+    }
+
+    assert_raise(TypeError) {
+      m0.absdiff(DUMMY_OBJ)
+    }
+  end
+
   def test_resize
     m0 = Mat.ones(200, 300, CV_8U)
     s = Size.new(150, 100)
