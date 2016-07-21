@@ -104,6 +104,13 @@ namespace rubyopencv {
       return self;
     }
 
+    /*
+     * Waits for a pressed key.
+     *
+     * @overload wait_key(delay = 0)
+     *   @param delay [Integer] Delay in milliseconds. 0 is the special value that means "forever".
+     * @opencv_func cv::waitKey
+     */
     VALUE rb_wait_key(int argc, VALUE* argv, VALUE self) {
       VALUE delay;
       rb_scan_args(argc, argv, "01", &delay);
@@ -173,7 +180,7 @@ namespace rubyopencv {
      * @overload move(x, y)
      *   @param x [Integer] The new x-coordinate of the window.
      *   @param y [Integer] The new y-coordinate of the window.
-     * @opencv_func cvMoveWindow
+     * @opencv_func cv::moveWindow
      */
     VALUE rb_move(VALUE self, VALUE x, VALUE y) {
       try {
@@ -239,6 +246,7 @@ namespace rubyopencv {
      * Sets mouse handler for the specified window.
      *
      * @overload set_mouse_callback { |event, x, y, flags| ... }
+     * @opencv_func cv::setMouseCallback
      */
     VALUE rb_set_mouse_callback(int argc, VALUE* argv, VALUE self) {
       window_t* selfptr = obj2window(self);
