@@ -6,6 +6,108 @@ require File.expand_path(File.dirname(__FILE__)) + '/helper'
 include Cv
 
 class TestMat < OpenCVTestCase
+  def test_line
+    m0 = Cv::Mat.zeros(128, 128, Cv::CV_8UC3) + Cv::Scalar.new(255, 255, 255)
+    color = Cv::Scalar.new(255, 0, 0)
+    option = { thickness: 2, line_type: Cv::CV_AA, shift: 0 }
+    pt1 = Cv::Point.new(0, 0)
+    pt2 = Cv::Point.new(m0.cols, m0.rows)
+
+    m1 = m0.line(pt1, pt2, color, option)
+    assert_equal(m0.class, m1.class)
+    assert_equal(m0.rows, m1.rows)
+    assert_equal(m0.cols, m1.cols)
+
+    m2 = m0.clone
+    m2 = m2.line!(pt1, pt2, color, option)
+    assert_equal(m0.class, m2.class)
+    assert_equal(m0.rows, m2.rows)
+    assert_equal(m0.cols, m2.cols)
+
+    assert_raise(TypeError) {
+      m0.line(DUMMY_OBJ, pt2, color, option)
+    }
+    assert_raise(TypeError) {
+      m0.line(pt1, DUMMY_OBJ, color, option)
+    }
+    assert_raise(TypeError) {
+      m0.line(pt1, pt2, DUMMY_OBJ, option)
+    }
+    assert_raise(TypeError) {
+      m0.line(pt1, pt2, color, DUMMY_OBJ)
+    }
+
+    assert_raise(TypeError) {
+      m0.line!(DUMMY_OBJ, pt2, color, option)
+    }
+    assert_raise(TypeError) {
+      m0.line!(pt1, DUMMY_OBJ, color, option)
+    }
+    assert_raise(TypeError) {
+      m0.line!(pt1, pt2, DUMMY_OBJ, option)
+    }
+    assert_raise(TypeError) {
+      m0.line!(pt1, pt2, color, DUMMY_OBJ)
+    }
+
+    # w1 = Window.new('Line 1')
+    # w1.show m1
+    # w2 = Window.new('Line 2')
+    # w2.show m2
+    # Cv::wait_key
+  end
+
+  def test_rectangle
+    m0 = Cv::Mat.zeros(128, 128, Cv::CV_8UC3) + Cv::Scalar.new(255, 255, 255)
+    color = Cv::Scalar.new(255, 0, 0)
+    option = { thickness: 2, rectangle_type: Cv::CV_AA, shift: 0 }
+    pt1 = Cv::Point.new(10, 10)
+    pt2 = Cv::Point.new(m0.cols - 10, m0.rows - 10)
+
+    m1 = m0.rectangle(pt1, pt2, color, option)
+    assert_equal(m0.class, m1.class)
+    assert_equal(m0.rows, m1.rows)
+    assert_equal(m0.cols, m1.cols)
+
+    m2 = m0.clone
+    m2 = m2.rectangle!(pt1, pt2, color, option)
+    assert_equal(m0.class, m2.class)
+    assert_equal(m0.rows, m2.rows)
+    assert_equal(m0.cols, m2.cols)
+
+    assert_raise(TypeError) {
+      m0.rectangle(DUMMY_OBJ, pt2, color, option)
+    }
+    assert_raise(TypeError) {
+      m0.rectangle(pt1, DUMMY_OBJ, color, option)
+    }
+    assert_raise(TypeError) {
+      m0.rectangle(pt1, pt2, DUMMY_OBJ, option)
+    }
+    assert_raise(TypeError) {
+      m0.rectangle(pt1, pt2, color, DUMMY_OBJ)
+    }
+
+    assert_raise(TypeError) {
+      m0.rectangle!(DUMMY_OBJ, pt2, color, option)
+    }
+    assert_raise(TypeError) {
+      m0.rectangle!(pt1, DUMMY_OBJ, color, option)
+    }
+    assert_raise(TypeError) {
+      m0.rectangle!(pt1, pt2, DUMMY_OBJ, option)
+    }
+    assert_raise(TypeError) {
+      m0.rectangle!(pt1, pt2, color, DUMMY_OBJ)
+    }
+
+    # w1 = Window.new('Rect 1')
+    # w1.show m1
+    # w2 = Window.new('Rect 2')
+    # w2.show m2
+    # Cv::wait_key
+  end
+
   def test_circle
     m0 = Cv::Mat.zeros(128, 128, Cv::CV_8UC3) + Cv::Scalar.new(255, 255, 255)
     center = Cv::Point.new(m0.cols * 0.5, m0.rows * 0.5)
