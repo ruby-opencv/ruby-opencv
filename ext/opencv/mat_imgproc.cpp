@@ -265,5 +265,51 @@ namespace rubyopencv {
 
       return mat2obj(dstptr, CLASS_OF(self));
     }
+
+    /*
+     * Applies a fixed-level threshold to each array element.
+     *
+     * @overload threshold(threshold, max_value, type)
+     *   @param threshold [Number] Threshold value
+     *   @param max_value [Number] Maximum value to use with the <tt>THRESH_BINARY</tt> and
+     *     <tt>THRESH_BINARY_INV</tt> thresholding types.
+     *   @param threshold_type [Integer] Thresholding type
+     *     * THRESH_BINARY
+     *     * THRESH_BINARY_INV
+     *     * THRESH_TRUNC
+     *     * THRESH_TOZERO
+     *     * THRESH_TOZERO_INV
+     *     * THRESH_MASK
+     *     * THRESH_OTSU
+     *     * THRESH_TRIANGLE
+     *   @return [Mat] Output array of the same size and type as <tt>self</tt>.
+     *   @return [Array<Mat, Number>] Output array and optimal threshold when using
+     *     <tt>THRESH_OTSU</tt> or <tt>THRESH_TRIANGLE</tt>.
+     * @opencv_func cv::threshold
+     */
+    VALUE rb_threshold(VALUE self, VALUE threshold, VALUE max_value, VALUE threshold_type) {
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* dstptr = NULL;
+      double optimal_threshold = 0.0;
+      int threshold_type_value = NUM2INT(threshold_type);
+      try {
+	dstptr = new cv::Mat();
+	optimal_threshold = cv::threshold(*selfptr, *dstptr, NUM2DBL(threshold), NUM2DBL(max_value), threshold_type_value);
+      }
+      catch (cv::Exception& e) {
+	delete dstptr;
+	Error::raise(e);
+      }
+
+      VALUE ret = Qnil;
+      VALUE dst = mat2obj(dstptr, CLASS_OF(self));
+      if ((threshold_type_value & cv::THRESH_OTSU) || (threshold_type_value & cv::THRESH_TRIANGLE)) {
+	ret = rb_assoc_new(dst, DBL2NUM(optimal_threshold));
+      }
+      else {
+	ret = dst;
+      }
+      return ret;
+    }
   }
 }

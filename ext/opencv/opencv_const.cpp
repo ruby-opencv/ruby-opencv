@@ -377,5 +377,14 @@ namespace rubyopencv {
     rb_define_const(rb_module, "CAP_PROP_SETTINGS", INT2FIX(cv::CAP_PROP_SETTINGS));
     rb_define_const(rb_module, "CAP_PROP_BUFFERSIZE", INT2FIX(cv::CAP_PROP_BUFFERSIZE));
     rb_define_const(rb_module, "CAP_PROP_AUTOFOCUS", INT2FIX(cv::CAP_PROP_AUTOFOCUS));
+
+    rb_define_const(rb_module, "THRESH_BINARY", INT2FIX(cv::THRESH_BINARY));
+    rb_define_const(rb_module, "THRESH_BINARY_INV", INT2FIX(cv::THRESH_BINARY_INV));
+    rb_define_const(rb_module, "THRESH_TRUNC", INT2FIX(cv::THRESH_TRUNC));
+    rb_define_const(rb_module, "THRESH_TOZERO", INT2FIX(cv::THRESH_TOZERO));
+    rb_define_const(rb_module, "THRESH_TOZERO_INV", INT2FIX(cv::THRESH_TOZERO_INV));
+    rb_define_const(rb_module, "THRESH_MASK", INT2FIX(cv::THRESH_MASK));
+    rb_define_const(rb_module, "THRESH_OTSU", INT2FIX(cv::THRESH_OTSU));
+    rb_define_const(rb_module, "THRESH_TRIANGLE", INT2FIX(cv::THRESH_TRIANGLE));
   }
 }
