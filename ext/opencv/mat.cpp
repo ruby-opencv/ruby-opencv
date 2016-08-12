@@ -1238,6 +1238,9 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "line", RUBY_METHOD_FUNC(rb_line), -1); // in ext/opencv/mat_drawing.cpp
       rb_define_method(rb_klass, "line!", RUBY_METHOD_FUNC(rb_line_bang), -1); // in ext/opencv/mat_drawing.cpp
 
+      rb_define_method(rb_klass, "circle", RUBY_METHOD_FUNC(rb_circle), -1); // in ext/opencv/mat_drawing.cpp
+      rb_define_method(rb_klass, "circle!", RUBY_METHOD_FUNC(rb_circle_bang), -1); // in ext/opencv/mat_drawing.cpp
+
       rb_define_method(rb_klass, "rectangle", RUBY_METHOD_FUNC(rb_rectangle), -1); // in ext/opencv/mat_drawing.cpp
       rb_define_method(rb_klass, "rectangle!", RUBY_METHOD_FUNC(rb_rectangle_bang), -1); // in ext/opencv/mat_drawing.cpp
 

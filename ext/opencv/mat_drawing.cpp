@@ -154,5 +154,64 @@ namespace rubyopencv {
       }
       return self;
     }
+
+    /*
+     * Draws a circle
+     *
+     * @overload circle(center, radius, options = nil)
+     *   @param center [Point] Center of the circle.
+     *   @param radius [Integer] Radius of the circle.
+     *   @param color [Scalar] Circle color.
+     *   @param options [Hash] Drawing options
+     *   @option options [Integer] :thickness Line thickness.
+     *   @option options [Integer] :line_type Type of the line.
+     *     * 8 - 8-connected line.
+     *     * 4 - 4-connected line.
+     *     * <tt>CV_AA</tt> - Antialiased line.
+     *   @option options [Integer] :shift Number of fractional bits in the coordinates of
+     *     the center and in the radius value.
+     * @return [Mat] Output array
+     * @opencv_func cv::circle
+     */
+    VALUE rb_circle(int argc, VALUE *argv, VALUE self) {
+      VALUE dst = rb_clone(self);
+      return rb_circle_bang(argc, argv, dst);
+    }
+
+    /*
+     * Draws a circle
+     *
+     * @overload circle!(center, radius, options = nil)
+     *   @param center [Point] Center of the circle.
+     *   @param radius [Integer] Radius of the circle.
+     *   @param color [Scalar] Circle color.
+     *   @param options [Hash] Drawing options
+     *   @option options [Integer] :thickness Line thickness.
+     *   @option options [Integer] :line_type Type of the line.
+     *     * 8 - 8-connected line.
+     *     * 4 - 4-connected line.
+     *     * <tt>CV_AA</tt> - Antialiased line.
+     *   @option options [Integer] :shift Number of fractional bits in the coordinates of
+     *     the center and in the radius value.
+     * @return [Mat] Output array
+     * @opencv_func cv::circle
+     */
+    VALUE rb_circle_bang(int argc, VALUE *argv, VALUE self) {
+      VALUE center, radius, color, option;
+      rb_scan_args(argc, argv, "31", &center, &radius, &color, &option);
+
+      cv::Mat* selfptr = obj2mat(self);
+      drawing_option_t opt = drawing_option(option);
+      try {
+	cv::Point center_value = Point::conpatible_obj2point(center);
+	cv::Scalar color_value = *(Scalar::obj2scalar(color));
+	cv::circle(*selfptr, center_value, NUM2INT(radius), color_value, opt.thickness, opt.line_type, opt.shift);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
+    }
   }
 }
