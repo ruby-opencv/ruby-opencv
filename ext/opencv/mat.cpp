@@ -848,13 +848,14 @@ namespace rubyopencv {
 	  cv::absdiff(*selfptr, *tmp, *retptr);
 	}
 	else {
+	  delete retptr;
 	  rb_raise(rb_eTypeError, "no implicit conversion of %s into Cv::Mat or Cv::Scalar",
 		   rb_obj_classname(other));
 	}
       }
       catch (cv::Exception& e) {
-	Error::raise(e);
 	delete retptr;
+	Error::raise(e);
       }
 
       return mat2obj(retptr, CLASS_OF(self));
