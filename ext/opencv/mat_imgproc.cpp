@@ -311,5 +311,37 @@ namespace rubyopencv {
       }
       return ret;
     }
+
+    /*
+     * Applies an adaptive threshold to an array.
+     *
+     * @overload adaptive_threshold(max_value, adaptive_method, threshold_type, block_size, delta)
+     *   @param max_value [Number] Non-zero value assigned to the pixels for which the condition is satisfied.
+     *   @param adaptive_method [Integer] Adaptive thresholding algorithm to use.
+     *   @param threshold_type [Integer] Thresholding type that must be either <tt>THRESH_BINARY</tt>
+     *     or <tt>THRESH_BINARY_INV</tt>.
+     *   @param block_size [Integer] Size of a pixel neighborhood that is used to calculate a threshold value
+     *     for the pixel: 3, 5, 7, and so on.
+     *   @param delta [Number] Constant subtracted from the mean or weighted mean.
+     *     Normally, it is positive but may be zero or negative as well.
+     *   @return [Mat] Destination image of the same size and the same type as <tt>self</tt>.
+     * @opencv_func cv::adaptiveThreshold
+     */
+    VALUE rb_adaptive_threshold(VALUE self, VALUE max_value, VALUE adaptive_method, VALUE threshold_type,
+				VALUE block_size, VALUE delta) {
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* dstptr = NULL;
+      try {
+	dstptr = new cv::Mat();
+	cv::adaptiveThreshold(*selfptr, *dstptr, NUM2DBL(max_value), NUM2INT(adaptive_method),
+			      NUM2INT(threshold_type), NUM2INT(block_size), NUM2DBL(delta));
+      }
+      catch (cv::Exception& e) {
+	delete dstptr;
+	Error::raise(e);
+      }
+
+      return mat2obj(dstptr, CLASS_OF(self));
+    }
   }
 }

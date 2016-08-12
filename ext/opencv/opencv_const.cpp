@@ -386,5 +386,8 @@ namespace rubyopencv {
     rb_define_const(rb_module, "THRESH_MASK", INT2FIX(cv::THRESH_MASK));
     rb_define_const(rb_module, "THRESH_OTSU", INT2FIX(cv::THRESH_OTSU));
     rb_define_const(rb_module, "THRESH_TRIANGLE", INT2FIX(cv::THRESH_TRIANGLE));
+
+    rb_define_const(rb_module, "ADAPTIVE_THRESH_MEAN_C", INT2FIX(cv::ADAPTIVE_THRESH_MEAN_C));
+    rb_define_const(rb_module, "ADAPTIVE_THRESH_GAUSSIAN_C", INT2FIX(cv::ADAPTIVE_THRESH_GAUSSIAN_C));
   }
 }
