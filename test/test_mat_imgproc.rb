@@ -275,6 +275,15 @@ class TestCvMat < OpenCVTestCase
     assert_equal(expected, m.to_s)
     assert_in_delta(12, optimal_threshold, 0.1)
 
+    assert_raise(TypeError) {
+      m0.threshold(DUMMY_OBJ, 255, Cv::THRESH_BINARY)
+    }
+    assert_raise(TypeError) {
+      m0.threshold(25, DUMMY_OBJ, Cv::THRESH_BINARY)
+    }
+    assert_raise(TypeError) {
+      m0.threshold(25, 255, DUMMY_OBJ)
+    }
     # m0 = Cv::imread(FILENAME_LENA256x256, 0)
     # m = m0.threshold(127, 255, Cv::THRESH_BINARY)
     # w = Window.new('Original | Binary')
