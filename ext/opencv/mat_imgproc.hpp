@@ -9,6 +9,7 @@ namespace rubyopencv {
     VALUE rb_sobel(int argc, VALUE *argv, VALUE self);
     VALUE rb_sobel_bang(int argc, VALUE *argv, VALUE self);
     VALUE rb_canny(int argc, VALUE *argv, VALUE self);
+    VALUE rb_canny_bang(int argc, VALUE *argv, VALUE self);
     VALUE rb_laplacian(int argc, VALUE *argv, VALUE self);
     VALUE rb_cvt_color(int argc, VALUE *argv, VALUE self);
     VALUE rb_resize(int argc, VALUE *argv, VALUE self);

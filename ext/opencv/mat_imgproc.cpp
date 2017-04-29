@@ -67,19 +67,7 @@ namespace rubyopencv {
       return self;
     }
 
-    /**
-     * Finds edges in an image using the [Canny86] algorithm.
-     *
-     * @overload canny(threshold1, threshold2, aperture_size = 3, l2gradient = false)
-     *   @param threshold1 [Number] First threshold for the hysteresis procedure.
-     *   @param threshold2 [Number] Second threshold for the hysteresis procedure.
-     *   @param aperture_size [Integer] Aperture size for the Sobel operator.
-     *   @param l2gradient [Boolean] a flag, indicating whether a more accurate L_2 =\sqrt{ (dI/dx)^2 + (dI/dy)^2 } norm
-     *     should be used to calculate the image gradient magnitude (l2gradient=true),
-     *     or whether the default L_1 norm =|dI/dx|+|dI/dy| is enough (l2gradient=false).
-     * @opencv_func cv::Canny
-     */
-    VALUE rb_canny(int argc, VALUE *argv, VALUE self) {
+    cv::Mat* rb_canny_internal(int argc, VALUE *argv, VALUE self, cv::Mat* destptr) {
       VALUE threshold1, threshold2, aperture_size, l2gradient;
       rb_scan_args(argc, argv, "22", &threshold1, &threshold2, &aperture_size, &l2gradient);
 
@@ -87,10 +75,29 @@ namespace rubyopencv {
       bool l2gradient_value = RTEST(l2gradient) ? true : false;
 
       cv::Mat* selfptr = obj2mat(self);
+      cv::Canny(*selfptr, *destptr, NUM2DBL(threshold1), NUM2DBL(threshold2),
+		aperture_size_value, l2gradient_value);
+
+      return destptr;
+    }
+
+    /**
+     * Finds edges in an image using the [Canny86] algorithm.
+     *
+     * @overload canny(threshold1, threshold2, aperture_size = 3, l2gradient = false)
+     *   @param threshold1 [Number] First threshold for the hysteresis procedure.
+     *   @param threshold2 [Number] Second threshold for the hysteresis procedure.
+     *   @param aperture_size [Integer] Aperture size for the Sobel operator.
+     *   @param l2gradient [Boolean] a flag, indicating whether a more accurate L_2 = \sqrt{ (dI/dx)^2 + (dI/dy)^2 } norm
+     *     should be used to calculate the image gradient magnitude (l2gradient=true),
+     *     or whether the default L_1 norm = |dI/dx|+|dI/dy| is enough (l2gradient=false).
+     * @return [Mat] Output image
+     * @opencv_func cv::Canny
+     */
+    VALUE rb_canny(int argc, VALUE *argv, VALUE self) {
       cv::Mat* destptr = new cv::Mat();
       try {
-	cv::Canny(*selfptr, *destptr, NUM2DBL(threshold1), NUM2DBL(threshold2),
-		  aperture_size_value, l2gradient_value);
+	rb_canny_internal(argc, argv, self, destptr);
       }
       catch (cv::Exception& e) {
 	delete destptr;
@@ -98,6 +105,22 @@ namespace rubyopencv {
       }
 
       return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /**
+     * @overload canny!(threshold1, threshold2, aperture_size = 3, l2gradient = false)
+     * @see #canny
+     */
+    VALUE rb_canny_bang(int argc, VALUE *argv, VALUE self) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_canny_internal(argc, argv, self, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
     }
 
     /*

@@ -123,6 +123,41 @@ class TestCvMat < OpenCVTestCase
     # Cv::wait_key
   end
 
+  def test_canny_bang
+    m0 = Cv::imread(FILENAME_LENA256x256, 0)
+    m1 = m0.clone
+    m0.canny!(50, 200)
+    m1.canny!(50, 200, 5, true)
+
+    canny = [m0, m1]
+    canny.each { |m|
+      assert_equal(m0.rows, m.rows)
+      assert_equal(m0.cols, m.cols)
+      assert_equal(m0.depth, m.depth)
+      assert_equal(m0.dims, m.dims)
+      assert_equal(m0.channels, m.channels)
+    }
+
+    assert_raise(TypeError) {
+      m0.canny!(DUMMY_OBJ, 200, 5, true)
+    }
+    assert_raise(TypeError) {
+      m0.canny!(50, DUMMY_OBJ, 5, true)
+    }
+    assert_raise(TypeError) {
+      m0.canny!(50, 200, DUMMY_OBJ, true)
+    }
+    assert_nothing_raised {
+      m0.canny!(50, 200, 5, DUMMY_OBJ)
+    }
+
+    # w = Window.new('Canny')
+    # m0 = Cv::imread(FILENAME_LENA256x256, 0)
+    # m0.canny!(50, 200)
+    # w.show(m0)
+    # Cv::wait_key
+  end
+
   def test_laplacian
     m0 = Cv::imread(FILENAME_LENA256x256, 0)
 
