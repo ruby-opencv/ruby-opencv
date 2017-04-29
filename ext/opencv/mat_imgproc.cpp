@@ -166,7 +166,7 @@ namespace rubyopencv {
 
     /*
      * @overload laplacian!(ddepth, ksize = 1, scale = 1, delta = 0, border_type = BORDER_DEFAULT)
-     * @see (#laplacian)
+     * @see #laplacian
      */
     VALUE rb_laplacian_bang(int argc, VALUE *argv, VALUE self) {
       cv::Mat* destptr = obj2mat(self);
@@ -216,7 +216,7 @@ namespace rubyopencv {
 
     /**
      * @overload cvt_color!(code, dcn = 0)
-     * @see (#cvt_color)
+     * @see #cvt_color
      */
     VALUE rb_cvt_color_bang(int argc, VALUE *argv, VALUE self) {
       cv::Mat* destptr = obj2mat(self);
