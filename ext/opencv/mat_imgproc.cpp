@@ -186,6 +186,20 @@ namespace rubyopencv {
       return mat2obj(destptr, CLASS_OF(self));
     }
 
+    cv::Mat* rb_resize_internal(int argc, VALUE *argv, VALUE self, cv::Mat* destptr) {
+      VALUE size, inv_scale_x, inv_scale_y, interpolation;
+      rb_scan_args(argc, argv, "13", &size, &inv_scale_x, &inv_scale_y, &interpolation);
+      cv::Size* sizeptr = Size::obj2size(size);
+      cv::Mat* selfptr = obj2mat(self);
+      double sx = NIL_P(inv_scale_x) ? 0 : NUM2DBL(inv_scale_x);
+      double sy = NIL_P(inv_scale_y) ? 0 : NUM2DBL(inv_scale_y);
+      int method = NIL_P(interpolation) ? CV_INTER_LINEAR : NUM2INT(interpolation);
+
+      cv::resize(*selfptr, *destptr, *sizeptr, sx, sy, method);
+
+      return destptr;
+    }
+
     /*
      * Resizes an image.
      *
@@ -203,17 +217,9 @@ namespace rubyopencv {
      * @opencv_func cv::Resize
      */
     VALUE rb_resize(int argc, VALUE *argv, VALUE self) {
-      VALUE size, inv_scale_x, inv_scale_y, interpolation;
-      rb_scan_args(argc, argv, "13", &size, &inv_scale_x, &inv_scale_y, &interpolation);
-      cv::Size* sizeptr = Size::obj2size(size);
-      cv::Mat* selfptr = obj2mat(self);
       cv::Mat* destptr = new cv::Mat();
-      double sx = NIL_P(inv_scale_x) ? 0 : NUM2DBL(inv_scale_x);
-      double sy = NIL_P(inv_scale_y) ? 0 : NUM2DBL(inv_scale_y);
-      int method = NIL_P(interpolation) ? CV_INTER_LINEAR : NUM2INT(interpolation);
-
       try {
-	cv::resize(*selfptr, *destptr, *sizeptr, sx, sy, method);
+	rb_resize_internal(argc, argv, self, destptr);
       }
       catch (cv::Exception& e) {
 	delete destptr;
@@ -221,6 +227,34 @@ namespace rubyopencv {
       }
 
       return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /*
+     * Resizes an image.
+     *
+     * @overload resize(size, interpolation = INTER_LINEAR)
+     *   @param size [Size] Output image size.
+     *   @param interpolation [Integer] Interpolation method:
+     *     * <tt>INTER_NEAREST</tt> - A nearest-neighbor interpolation
+     *	   * <tt>INTER_LINEAR</tt> - A bilinear interpolation (used by default)
+     *	   * <tt>INTER_AREA</tt> - Resampling using pixel area relation. It may be a preferred method for
+     *       image decimation, as it gives moire'-free results. But when the image is zoomed,
+     *       it is similar to the <tt>INTER_NEAREST</tt> method.
+     *     * <tt>INTER_CUBIC</tt> - A bicubic interpolation over 4x4 pixel neighborhood
+     *	   * <tt>INTER_LANCZOS4</tt> - A Lanczos interpolation over 8x8 pixel neighborhood
+     * @return [Mat] Output image.
+     * @opencv_func cv::Resize
+     */
+    VALUE rb_resize_bang(int argc, VALUE *argv, VALUE self) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_resize_internal(argc, argv, self, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
     }
 
     /*

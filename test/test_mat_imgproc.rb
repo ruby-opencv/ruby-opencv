@@ -6,6 +6,60 @@ require File.expand_path(File.dirname(__FILE__)) + '/helper'
 include Cv
 
 class TestCvMat < OpenCVTestCase
+  def test_resize
+    m0 = Mat.ones(200, 300, CV_8U)
+    s = Size.new(150, 100)
+
+    m = m0.resize(s)
+    assert_equal(s.height, m.rows)
+    assert_equal(s.width, m.cols)
+    assert_equal(m0.depth, m.depth)
+    assert_equal(m0.dims, m.dims)
+    assert_equal(m0.channels, m.channels)
+
+    [INTER_NEAREST, INTER_LINEAR, INTER_AREA,
+     INTER_CUBIC, INTER_LANCZOS4].each { |interpolation|
+      m = m0.resize(s, interpolation)
+      assert_equal(s.height, m.rows)
+      assert_equal(s.width, m.cols)
+      assert_equal(m0.depth, m.depth)
+      assert_equal(m0.dims, m.dims)
+      assert_equal(m0.channels, m.channels)
+    }
+
+    assert_raise(TypeError) {
+      m.resize(DUMMY_OBJ)
+    }
+  end
+
+  def test_resize_bang
+    m0 = Mat.ones(200, 300, CV_8U)
+    m = m0.clone
+    s = Size.new(150, 100)
+
+    m.resize!(s)
+    assert_equal(s.height, m.rows)
+    assert_equal(s.width, m.cols)
+    assert_equal(m0.depth, m.depth)
+    assert_equal(m0.dims, m.dims)
+    assert_equal(m0.channels, m.channels)
+
+    [INTER_NEAREST, INTER_LINEAR, INTER_AREA,
+     INTER_CUBIC, INTER_LANCZOS4].each { |interpolation|
+      m = m0.clone
+      m.resize!(s, interpolation)
+      assert_equal(s.height, m.rows)
+      assert_equal(s.width, m.cols)
+      assert_equal(m0.depth, m.depth)
+      assert_equal(m0.dims, m.dims)
+      assert_equal(m0.channels, m.channels)
+    }
+
+    assert_raise(TypeError) {
+      m.resize!(DUMMY_OBJ)
+    }
+  end
+
   def test_sobel
     m0 = Cv::imread(FILENAME_LENA256x256, 0)
 

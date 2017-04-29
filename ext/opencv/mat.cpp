@@ -1247,6 +1247,7 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "rectangle!", RUBY_METHOD_FUNC(rb_rectangle_bang), -1); // in ext/opencv/mat_drawing.cpp
 
       rb_define_method(rb_klass, "resize", RUBY_METHOD_FUNC(rb_resize), -1); // in ext/opencv/mat_imgproc.cpp
+      rb_define_method(rb_klass, "resize!", RUBY_METHOD_FUNC(rb_resize_bang), -1); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "cvt_color", RUBY_METHOD_FUNC(rb_cvt_color), -1); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "blur", RUBY_METHOD_FUNC(rb_blur), -1); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "gaussian_blur", RUBY_METHOD_FUNC(rb_gaussian_blur), -1); // in ext/opencv/mat_imgproc.cpp

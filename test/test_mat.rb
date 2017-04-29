@@ -480,32 +480,6 @@ class TestMat < OpenCVTestCase
     }
   end
 
-  def test_resize
-    m0 = Mat.ones(200, 300, CV_8U)
-    s = Size.new(150, 100)
-
-    m = m0.resize(s)
-    assert_equal(s.height, m.rows)
-    assert_equal(s.width, m.cols)
-    assert_equal(m0.depth, m.depth)
-    assert_equal(m0.dims, m.dims)
-    assert_equal(m0.channels, m.channels)
-
-    [INTER_NEAREST, INTER_LINEAR, INTER_AREA,
-     INTER_CUBIC, INTER_LANCZOS4].each { |interpolation|
-      m = m0.resize(s, interpolation)
-      assert_equal(s.height, m.rows)
-      assert_equal(s.width, m.cols)
-      assert_equal(m0.depth, m.depth)
-      assert_equal(m0.dims, m.dims)
-      assert_equal(m0.channels, m.channels)
-    }
-
-    assert_raise(TypeError) {
-      m.resize(DUMMY_OBJ)
-    }
-  end 
-
   def test_diag
     m0 = Mat.new(3, 3, CV_8U)
     i = 1
