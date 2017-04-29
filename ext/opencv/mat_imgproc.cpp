@@ -351,6 +351,19 @@ namespace rubyopencv {
       return self;
     }
 
+    cv::Mat* rb_gaussian_blur_internal(int argc, VALUE *argv, VALUE self, cv::Mat* destptr) {
+      VALUE ksize, sigma_x, sigma_y, border_type;
+      rb_scan_args(argc, argv, "22", &ksize, &sigma_x, &sigma_y, &border_type);
+      double sigma_y_value = NIL_P(sigma_y) ? 0 : NUM2DBL(sigma_y);
+      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::GaussianBlur(*selfptr, *destptr, *(Size::obj2size(ksize)), NUM2DBL(sigma_x),
+		       sigma_y_value, border_type_value);
+
+      return destptr;
+    }
+
     /*
      * Blurs an image using a Gaussian filter.
      *
@@ -366,23 +379,32 @@ namespace rubyopencv {
      *   @opencv_func cv::GaussianBlur
      */
     VALUE rb_gaussian_blur(int argc, VALUE *argv, VALUE self) {
-      VALUE ksize, sigma_x, sigma_y, border_type;
-      rb_scan_args(argc, argv, "22", &ksize, &sigma_x, &sigma_y, &border_type);
-      double sigma_y_value = NIL_P(sigma_y) ? 0 : NUM2DBL(sigma_y);
-      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
-
-      cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = new cv::Mat();
+      cv::Mat* destptr = new cv::Mat();
       try {
-	cv::GaussianBlur(*selfptr, *dstptr, *(Size::obj2size(ksize)), NUM2DBL(sigma_x),
-			 sigma_y_value, border_type_value);
+	rb_gaussian_blur_internal(argc, argv, self, destptr);
       }
       catch (cv::Exception& e) {
-	delete dstptr;
+	delete destptr;
 	Error::raise(e);
       }
 
-      return mat2obj(dstptr, CLASS_OF(self));
+      return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /*
+     * @overload gaussian_blur!(ksize, sigma_x, sigma_y = 0, border_type = BORDER_DEFAULT)
+     * @see #gaussian_blur
+     */
+    VALUE rb_gaussian_blur_bang(int argc, VALUE *argv, VALUE self) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_gaussian_blur_internal(argc, argv, self, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
     }
 
     /*
