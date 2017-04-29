@@ -390,6 +390,44 @@ class TestCvMat < OpenCVTestCase
     # Cv::wait_key
   end
 
+  def test_blur_bang
+    m0 = Cv::imread(FILENAME_LENA256x256, -1)
+    m1 = m0.clone
+    m2 = m0.clone
+    m3 = m0.clone
+
+    ksize = Cv::Size.new(3, 3)
+    anchor = Cv::Point.new(1, 1)
+    m0.blur!(ksize)
+    m0.blur!(ksize, anchor)
+    m0.blur!(ksize, anchor, Cv::BORDER_REPLICATE)
+
+    blurs = [m1, m2, m3]
+    blurs.each { |m|
+      assert_equal(m0.rows, m.rows)
+      assert_equal(m0.cols, m.cols)
+      assert_equal(m0.depth, m.depth)
+      assert_equal(m0.dims, m.dims)
+      assert_equal(m0.channels, m.channels)
+    }
+
+    assert_raise(TypeError) {
+      m0.blur!(DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.blur!(ksize, DUMMY_OBJ)
+    }
+    assert_raise(TypeError) {
+      m0.blur!(ksize, anchor, DUMMY_OBJ)
+    }
+
+    # w = Window.new('Blur')
+    # m0 = Cv::imread(FILENAME_LENA256x256, -1)
+    # m0.blur!(ksize, anchor, Cv::BORDER_REPLICATE)
+    # w.show(m0)
+    # Cv::wait_key
+  end
+
   def test_gaussian_blur
     m0 = Cv::imread(FILENAME_LENA256x256, -1)
 

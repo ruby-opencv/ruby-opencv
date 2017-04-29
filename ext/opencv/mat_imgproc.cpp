@@ -301,6 +301,18 @@ namespace rubyopencv {
       return self;
     }
 
+    cv::Mat* rb_blur_internal(int argc, VALUE *argv, VALUE self, cv::Mat* destptr) {
+      VALUE ksize, anchor, border_type;
+      rb_scan_args(argc, argv, "12", &ksize, &anchor, &border_type);
+      cv::Point anchor_value = NIL_P(anchor) ? cv::Point(-1, -1) : *(Point::obj2point(anchor));
+      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::blur(*selfptr, *destptr, *(Size::obj2size(ksize)), anchor_value, border_type_value);
+
+      return destptr;
+    }
+
     /*
      * Blurs an image using the normalized box filter.
      *
@@ -311,22 +323,32 @@ namespace rubyopencv {
      *   @opencv_func cv::blur
      */
     VALUE rb_blur(int argc, VALUE *argv, VALUE self) {
-      VALUE ksize, anchor, border_type;
-      rb_scan_args(argc, argv, "12", &ksize, &anchor, &border_type);
-      cv::Point anchor_value = NIL_P(anchor) ? cv::Point(-1, -1) : *(Point::obj2point(anchor));
-      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
-
-      cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = new cv::Mat();
+      cv::Mat* destptr = new cv::Mat();
       try {
-	cv::blur(*selfptr, *dstptr, *(Size::obj2size(ksize)), anchor_value, border_type_value);
+	rb_blur_internal(argc, argv, self, destptr);
       }
       catch (cv::Exception& e) {
-	delete dstptr;
+	delete destptr;
 	Error::raise(e);
       }
 
-      return mat2obj(dstptr, CLASS_OF(self));
+      return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /*
+     * @overload blur!(ksize, anchor = Point.new(-1, -1), border_type = BORDER_DEFAULT)
+     * @see #blue
+     */
+    VALUE rb_blur_bang(int argc, VALUE *argv, VALUE self) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_blur_internal(argc, argv, self, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
     }
 
     /*
