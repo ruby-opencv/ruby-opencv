@@ -1256,6 +1256,7 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "gaussian_blur", RUBY_METHOD_FUNC(rb_gaussian_blur), -1); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "gaussian_blur!", RUBY_METHOD_FUNC(rb_gaussian_blur_bang), -1); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "median_blur", RUBY_METHOD_FUNC(rb_median_blur), 1); // in ext/opencv/mat_imgproc.cpp
+      rb_define_method(rb_klass, "median_blur!", RUBY_METHOD_FUNC(rb_median_blur_bang), 1); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "threshold", RUBY_METHOD_FUNC(rb_threshold), 3); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "adaptive_threshold", RUBY_METHOD_FUNC(rb_adaptive_threshold), 5); // in ext/opencv/mat_imgproc.cpp
 

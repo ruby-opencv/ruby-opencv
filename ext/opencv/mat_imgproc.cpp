@@ -407,6 +407,13 @@ namespace rubyopencv {
       return self;
     }
 
+    cv::Mat* rb_median_blur_internal(VALUE self, VALUE ksize, cv::Mat* destptr) {
+      cv::Mat* selfptr = obj2mat(self);
+      cv::medianBlur(*selfptr, *destptr, NUM2INT(ksize));
+
+      return destptr;
+    }
+
     /*
      * Blurs an image using the median filter.
      *
@@ -417,18 +424,32 @@ namespace rubyopencv {
      *   @opencv_func cv::medianBlur
      */
     VALUE rb_median_blur(VALUE self, VALUE ksize) {
-      cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = NULL;
+      cv::Mat* destptr = new cv::Mat();
       try {
-	dstptr = new cv::Mat();
-	cv::medianBlur(*selfptr, *dstptr, NUM2INT(ksize));
+	rb_median_blur_internal(self, ksize, destptr);
       }
       catch (cv::Exception& e) {
-	delete dstptr;
+	delete destptr;
 	Error::raise(e);
       }
 
-      return mat2obj(dstptr, CLASS_OF(self));
+      return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /*
+     * @overload median_blur!(ksize)
+     * @see #median_blur
+     */
+    VALUE rb_median_blur_bang(VALUE self, VALUE ksize) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_median_blur_internal(self, ksize, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
     }
 
     /*

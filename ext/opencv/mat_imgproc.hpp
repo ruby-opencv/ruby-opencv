@@ -21,6 +21,7 @@ namespace rubyopencv {
     VALUE rb_gaussian_blur(int argc, VALUE *argv, VALUE self);
     VALUE rb_gaussian_blur_bang(int argc, VALUE *argv, VALUE self);
     VALUE rb_median_blur(VALUE self, VALUE ksize);
+    VALUE rb_median_blur_bang(VALUE self, VALUE ksize);
     VALUE rb_threshold(VALUE self, VALUE threshold, VALUE max_value, VALUE threshold_type);
     VALUE rb_adaptive_threshold(VALUE self, VALUE max_value, VALUE adaptive_method,
 				VALUE threshold_type, VALUE block_size, VALUE delta);
