@@ -519,6 +519,15 @@ namespace rubyopencv {
       return ret;
     }
 
+    cv::Mat* rb_adaptive_threshold_internal(VALUE self, VALUE max_value, VALUE adaptive_method, VALUE threshold_type,
+					    VALUE block_size, VALUE delta, cv::Mat* destptr) {
+      cv::Mat* selfptr = obj2mat(self);
+      cv::adaptiveThreshold(*selfptr, *destptr, NUM2DBL(max_value), NUM2INT(adaptive_method),
+			    NUM2INT(threshold_type), NUM2INT(block_size), NUM2DBL(delta));
+
+      return destptr;
+    }
+
     /*
      * Applies an adaptive threshold to an array.
      *
@@ -536,19 +545,31 @@ namespace rubyopencv {
      */
     VALUE rb_adaptive_threshold(VALUE self, VALUE max_value, VALUE adaptive_method, VALUE threshold_type,
 				VALUE block_size, VALUE delta) {
-      cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = NULL;
+      cv::Mat* destptr = new cv::Mat();
       try {
-	dstptr = new cv::Mat();
-	cv::adaptiveThreshold(*selfptr, *dstptr, NUM2DBL(max_value), NUM2INT(adaptive_method),
-			      NUM2INT(threshold_type), NUM2INT(block_size), NUM2DBL(delta));
+	rb_adaptive_threshold_internal(self, max_value, adaptive_method, threshold_type,
+				       block_size, delta, destptr);
       }
       catch (cv::Exception& e) {
-	delete dstptr;
+	delete destptr;
 	Error::raise(e);
       }
 
-      return mat2obj(dstptr, CLASS_OF(self));
+      return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    VALUE rb_adaptive_threshold_bang(VALUE self, VALUE max_value, VALUE adaptive_method, VALUE threshold_type,
+				     VALUE block_size, VALUE delta) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_adaptive_threshold_internal(self, max_value, adaptive_method, threshold_type,
+				       block_size, delta, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
     }
   }
 }

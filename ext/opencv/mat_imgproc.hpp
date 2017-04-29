@@ -26,6 +26,8 @@ namespace rubyopencv {
     VALUE rb_threshold_bang(VALUE self, VALUE threshold, VALUE max_value, VALUE threshold_type);
     VALUE rb_adaptive_threshold(VALUE self, VALUE max_value, VALUE adaptive_method,
 				VALUE threshold_type, VALUE block_size, VALUE delta);
+    VALUE rb_adaptive_threshold_bang(VALUE self, VALUE max_value, VALUE adaptive_method,
+				     VALUE threshold_type, VALUE block_size, VALUE delta);
   }
 }
 
