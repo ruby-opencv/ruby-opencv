@@ -558,6 +558,10 @@ namespace rubyopencv {
       return mat2obj(destptr, CLASS_OF(self));
     }
 
+    /*
+     * @overload adaptive_threshold!(max_value, adaptive_method, threshold_type, block_size, delta)
+     * @see #adaptive_threshold
+     */
     VALUE rb_adaptive_threshold_bang(VALUE self, VALUE max_value, VALUE adaptive_method, VALUE threshold_type,
 				     VALUE block_size, VALUE delta) {
       cv::Mat* destptr = obj2mat(self);
