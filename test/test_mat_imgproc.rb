@@ -10,12 +10,12 @@ class TestCvMat < OpenCVTestCase
     m0 = Cv::imread(FILENAME_LENA256x256, 0)
 
     sobel = []
-    sobel << m0.sobel(CV_32F, 1, 1)
-    sobel << m0.sobel(CV_32F, 1, 1, 5, 0.5, 32, BORDER_CONSTANT)
+    sobel << m0.sobel(CV_8U, 1, 1)
+    sobel << m0.sobel(CV_8U, 1, 1, 5, 0.5, 32, BORDER_CONSTANT)
     sobel.each { |m|
       assert_equal(m0.rows, m.rows)
       assert_equal(m0.cols, m.cols)
-      assert_equal(CV_32F, m.depth)
+      assert_equal(CV_8U, m.depth)
       assert_equal(m0.dims, m.dims)
       assert_equal(m0.channels, m.channels)
     }
@@ -24,26 +24,70 @@ class TestCvMat < OpenCVTestCase
       m0.sobel(DUMMY_OBJ, 1, 1, 5, 0.5, 32, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.sobel(CV_32F, DUMMY_OBJ, 1, 5, 0.5, 32, BORDER_CONSTANT)
+      m0.sobel(CV_8U, DUMMY_OBJ, 1, 5, 0.5, 32, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.sobel(CV_32F, 1, DUMMY_OBJ, 5, 0.5, 32, BORDER_CONSTANT)
+      m0.sobel(CV_8U, 1, DUMMY_OBJ, 5, 0.5, 32, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.sobel(CV_32F, 1, 1, DUMMY_OBJ, 0.5, 32, BORDER_CONSTANT)
+      m0.sobel(CV_8U, 1, 1, DUMMY_OBJ, 0.5, 32, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.sobel(CV_32F, 1, 1, 5, DUMMY_OBJ, 32, BORDER_CONSTANT)
+      m0.sobel(CV_8U, 1, 1, 5, DUMMY_OBJ, 32, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.sobel(CV_32F, 1, 1, 5, 0.5, DUMMY_OBJ, BORDER_CONSTANT)
+      m0.sobel(CV_8U, 1, 1, 5, 0.5, DUMMY_OBJ, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.sobel(CV_32F, 1, 1, 5, 0.5, 32, DUMMY_OBJ)
+      m0.sobel(CV_8U, 1, 1, 5, 0.5, 32, DUMMY_OBJ)
     }
 
     # w = Window.new('Sobel')
-    # w.show(m0.sobel(CV_32F, 1, 1))
+    # w.show(m0.sobel(CV_8U, 1, 1))
+    # Cv::wait_key
+  end
+
+  def test_sobel_bang
+    m0 = Cv::imread(FILENAME_LENA256x256, 0)
+    m1 = m0.clone
+
+    m0.sobel!(CV_8U, 1, 1)
+    m1.sobel!(CV_8U, 1, 1, 5, 0.5, 32, BORDER_CONSTANT)
+    sobel = [m0, m1]
+    sobel.each { |m|
+      assert_equal(m0.rows, m.rows)
+      assert_equal(m0.cols, m.cols)
+      assert_equal(CV_8U, m.depth)
+      assert_equal(m0.dims, m.dims)
+      assert_equal(m0.channels, m.channels)
+    }
+
+    assert_raise(TypeError) {
+      m0.sobel!(DUMMY_OBJ, 1, 1, 5, 0.5, 32, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.sobel!(CV_8U, DUMMY_OBJ, 1, 5, 0.5, 32, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.sobel!(CV_8U, 1, DUMMY_OBJ, 5, 0.5, 32, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.sobel!(CV_8U, 1, 1, DUMMY_OBJ, 0.5, 32, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.sobel!(CV_8U, 1, 1, 5, DUMMY_OBJ, 32, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.sobel!(CV_8U, 1, 1, 5, 0.5, DUMMY_OBJ, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.sobel!(CV_8U, 1, 1, 5, 0.5, 32, DUMMY_OBJ)
+    }
+
+    # w = Window.new('Sobel')
+    # m0 = Cv::imread(FILENAME_LENA256x256, 0)
+    # m0.sobel!(CV_8U, 1, 1)
+    # w.show(m0)
     # Cv::wait_key
   end
 

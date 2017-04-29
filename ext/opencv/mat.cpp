@@ -1232,6 +1232,7 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "to_s", RUBY_METHOD_FUNC(rb_to_s), 0);
 
       rb_define_method(rb_klass, "sobel", RUBY_METHOD_FUNC(rb_sobel), -1); // in ext/opencv/mat_imgproc.cpp
+      rb_define_method(rb_klass, "sobel!", RUBY_METHOD_FUNC(rb_sobel_bang), -1); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "canny", RUBY_METHOD_FUNC(rb_canny), -1); // in ext/opencv/mat_imgproc.cpp
       rb_define_method(rb_klass, "laplacian", RUBY_METHOD_FUNC(rb_laplacian), -1); // in ext/opencv/mat_imgproc.cpp
 

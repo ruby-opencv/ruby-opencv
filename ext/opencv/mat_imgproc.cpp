@@ -11,6 +11,21 @@
  */
 namespace rubyopencv {
   namespace Mat {
+    cv::Mat* rb_sobel_internal(int argc, VALUE *argv, VALUE self, cv::Mat* destptr) {
+      VALUE ddepth, dx, dy, ksize, scale, delta, border_type;
+      rb_scan_args(argc, argv, "34", &ddepth ,&dx, &dy, &ksize, &scale, &delta, &border_type);
+      int ksize_value = NIL_P(ksize) ? 3 : NUM2INT(ksize);
+      double scale_value = NIL_P(scale) ? 1.0 : NUM2DBL(scale);
+      double delta_value = NIL_P(delta) ? 0.0 : NUM2DBL(delta);
+      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Sobel(*selfptr, *destptr, NUM2INT(ddepth), NUM2INT(dx), NUM2INT(dy),
+		ksize_value, scale_value, delta_value, border_type_value);
+
+      return destptr;
+    }
+
     /*
      * Calculates the first, second, third, or mixed image derivatives using an extended Sobel operator.
      *
@@ -26,25 +41,30 @@ namespace rubyopencv {
      * @opencv_func cv::Sobel
      */
     VALUE rb_sobel(int argc, VALUE *argv, VALUE self) {
-      VALUE ddepth, dx, dy, ksize, scale, delta, border_type;
-      rb_scan_args(argc, argv, "34", &ddepth ,&dx, &dy, &ksize, &scale, &delta, &border_type);
-      int ksize_value = NIL_P(ksize) ? 3 : NUM2INT(ksize);
-      double scale_value = NIL_P(scale) ? 1.0 : NUM2DBL(scale);
-      double delta_value = NIL_P(delta) ? 0.0 : NUM2DBL(delta);
-      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
-
-      cv::Mat* selfptr = obj2mat(self);
       cv::Mat* destptr = new cv::Mat();
       try {
-	cv::Sobel(*selfptr, *destptr, NUM2INT(ddepth), NUM2INT(dx), NUM2INT(dy),
-		  ksize_value, scale_value, delta_value, border_type_value);
+	rb_sobel_internal(argc, argv, self, destptr);
       }
       catch (cv::Exception& e) {
 	delete destptr;
 	Error::raise(e);
       }
-
       return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /*
+     * @overload sobel!(ddepth, dx, dy, ksize = 3, scale = 1, delta = 0, border_type = BORDER_DEFAULT)
+     * @see #sobel
+     */
+    VALUE rb_sobel_bang(int argc, VALUE *argv, VALUE self) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_sobel_internal(argc, argv, self, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+      return self;
     }
 
     /**
