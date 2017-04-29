@@ -452,6 +452,22 @@ namespace rubyopencv {
       return self;
     }
 
+    VALUE rb_threshold_internal(VALUE self, VALUE threshold, VALUE max_value, VALUE threshold_type, VALUE dest) {
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Mat* destptr = obj2mat(dest);
+      int threshold_type_value = NUM2INT(threshold_type);
+      double optimal_threshold = cv::threshold(*selfptr, *destptr, NUM2DBL(threshold), NUM2DBL(max_value), threshold_type_value);
+
+      VALUE ret = Qnil;
+      if ((threshold_type_value & cv::THRESH_OTSU) || (threshold_type_value & cv::THRESH_TRIANGLE)) {
+	ret = rb_assoc_new(dest, DBL2NUM(optimal_threshold));
+      }
+      else {
+	ret = dest;
+      }
+      return ret;
+    }
+
     /*
      * Applies a fixed-level threshold to each array element.
      *
@@ -474,27 +490,32 @@ namespace rubyopencv {
      * @opencv_func cv::threshold
      */
     VALUE rb_threshold(VALUE self, VALUE threshold, VALUE max_value, VALUE threshold_type) {
-      cv::Mat* selfptr = obj2mat(self);
-      cv::Mat* dstptr = NULL;
-      double optimal_threshold = 0.0;
-      int threshold_type_value = NUM2INT(threshold_type);
+      cv::Mat* destptr = new cv::Mat();
+      VALUE dest = mat2obj(destptr);
+      VALUE ret = Qnil;
       try {
-	dstptr = new cv::Mat();
-	optimal_threshold = cv::threshold(*selfptr, *dstptr, NUM2DBL(threshold), NUM2DBL(max_value), threshold_type_value);
+	ret = rb_threshold_internal(self, threshold, max_value, threshold_type, dest);
       }
       catch (cv::Exception& e) {
-	delete dstptr;
 	Error::raise(e);
       }
 
+      return ret;
+    }
+
+    /*
+     * @overload threshold!(threshold, max_value, type)
+     * @see #threshold
+     */
+    VALUE rb_threshold_bang(VALUE self, VALUE threshold, VALUE max_value, VALUE threshold_type) {
       VALUE ret = Qnil;
-      VALUE dst = mat2obj(dstptr, CLASS_OF(self));
-      if ((threshold_type_value & cv::THRESH_OTSU) || (threshold_type_value & cv::THRESH_TRIANGLE)) {
-	ret = rb_assoc_new(dst, DBL2NUM(optimal_threshold));
+      try {
+	ret = rb_threshold_internal(self, threshold, max_value, threshold_type, self);
       }
-      else {
-	ret = dst;
+      catch (cv::Exception& e) {
+	Error::raise(e);
       }
+
       return ret;
     }
 

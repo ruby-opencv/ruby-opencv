@@ -605,6 +605,68 @@ class TestCvMat < OpenCVTestCase
     # Cv::wait_key
   end
 
+  def test_threshold_bang
+    m0 = Cv::Mat.zeros(2, 2, Cv::CV_8U)
+    m0[0, 0] = Cv::Scalar.new(10)
+    m0[0, 1] = Cv::Scalar.new(20)
+    m0[1, 0] = Cv::Scalar.new(30)
+    m0[1, 1] = Cv::Scalar.new(40)
+
+    m = m0.clone
+    m.threshold!(25, 255, Cv::THRESH_BINARY)
+    expected = "<Cv::Mat:2x2,depth=0,channels=1,\n[  0,   0;\n 255, 255]>"
+    assert_equal(expected, m.to_s)
+
+    m = m0.clone
+    m.threshold!(25, 255, Cv::THRESH_BINARY_INV)
+    expected = "<Cv::Mat:2x2,depth=0,channels=1,\n[255, 255;\n   0,   0]>"
+    assert_equal(expected, m.to_s)
+
+    m = m0.clone
+    m.threshold!(25, 255, Cv::THRESH_TRUNC)
+    expected = "<Cv::Mat:2x2,depth=0,channels=1,\n[ 10,  20;\n  25,  25]>"
+    assert_equal(expected, m.to_s)
+
+    m = m0.clone
+    m.threshold!(25, 255, Cv::THRESH_TOZERO)
+    expected = "<Cv::Mat:2x2,depth=0,channels=1,\n[  0,   0;\n  30,  40]>"
+    assert_equal(expected, m.to_s)
+
+    m = m0.clone
+    m.threshold!(25, 255, Cv::THRESH_TOZERO_INV)
+    expected = "<Cv::Mat:2x2,depth=0,channels=1,\n[ 10,  20;\n   0,   0]>"
+    assert_equal(expected, m.to_s)
+
+    m = m0.clone
+    _, optimal_threshold = m.threshold!(25, 255, Cv::THRESH_BINARY | Cv::THRESH_OTSU)
+    expected = "<Cv::Mat:2x2,depth=0,channels=1,\n[  0,   0;\n 255, 255]>"
+    assert_equal(expected, m.to_s)
+    assert_in_delta(20, optimal_threshold, 0.1)
+
+    m = m0.clone
+    _, optimal_threshold = m.threshold!(25, 255, Cv::THRESH_BINARY | Cv::THRESH_TRIANGLE)
+    expected = "<Cv::Mat:2x2,depth=0,channels=1,\n[  0, 255;\n 255, 255]>"
+    assert_equal(expected, m.to_s)
+    assert_in_delta(12, optimal_threshold, 0.1)
+
+    assert_raise(TypeError) {
+      m0.threshold!(DUMMY_OBJ, 255, Cv::THRESH_BINARY)
+    }
+    assert_raise(TypeError) {
+      m0.threshold!(25, DUMMY_OBJ, Cv::THRESH_BINARY)
+    }
+    assert_raise(TypeError) {
+      m0.threshold!(25, 255, DUMMY_OBJ)
+    }
+
+    # m0 = Cv::imread(FILENAME_LENA256x256, 0)
+    # m = m0.clone
+    # m.threshold!(127, 255, Cv::THRESH_BINARY)
+    # w = Window.new('Original | Binary')
+    # w.show(Cv::hconcat([m0, m]))
+    # Cv::wait_key
+  end
+
   def test_adaptive_threshold
     m0 = Cv::Mat.new(2, 2, Cv::CV_8U)
     m0[0, 0] = Cv::Scalar.new(10)
