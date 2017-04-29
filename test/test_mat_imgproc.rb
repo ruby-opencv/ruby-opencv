@@ -32,6 +32,44 @@ class TestCvMat < OpenCVTestCase
     }
   end
 
+  def test_cvt_color
+    m = Mat.new(1, 1, CV_32FC3)
+    m[0, 0] = Scalar.new(1.0, 2.0, 3.0)
+    delta = 0.01
+
+    m2 = m.cvt_color(COLOR_BGR2GRAY)
+    assert_in_delta(2.1849999, m2[0, 0][0], delta)
+
+    m2 = m.cvt_color(COLOR_BGR2HSV)
+    [30, 0.66666669, 3].each_with_index { |expected, i|
+      assert_in_delta(expected, m2[0, 0][i], delta, "Failed at m2[0, 0][#{i}]")
+    }
+
+    assert_raise(TypeError) {
+      m.cvt_color(DUMMY_OBJ)
+    }
+  end
+
+  def test_cvt_color_bang
+    m0 = Mat.new(1, 1, CV_32FC3)
+    m0[0, 0] = Scalar.new(1.0, 2.0, 3.0)
+    delta = 0.01
+
+    m = m0.clone
+    m.cvt_color!(COLOR_BGR2GRAY)
+    assert_in_delta(2.1849999, m[0, 0][0], delta)
+
+    m = m0.clone
+    m.cvt_color!(COLOR_BGR2HSV)
+    [30, 0.66666669, 3].each_with_index { |expected, i|
+      assert_in_delta(expected, m[0, 0][i], delta, "Failed at m[0, 0][#{i}]")
+    }
+
+    assert_raise(TypeError) {
+      m.cvt_color!(DUMMY_OBJ)
+    }
+  end
+
   def test_resize_bang
     m0 = Mat.ones(200, 300, CV_8U)
     m = m0.clone

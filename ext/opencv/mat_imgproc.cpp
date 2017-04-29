@@ -180,6 +180,17 @@ namespace rubyopencv {
       return self;
     }
 
+    cv::Mat* rb_cvt_color_internal(int argc, VALUE *argv, VALUE self, cv::Mat* destptr) {
+      VALUE code, dcn;
+      rb_scan_args(argc, argv, "11", &code, &dcn);
+      int dcn_value = NIL_P(dcn) ? 0 : NUM2INT(dcn);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::cvtColor(*selfptr, *destptr, NUM2INT(code), dcn_value);
+
+      return destptr;
+    }
+
     /**
      * Converts an image from one color space to another.
      *
@@ -191,14 +202,9 @@ namespace rubyopencv {
      * @opencv_func cv::cvtColor
      */
     VALUE rb_cvt_color(int argc, VALUE *argv, VALUE self) {
-      VALUE code, dcn;
-      rb_scan_args(argc, argv, "11", &code, &dcn);
-      int dcn_value = NIL_P(dcn) ? 0 : NUM2INT(dcn);
-
       cv::Mat* destptr = new cv::Mat();
-      cv::Mat* selfptr = obj2mat(self);
       try {
-	cv::cvtColor(*selfptr, *destptr, NUM2INT(code), dcn_value);
+	rb_cvt_color_internal(argc, argv, self, destptr);
       }
       catch (cv::Exception& e) {
 	delete destptr;
@@ -206,6 +212,22 @@ namespace rubyopencv {
       }
 
       return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /**
+     * @overload cvt_color!(code, dcn = 0)
+     * @see (#cvt_color)
+     */
+    VALUE rb_cvt_color_bang(int argc, VALUE *argv, VALUE self) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_cvt_color_internal(argc, argv, self, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
     }
 
     cv::Mat* rb_resize_internal(int argc, VALUE *argv, VALUE self, cv::Mat* destptr) {
