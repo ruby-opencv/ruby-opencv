@@ -123,6 +123,21 @@ namespace rubyopencv {
       return self;
     }
 
+    cv::Mat* rb_laplacian_internal(int argc, VALUE *argv, VALUE self, cv::Mat* destptr) {
+      VALUE ddepth, ksize, scale, delta, border_type;
+      rb_scan_args(argc, argv, "14", &ddepth, &ksize, &scale, &delta, &border_type);
+      int ksize_value = NIL_P(ksize) ? 3 : NUM2INT(ksize);
+      double scale_value = NIL_P(scale) ? 1.0 : NUM2DBL(scale);
+      double delta_value = NIL_P(delta) ? 0.0 : NUM2DBL(delta);
+      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
+
+      cv::Mat* selfptr = obj2mat(self);
+      cv::Laplacian(*selfptr, *destptr, NUM2INT(ddepth), ksize_value, scale_value,
+		    delta_value, border_type_value);
+
+      return destptr;
+    }
+
     /*
      * Calculates the Laplacian of an image.
      *
@@ -137,18 +152,9 @@ namespace rubyopencv {
      * @opencv_func cv::Laplacian
      */
     VALUE rb_laplacian(int argc, VALUE *argv, VALUE self) {
-      VALUE ddepth, ksize, scale, delta, border_type;
-      rb_scan_args(argc, argv, "14", &ddepth, &ksize, &scale, &delta, &border_type);
-      int ksize_value = NIL_P(ksize) ? 3 : NUM2INT(ksize);
-      double scale_value = NIL_P(scale) ? 1.0 : NUM2DBL(scale);
-      double delta_value = NIL_P(delta) ? 0.0 : NUM2DBL(delta);
-      int border_type_value = NIL_P(border_type) ? cv::BORDER_DEFAULT : NUM2INT(border_type);
-
-      cv::Mat* selfptr = obj2mat(self);
       cv::Mat* destptr = new cv::Mat();
       try {
-	cv::Laplacian(*selfptr, *destptr, NUM2INT(ddepth), ksize_value, scale_value,
-		      delta_value, border_type_value);
+	rb_laplacian_internal(argc, argv, self, destptr);
       }
       catch (cv::Exception& e) {
 	delete destptr;
@@ -156,6 +162,22 @@ namespace rubyopencv {
       }
 
       return mat2obj(destptr, CLASS_OF(self));
+    }
+
+    /*
+     * @overload laplacian!(ddepth, ksize = 1, scale = 1, delta = 0, border_type = BORDER_DEFAULT)
+     * @see (#laplacian)
+     */
+    VALUE rb_laplacian_bang(int argc, VALUE *argv, VALUE self) {
+      cv::Mat* destptr = obj2mat(self);
+      try {
+	rb_laplacian_internal(argc, argv, self, destptr);
+      }
+      catch (cv::Exception& e) {
+	Error::raise(e);
+      }
+
+      return self;
     }
 
     /**

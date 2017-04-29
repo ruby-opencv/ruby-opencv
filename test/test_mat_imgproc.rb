@@ -216,12 +216,12 @@ class TestCvMat < OpenCVTestCase
     m0 = Cv::imread(FILENAME_LENA256x256, 0)
 
     laplacian = []
-    laplacian << m0.laplacian(CV_32F)
-    laplacian << m0.laplacian(CV_32F, 5, 0.5, 32, BORDER_CONSTANT)
+    laplacian << m0.laplacian(CV_8U)
+    laplacian << m0.laplacian(CV_8U, 5, 0.5, 32, BORDER_CONSTANT)
     laplacian.each { |m|
       assert_equal(m0.rows, m.rows)
       assert_equal(m0.cols, m.cols)
-      assert_equal(CV_32F, m.depth)
+      assert_equal(CV_8U, m.depth)
       assert_equal(m0.dims, m.dims)
       assert_equal(m0.channels, m.channels)
     }
@@ -230,20 +230,58 @@ class TestCvMat < OpenCVTestCase
       m0.laplacian(DUMMY_OBJ, 5, 0.5, 32, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.laplacian(CV_32F, DUMMY_OBJ, 0.5, 32, BORDER_CONSTANT)
+      m0.laplacian(CV_8U, DUMMY_OBJ, 0.5, 32, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.laplacian(CV_32F, 5, DUMMY_OBJ, 32, BORDER_CONSTANT)
+      m0.laplacian(CV_8U, 5, DUMMY_OBJ, 32, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.laplacian(CV_32F, 5, 0.5, DUMMY_OBJ, BORDER_CONSTANT)
+      m0.laplacian(CV_8U, 5, 0.5, DUMMY_OBJ, BORDER_CONSTANT)
     }
     assert_raise(TypeError) {
-      m0.laplacian(CV_32F, 5, 0.5, 32, DUMMY_OBJ)
+      m0.laplacian(CV_8U, 5, 0.5, 32, DUMMY_OBJ)
     }
 
     # w = Window.new('Laplacian')
-    # w.show(m0.laplacian(CV_32F))
+    # w.show(m0.laplacian(CV_8U))
+    # Cv::wait_key
+  end
+
+  def test_laplacian_bang
+    m0 = Cv::imread(FILENAME_LENA256x256, 0)
+    m1 = m0.clone
+    m0.laplacian!(CV_8U)
+    m1.laplacian!(CV_8U, 5, 0.5, 32, BORDER_CONSTANT)
+
+    laplacian = [m0, m1]
+    laplacian.each { |m|
+      assert_equal(m0.rows, m.rows)
+      assert_equal(m0.cols, m.cols)
+      assert_equal(CV_8U, m.depth)
+      assert_equal(m0.dims, m.dims)
+      assert_equal(m0.channels, m.channels)
+    }
+
+    assert_raise(TypeError) {
+      m0.laplacian!(DUMMY_OBJ, 5, 0.5, 32, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.laplacian!(CV_8U, DUMMY_OBJ, 0.5, 32, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.laplacian!(CV_8U, 5, DUMMY_OBJ, 32, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.laplacian!(CV_8U, 5, 0.5, DUMMY_OBJ, BORDER_CONSTANT)
+    }
+    assert_raise(TypeError) {
+      m0.laplacian!(CV_8U, 5, 0.5, 32, DUMMY_OBJ)
+    }
+
+    # w = Window.new('Laplacian')
+    # m0 = Cv::imread(FILENAME_LENA256x256, 0)
+    # m0.laplacian!(CV_8U)
+    # w.show(m0)
     # Cv::wait_key
   end
 
