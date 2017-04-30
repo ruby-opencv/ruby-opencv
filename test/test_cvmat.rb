@@ -217,21 +217,6 @@ class TestCvMat < OpenCVTestCase
     assert_equal(0, CvMat::FIND_CONTOURS_OPTION[:offset].y)
   end
 
-  def test_OPTICAL_FLOW_HS_OPTION
-    assert_in_delta(0.0005, CvMat::OPTICAL_FLOW_HS_OPTION[:lambda], 0.000001)
-    assert_equal(1, CvMat::OPTICAL_FLOW_HS_OPTION[:criteria].max)
-    assert_in_delta(0.001, CvMat::OPTICAL_FLOW_HS_OPTION[:criteria].eps, 0.00001)
-  end
-
-  def test_OPTICAL_FLOW_BM_OPTION
-    assert_equal(4, CvMat::OPTICAL_FLOW_BM_OPTION[:block_size].width)
-    assert_equal(4, CvMat::OPTICAL_FLOW_BM_OPTION[:block_size].height)
-    assert_equal(1, CvMat::OPTICAL_FLOW_BM_OPTION[:shift_size].width)
-    assert_equal(1, CvMat::OPTICAL_FLOW_BM_OPTION[:shift_size].height)
-    assert_equal(4, CvMat::OPTICAL_FLOW_BM_OPTION[:max_range].width)
-    assert_equal(4, CvMat::OPTICAL_FLOW_BM_OPTION[:max_range].height)
-  end
-  
   def test_FIND_FUNDAMENTAL_MAT_OPTION
     assert((not CvMat::FIND_FUNDAMENTAL_MAT_OPTION[:with_status]))
     assert_in_delta(1.0, CvMat::FIND_FUNDAMENTAL_MAT_OPTION[:maximum_distance], 0.01)

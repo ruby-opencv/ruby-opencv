@@ -96,19 +96,6 @@ class TestCvContour < OpenCVTestCase
     assert_equal(65, rect.height)
   end
 
-  def test_create_tree
-    mat0 = create_cvmat(128, 128, :cv8u, 1) { |j, i|
-      (j - 64) ** 2 + (i - 64) ** 2 <= (32 ** 2) ? CvColor::White : CvColor::Black
-    }
-    contour = mat0.find_contours
-    tree = contour.create_tree
-    assert_equal(CvContourTree, tree.class)
-    assert_equal(34, tree.p1.x)
-    assert_equal(53, tree.p1.y)
-    assert_equal(0, tree.p2.x)
-    assert_equal(0, tree.p2.y)
-  end
-
   def test_in
     mat0 = create_cvmat(128, 128, :cv8u, 1) { |j, i|
       (j - 64) ** 2 + (i - 64) ** 2 <= (32 ** 2) ? CvColor::White : CvColor::Black

@@ -9,14 +9,13 @@ include OpenCV
 class TestOpenCV < OpenCVTestCase
   def test_constants
     # OpenCV version
-    assert_equal('2.4.12', CV_VERSION)
-    assert_equal(2, CV_MAJOR_VERSION)
-    assert_equal(4, CV_MINOR_VERSION)
-    assert_equal(12, CV_SUBMINOR_VERSION)
+    assert_equal('3.2.0', CV_VERSION)
+    assert_equal(3, CV_MAJOR_VERSION)
+    assert_equal(2, CV_MINOR_VERSION)
+    assert_equal(0, CV_SUBMINOR_VERSION)
 
-    assert_equal(2, CV_VERSION_EPOCH)
-    assert_equal(4, CV_VERSION_MAJOR)
-    assert_equal(12, CV_VERSION_MINOR)
+    assert_equal(3, CV_VERSION_MAJOR)
+    assert_equal(2, CV_VERSION_MINOR)
     assert_equal(0, CV_VERSION_REVISION)
 
     # Depths
@@ -346,8 +345,6 @@ class TestOpenCV < OpenCVTestCase
 
     img_3ch = IplImage.new(1, 1, :cv8u, 3)
     assert_equal(IplImage, img_3ch.BGR2GRAY.class)
-
-    flunk('FIXME: Most cvtColor functions are not tested yet.')
   end
 
   def test_build_information

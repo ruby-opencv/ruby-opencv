@@ -44,7 +44,7 @@ class TestPointSet < OpenCVTestCase
     angle = [box.angle, 180 - box.angle].min
     assert_in_delta(0, angle, 0.1)
 
-    assert_raise(CvStsBadSize) {
+    assert_raise(CvStsAssert) {
       @contour2.fit_ellipse2
     }
   end
@@ -106,8 +106,7 @@ class TestPointSet < OpenCVTestCase
     assert_in_delta(63.356, size.height, 0.001)
     assert_in_delta(-81.30, box.angle, 1.0)
 
-    flunk('FIXME: Currently PointSet#min_area_rect2 causes segmentation fault when "self" is invalid.')    
-    assert_raise(CvStsBadSize) {
+    assert_raise(CvStsAssert) {
       @contour2.min_area_rect2
     }
   end
@@ -118,9 +117,9 @@ class TestPointSet < OpenCVTestCase
     center = circle.center
     assert_equal(64, center.x.to_i)
     assert_equal(64, center.y.to_i)
-    assert_in_delta(32.959, circle.radius, 0.001)
+    assert_in_delta(32, circle.radius, 0.001)
 
-    assert_raise(CvStsBadSize) {
+    assert_raise(CvStsAssert) {
       @contour2.min_enclosing_circle
     }
   end

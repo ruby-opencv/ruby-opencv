@@ -194,39 +194,4 @@ class TestIplImage < OpenCVTestCase
       should_classify_images_as image, :blank
     end
   end
-
-  def test_pyr_segmentation
-    img0 = IplImage.load(FILENAME_CAT, CV_LOAD_IMAGE_ANYCOLOR | CV_LOAD_IMAGE_ANYDEPTH)
-    img0.set_roi(CvRect.new(0, 0, 256, 512))
-    img1, seq1 = img0.pyr_segmentation(2, 255, 50)
-    assert_equal('963b26f51b14f175fbbf128e9b9e979f', hash_img(img1))
-    assert_equal(11, seq1.total)
-
-    assert_raise(CvStsAssert) {
-      img0.pyr_segmentation(-1, 255, 50)
-    }
-    assert_raise(CvStsAssert) {
-      img0.pyr_segmentation(1000, 255, 50)
-    }
-    assert_raise(CvStsAssert) {
-      img0.pyr_segmentation(4, -1, 50)
-    }
-    assert_raise(CvStsAssert) {
-      img0.pyr_segmentation(4, 255, -1)
-    }
-    assert_raise(TypeError) {
-      img0.pyr_segmentation(DUMMY_OBJ, 255, 50)
-    }
-    assert_raise(TypeError) {
-      img0.pyr_segmentation(4, DUMMY_OBJ, 50)
-    }
-    assert_raise(TypeError) {
-      img0.pyr_segmentation(4, 255, DUMMY_OBJ)
-    }
-    assert_raise(CvBadDepth) {
-      IplImage.new(10, 10, :cv32f, 2).pyr_segmentation(4, 255, 50)
-    }
-  end
 end
-
-
