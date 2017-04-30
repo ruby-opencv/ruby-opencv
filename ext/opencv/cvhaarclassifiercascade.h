@@ -10,30 +10,24 @@
 #ifndef RUBY_OPENCV_CVHAARCLASSIFIERCASCADE_H
 #define RUBY_OPENCV_CVHAARCLASSIFIERCASCADE_H
 
-#define __NAMESPACE_BEGIN_CVHAARCLASSIFERCASCADE namespace cCvHaarClassifierCascade {
-#define __NAMESPACE_END_CVHAARCLASSIFERCASCADE }
+#include <ruby.h>
+#include "opencv2/objdetect.hpp"
 
-#include "opencv.h"
+namespace mOpenCV {
+  namespace cCvHaarClassifierCascade {
+    VALUE rb_class();
+    void init_ruby_class();
+    VALUE rb_allocate(VALUE klass);
+    VALUE rb_load(VALUE klass, VALUE path);
+    VALUE rb_detect_objects(int argc, VALUE *argv, VALUE self);
+  }
 
-__NAMESPACE_BEGIN_OPENCV
-__NAMESPACE_BEGIN_CVHAARCLASSIFERCASCADE
-
-VALUE rb_class();
-
-void init_ruby_class();
-
-VALUE rb_allocate(VALUE klass);
-
-VALUE rb_load(VALUE klass, VALUE path);
-VALUE rb_detect_objects(int argc, VALUE *argv, VALUE self);
-
-__NAMESPACE_END_CVHAARCLASSIFERCASCADE
-inline CvHaarClassifierCascade*
-CVHAARCLASSIFIERCASCADE(VALUE object) {
-  CvHaarClassifierCascade *ptr;
-  Data_Get_Struct(object, CvHaarClassifierCascade, ptr);
-  return ptr;
+  inline CvHaarClassifierCascade*
+    CVHAARCLASSIFIERCASCADE(VALUE object) {
+    CvHaarClassifierCascade *ptr;
+    Data_Get_Struct(object, CvHaarClassifierCascade, ptr);
+    return ptr;
+  }
 }
-__NAMESPACE_END_OPENCV
 
 #endif // RUBY_OPENCV_CVHAARCLASSIFIERCASCADE_H

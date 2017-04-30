@@ -10,25 +10,20 @@
 #ifndef RUBY_OPENCV_CVSEQ_CURVE_H
 #define RUBY_OPENCV_CVSEQ_CURVE_H
 
-#include "opencv.h"
+#include <ruby.h>
 
-#define __NAMESPACE_BEGIN_CURVE namespace mCurve {
-#define __NAMESPACE_END_CURVE }
+namespace mOpenCV {
+  namespace mCurve {
+    VALUE rb_module();
 
-__NAMESPACE_BEGIN_OPENCV
-__NAMESPACE_BEGIN_CURVE
+    void init_ruby_module();
 
-VALUE rb_module();
+    VALUE rb_closed_q(VALUE self);
+    VALUE rb_convex_q(VALUE self);
+    VALUE rb_hole_q(VALUE self);
+    VALUE rb_simple_q(VALUE self);
+    VALUE rb_arc_length(int argc, VALUE *argv, VALUE self);
 
-void init_ruby_module();
-
-VALUE rb_closed_q(VALUE self);
-VALUE rb_convex_q(VALUE self);
-VALUE rb_hole_q(VALUE self);
-VALUE rb_simple_q(VALUE self);
-VALUE rb_arc_length(int argc, VALUE *argv, VALUE self);
-
-__NAMESPACE_END_CURVE
-__NAMESPACE_END_OPENCV
-
+  }
+}
 #endif // RUBY_OPENCV_CVSEQ_CURVE_H

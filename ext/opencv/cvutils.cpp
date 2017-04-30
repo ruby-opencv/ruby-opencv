@@ -7,7 +7,17 @@
   Copyright (C) 2011 ser1zw
 
 ************************************************************/
+#include "opencv2/imgproc/imgproc_c.h"
+
 #include "cvutils.h"
+
+// OpenCV private function
+#define  CV_MALLOC_ALIGN    16
+static inline void* cvAlignPtr( const void* ptr, int align = 32 )
+{
+  CV_DbgAssert ( (align & (align-1)) == 0 );
+  return (void*)( ((size_t)ptr + align - 1) & ~(size_t)(align-1) );
+}
 
 void
 raise_typeerror(VALUE object, VALUE expected_class)

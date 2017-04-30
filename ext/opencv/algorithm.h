@@ -7,10 +7,12 @@
    Copyright (C) 2013 ser1zw
 
 ************************************************************/
+#include "opencv.h"
+
 #ifndef RUBY_OPENCV_ALGORITHM_H
 #define RUBY_OPENCV_ALGORITHM_H
 
-#include "opencv.h"
+#include <ruby.h>
 
 #define __NAMESPACE_BEGIN_ALGORITHM namespace cAlgorithm {
 #define __NAMESPACE_END_ALGORITM }

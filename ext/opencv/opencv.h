@@ -44,13 +44,7 @@ extern "C" {
 #include <st.h>
 #endif
 
-#ifdef HAVE_STDARG_H
 #include <stdarg.h>
-#define va_init_list(a,b) va_start(a,b)
-#else
-#include <varargs.h>
-#define va_init_list(a,b) va_start(a)
-#endif
 }
 
 // standard c headers
@@ -71,81 +65,14 @@ extern "C" {
 #include "opencv2/flann/flann.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
 #include "opencv2/objdetect/objdetect.hpp"
-#include "opencv2/legacy/compat.hpp"
-#include "opencv2/legacy/legacy.hpp"
-#include "opencv2/legacy/blobtrack.hpp"
-#include "opencv2/contrib/contrib.hpp"
 #include "opencv2/highgui/highgui_c.h"
 #include "opencv2/highgui/highgui.hpp"
-#include "opencv2/core/internal.hpp"
-#include "opencv2/photo/photo.hpp"
-
-#ifdef HAVE_ML_H
-#include "opencv2/ml/ml.hpp"
-#endif
 
 #ifdef HAVE_OPENCV2_NONFREE_NONFREE_HPP
 #include "opencv2/nonfree/nonfree.hpp"
 #endif
 
-// Ruby/OpenCV headers
 #include "cvutils.h"
-#include "cverror.h"
-#include "cvpoint.h"
-#include "cvpoint2d32f.h"
-#include "cvsize.h"
-#include "cvsize2d32f.h"
-#include "cvrect.h"
-#include "cvscalar.h"
-#include "cvslice.h"
-#include "cvtermcriteria.h"
-#include "cvbox2d.h"
-#include "cvfont.h"
-#include "iplconvkernel.h"
-#include "cvmoments.h"
-#include "cvhumoments.h"
-#include "cvconvexitydefect.h"
-#include "cvpoint3d32f.h"
-
-#include "cvmemstorage.h"
-
-#include "cvseq.h"
-#include "curve.h"
-#include "pointset.h"
-#include "cvchain.h"
-#include "cvcontour.h"
-#include "cvcontourtree.h"
-
-#include "cvmat.h"
-#include "iplimage.h"
-#include "cvhistogram.h"
-#include "cvcapture.h"
-#include "cvvideowriter.h"
-
-#include "cvline.h"
-#include "cvtwopoints.h"
-#include "cvcircle32f.h"
-
-#include "cvconnectedcomp.h"
-#include "cvavgcomp.h"
-#include "cvhaarclassifiercascade.h"
-
-#include "cvsurfpoint.h"
-#include "cvsurfparams.h"
-
-#include "cvfeaturetree.h"
-
-#include "algorithm.h"
-#include "facerecognizer.h"
-#include "eigenfaces.h"
-#include "fisherfaces.h"
-#include "lbph.h"
-
-// GUI
-#include "gui.h"
-#include "window.h"
-#include "trackbar.h"
-#include "mouseevent.h"
 
 // memory management wrapper
 #define RB_CVALLOC(type) (type*)rb_cvAlloc(sizeof(type))
@@ -204,29 +131,6 @@ void release_iplconvkernel_object(void *ptr);
 VALUE rb_module_opencv();
 void init_ruby_module();
 
-// Ruby/OpenCV inline functions  
-inline CvArr*
-CVARR(VALUE object)
-{
-  CvArr *ptr;
-  Data_Get_Struct(object, CvArr, ptr);
-  return ptr;
-}  
-
-inline CvArr*
-CVARR_WITH_CHECK(VALUE object)
-{
-  Check_Type(object, T_DATA);
-  void *ptr = DATA_PTR(object);
-  if (CV_IS_IMAGE(ptr) || CV_IS_MAT(ptr) || CV_IS_SEQ(ptr) ||
-      CV_IS_MATND(ptr) || CV_IS_SPARSE_MAT(ptr)) {
-    return CVARR(object);
-  }
-  else {
-    raise_compatible_typeerror(object, (char*)"CvArr");
-  }
-  return NULL;
-}  
 
 inline VALUE
 OPENCV_OBJECT(VALUE klass, void *ptr)

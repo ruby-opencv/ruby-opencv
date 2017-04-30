@@ -1,13 +1,11 @@
 #!/usr/bin/env ruby
 
-CC = RbConfig::CONFIG['CC']
-if CC =~ /clang/
-  RbConfig::MAKEFILE_CONFIG['try_header'] = :try_cpp
-  RbConfig::CONFIG['CPP'] = "#{CC} -E"
+if RbConfig::CONFIG['CC'] =~ /gcc|clang/
+  RbConfig::CONFIG['CPP'] = "#{RbConfig::CONFIG["CXX"]} -E"
 elsif RbConfig::CONFIG['arch'] =~ /mswin32/
-  RbConfig::MAKEFILE_CONFIG['try_header'] = :try_cpp
   RbConfig::CONFIG['CPP'] = "#{CC} /P"
 end
+RbConfig::MAKEFILE_CONFIG['try_header'] = :try_cpp
 
 require "mkmf"
 
@@ -23,23 +21,12 @@ def cv_version_suffix(incdir)
   major + minor + subminor
 end
 
-# Quick fix for 2.0.0
-# @libdir_basename is set to nil and dir_config() sets invalid libdir '${opencv-dir}/' when --with-opencv-dir option passed.
-@libdir_basename ||= 'lib'
 incdir, libdir = dir_config("opencv", "/usr/local/include", "/usr/local/lib")
-dir_config("libxml2", "/usr/include", "/usr/lib")
 
-opencv_headers = ["opencv2/core/core_c.h", "opencv2/core/core.hpp", "opencv2/imgproc/imgproc_c.h",
-                  "opencv2/imgproc/imgproc.hpp", "opencv2/video/tracking.hpp", "opencv2/features2d/features2d.hpp",
-                  "opencv2/flann/flann.hpp", "opencv2/calib3d/calib3d.hpp", "opencv2/objdetect/objdetect.hpp",
-                  "opencv2/legacy/compat.hpp", "opencv2/legacy/legacy.hpp", "opencv2/highgui/highgui_c.h",
-                  "opencv2/highgui/highgui.hpp", "opencv2/photo/photo.hpp"]
-opencv_headers_opt = ["opencv2/nonfree/nonfree.hpp"]
-
-opencv_libraries = ["opencv_calib3d", "opencv_contrib", "opencv_core", "opencv_features2d",
-                    "opencv_flann", "opencv_highgui", "opencv_imgproc", "opencv_legacy",
-                    "opencv_ml", "opencv_objdetect", "opencv_video", "opencv_photo"]
-opencv_libraries_opt = ["opencv_gpu", "opencv_nonfree"]
+opencv_headers = ["opencv2/core.hpp", "opencv2/highgui.hpp", "opencv2/imgcodecs.hpp", "opencv2/imgproc.hpp",
+                  "opencv2/objdetect.hpp", "opencv2/videoio.hpp", "opencv2/calib3d.hpp", "opencv2/photo.hpp"]
+opencv_libraries = ["opencv_core", "opencv_highgui", "opencv_imgcodecs", "opencv_imgproc", "opencv_objdetect",
+                    "opencv_videoio", "opencv_calib3d", "opencv_photo"]
 
 puts ">> Check the required libraries..."
 if $mswin or $mingw
@@ -56,22 +43,22 @@ else
 end
 
 opencv_libraries.each { |lib| raise "#{lib} not found." unless have_library(lib) }
-opencv_libraries_opt.each { |lib| warn "#{lib} not found." unless have_library(lib) }
 
 # Check the required headers
 puts ">> Check the required headers..."
-opencv_headers.each { |header| raise "#{header} not found." unless have_header(header) }
-opencv_headers_opt.each { |header| warn "#{header} not found." unless have_header(header) }
-have_header("stdarg.h")
 
-if $warnflags
-  $warnflags.slice!('-Wdeclaration-after-statement')
-  $warnflags.slice!('-Wimplicit-function-declaration')
+# TODO: #77 Check this in some OS/compilers
+with_cflags("-x c++") do
+  opencv_headers.each { |header| raise "#{header} not found." unless have_header(header) }
 end
 
-# Quick fix for 1.8.7
-$CFLAGS << " -I#{File.dirname(__FILE__)}/ext/opencv"
+if $warnflags
+  ['-Wdeclaration-after-statement', '-Wimplicit-function-declaration', '-Wimplicit-int',
+   '-Wno-self-assign', '-Wno-constant-logical-operand', '-Wno-parentheses-equality',
+   '-Wno-tautological-compare'].each { |opt|
+    $warnflags.slice!(opt)
+  }
+end
 
 # Create Makefile
 create_makefile('opencv')
-

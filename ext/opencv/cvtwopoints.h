@@ -10,42 +10,31 @@
 #ifndef RUBY_OPENCV_CVTWOPOINTS_H
 #define RUBY_OPENCV_CVTWOPOINTS_H
 
-#include "opencv.h"
+#include <ruby.h>
+#include "opencv2/imgproc/types_c.h"
 
-#define __NAMESPACE_BEGIN_CVTWOPOINTS namespace cCvTwoPoints {
-#define __NAMESPACE_END_CVTWOPOINTS }
+namespace mOpenCV {
+  typedef struct CvTwoPoints {
+    CvPoint p1;
+    CvPoint p2;
+  } CvTwoPoints;
 
-__NAMESPACE_BEGIN_OPENCV
+  namespace cCvTwoPoints {
+    VALUE rb_class();
+    void init_ruby_class();
+    VALUE rb_allocate(VALUE klass);
+    VALUE rb_point1(VALUE self);
+    VALUE rb_point2(VALUE self);
+    VALUE rb_aref(VALUE self, VALUE index);
+    VALUE rb_to_ary(VALUE self);
+    VALUE new_object(CvTwoPoints twopoints);
+  }
 
-typedef struct CvTwoPoints {
-  CvPoint p1;
-  CvPoint p2;
-} CvTwoPoints;
-
-__NAMESPACE_BEGIN_CVTWOPOINTS
-
-VALUE rb_class();
-
-void init_ruby_class();
-
-VALUE rb_allocate(VALUE klass);
-
-VALUE rb_point1(VALUE self);
-VALUE rb_point2(VALUE self);
-VALUE rb_aref(VALUE self, VALUE index);
-VALUE rb_to_ary(VALUE self);
-
-VALUE new_object(CvTwoPoints twopoints);
-
-__NAMESPACE_END_CVTWOPOINTS
-
-inline CvTwoPoints*
-CVTWOPOINTS(VALUE object) {
-  CvTwoPoints *ptr;
-  Data_Get_Struct(object, CvTwoPoints, ptr);
-  return ptr;
+  inline CvTwoPoints*
+    CVTWOPOINTS(VALUE object) {
+    CvTwoPoints *ptr;
+    Data_Get_Struct(object, CvTwoPoints, ptr);
+    return ptr;
+  }
 }
-
-__NAMESPACE_END_OPENCV
-
 #endif // RUBY_OPENCV_CVTWOPOINTS_H

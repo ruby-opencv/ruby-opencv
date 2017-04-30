@@ -10,30 +10,21 @@
 #ifndef RUBY_OPENCV_AVGCOMP_H
 #define RUBY_OPENCV_AVGCOMP_H
 
-#define __NAMESPACE_BEGIN_AVGCOMP namespace cCvAvgComp {
-#define __NAMESPACE_END_AVGCOMP }
+#include "opencv2/objdetect/objdetect_c.h"
 
-#include <opencv.h>
+namespace mOpenCV {
+  namespace cCvAvgComp {
+    VALUE rb_class();
+    void init_ruby_class();
+    VALUE rb_allocate(VALUE klass);
+    VALUE rb_neighbors(VALUE self);
+  }
 
-__NAMESPACE_BEGIN_OPENCV
-__NAMESPACE_BEGIN_AVGCOMP
-
-VALUE rb_class();
-
-void init_ruby_class();
-
-VALUE rb_allocate(VALUE klass);
-VALUE rb_neighbors(VALUE self);
-
-__NAMESPACE_END_AVGCOMP
-
-inline CvAvgComp *CVAVGCOMP(VALUE object){
-  CvAvgComp *ptr;
-  Data_Get_Struct(object, CvAvgComp, ptr);
-  return ptr;
+  inline CvAvgComp *CVAVGCOMP(VALUE object){
+    CvAvgComp *ptr;
+    Data_Get_Struct(object, CvAvgComp, ptr);
+    return ptr;
+  }
 }
-
-__NAMESPACE_END_OPENCV
-
 
 #endif // RUBY_OPENCV_AVGCOMP_H

@@ -41,7 +41,58 @@
  *   > rdoc
  * and show "./doc/index.html"
  */
+#include "opencv2/photo/photo_c.h"
+
 #include "opencv.h"
+
+// Ruby/OpenCV headers
+#include "cvutils.h"
+#include "cverror.h"
+#include "cvpoint.h"
+#include "cvpoint2d32f.h"
+#include "cvsize.h"
+#include "cvsize2d32f.h"
+#include "cvrect.h"
+#include "cvscalar.h"
+#include "cvslice.h"
+#include "cvtermcriteria.h"
+#include "cvbox2d.h"
+#include "cvfont.h"
+#include "iplconvkernel.h"
+#include "cvmoments.h"
+#include "cvhumoments.h"
+#include "cvconvexitydefect.h"
+#include "cvpoint3d32f.h"
+
+#include "cvmemstorage.h"
+
+#include "cvseq.h"
+#include "curve.h"
+#include "pointset.h"
+#include "cvchain.h"
+#include "cvcontour.h"
+
+#include "cvmat.h"
+#include "iplimage.h"
+#include "cvhistogram.h"
+#include "cvcapture.h"
+#include "cvvideowriter.h"
+
+#include "cvline.h"
+#include "cvtwopoints.h"
+#include "cvcircle32f.h"
+
+#include "cvconnectedcomp.h"
+#include "cvavgcomp.h"
+#include "cvhaarclassifiercascade.h"
+
+#include "algorithm.h"
+
+// GUI
+#include "gui.h"
+#include "window.h"
+#include "trackbar.h"
+#include "mouseevent.h"
 
 __NAMESPACE_BEGIN_OPENCV
 
@@ -166,7 +217,6 @@ init_ruby_module()
   rb_define_const(rb_module, "CV_MINOR_VERSION", INT2FIX(CV_MINOR_VERSION));
   rb_define_const(rb_module, "CV_SUBMINOR_VERSION", INT2FIX(CV_SUBMINOR_VERSION));
 
-  rb_define_const(rb_module, "CV_VERSION_EPOCH", INT2FIX(CV_VERSION_EPOCH));
   rb_define_const(rb_module, "CV_VERSION_MAJOR", INT2FIX(CV_VERSION_MAJOR));
   rb_define_const(rb_module, "CV_VERSION_MINOR", INT2FIX(CV_VERSION_MINOR));
   rb_define_const(rb_module, "CV_VERSION_REVISION", INT2FIX(CV_VERSION_REVISION));
@@ -767,9 +817,6 @@ extern "C" {
     mOpenCV::cCvHuMoments::init_ruby_class();
     mOpenCV::cCvConvexityDefect::init_ruby_class();
 
-    mOpenCV::cCvSURFPoint::init_ruby_class();
-    mOpenCV::cCvSURFParams::init_ruby_class();
-    
     mOpenCV::cCvMemStorage::init_ruby_class();
 
     mOpenCV::cCvSeq::init_ruby_class();
@@ -777,7 +824,6 @@ extern "C" {
     mOpenCV::mPointSet::init_ruby_module();
     mOpenCV::cCvChain::init_ruby_class();
     mOpenCV::cCvContour::init_ruby_class();
-    mOpenCV::cCvContourTree::init_ruby_class();
 
     mOpenCV::cCvMat::init_ruby_class();
     mOpenCV::cIplImage::init_ruby_class();
@@ -789,17 +835,11 @@ extern "C" {
     mOpenCV::cCvTwoPoints::init_ruby_class();
     mOpenCV::cCvCircle32f::init_ruby_class();
 
-    mOpenCV::cCvFeatureTree::init_ruby_class();
-
     mOpenCV::cCvConnectedComp::init_ruby_class();
     mOpenCV::cCvAvgComp::init_ruby_class();
     mOpenCV::cCvHaarClassifierCascade::init_ruby_class();
 
     mOpenCV::cAlgorithm::init_ruby_class();
-    mOpenCV::cFaceRecognizer::init_ruby_class();
-    mOpenCV::cEigenFaces::init_ruby_class();
-    mOpenCV::cFisherFaces::init_ruby_class();
-    mOpenCV::cLBPH::init_ruby_class();
 
     mOpenCV::mGUI::init_ruby_module();
     mOpenCV::mGUI::cWindow::init_ruby_class();

@@ -10,19 +10,15 @@
 #ifndef RUBY_OPENCV_CVERROR_H
 #define RUBY_OPENCV_CVERROR_H
 
-#include "opencv.h"
+#include <ruby.h>
+#include "opencv2/core/core.hpp"
 
-#define __NAMESPACE_BEGIN_CVERROR namespace cCvError {
-#define __NAMESPACE_END_CVERROR }
+namespace mOpenCV {
+  namespace cCvError {
+    void init_ruby_class();
+    VALUE by_code(int error_code);
+    void raise(cv::Exception e);
+  }
+}
 
-__NAMESPACE_BEGIN_OPENCV
-__NAMESPACE_BEGIN_CVERROR
-
-void init_ruby_class();
-VALUE by_code(int error_code);
-void raise(cv::Exception e);
-
-__NAMESPACE_END_CVERROR
-__NAMESPACE_END_OPENCV
-
-#endif // RUBY_OPENCV_CVERROR_H
+#endif

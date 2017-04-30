@@ -7,13 +7,13 @@
     Copyright (C) 2011 ser1zw
 
 ************************************************************/
+#ifndef RUBY_OPENCV_CVUTILS_H
+#define RUBY_OPENCV_CVUTILS_H
 
 #include <ruby.h>
 #include "opencv2/core/core_c.h"
 #include "opencv2/core/core.hpp"
-#include "opencv2/core/internal.hpp"
-#include "opencv2/imgproc/imgproc_c.h"
-#include "opencv2/imgproc/imgproc.hpp"
+#include "cverror.h"
 
 #define raise_cverror(e) cCvError::raise(e)
 
@@ -28,3 +28,28 @@ IplConvKernel* rb_cvCreateStructuringElementEx(int cols, int rows, int anchorX, 
 CvMemStorage* rb_cvCreateMemStorage(int block_size);
 VALUE rb_get_option_table(VALUE klass, const char* table_name, VALUE option);
 
+// Ruby/OpenCV inline functions  
+inline CvArr*
+CVARR(VALUE object)
+{
+  CvArr *ptr;
+  Data_Get_Struct(object, CvArr, ptr);
+  return ptr;
+}  
+
+inline CvArr*
+CVARR_WITH_CHECK(VALUE object)
+{
+  Check_Type(object, T_DATA);
+  void *ptr = DATA_PTR(object);
+  if (CV_IS_IMAGE(ptr) || CV_IS_MAT(ptr) || CV_IS_SEQ(ptr) ||
+      CV_IS_MATND(ptr) || CV_IS_SPARSE_MAT(ptr)) {
+    return CVARR(object);
+  }
+  else {
+    raise_compatible_typeerror(object, (char*)"CvArr");
+  }
+  return NULL;
+}  
+
+#endif // RUBY_OPENCV_CVUTILS_H
