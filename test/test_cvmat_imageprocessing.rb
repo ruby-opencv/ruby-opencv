@@ -1541,7 +1541,8 @@ class TestCvMat_imageprocessing < OpenCVTestCase
     assert_raise(ArgumentError) {
       mat.hough_lines(:dummy, 1, Math::PI / 180, 40, 2, DUMMY_OBJ)
     }
-    assert_raise(CvStsAssert) {
+    ex = IS_OPENCV2 ? CvStsBadArg : CvStsAssert
+    assert_raise(ex) {
       CvMat.new(10, 10, :cv32f, 3).hough_lines(:standard, 1, Math::PI / 180, 65)
     }
   end

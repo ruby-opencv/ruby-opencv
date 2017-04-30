@@ -10,7 +10,11 @@
 #ifndef RUBY_OPENCV_AVGCOMP_H
 #define RUBY_OPENCV_AVGCOMP_H
 
-#include "opencv2/objdetect/objdetect_c.h"
+#ifdef IS_OPENCV2
+#  include "opencv2/objdetect/objdetect.hpp"
+#else
+#  include "opencv2/objdetect/objdetect_c.h"
+#endif
 
 namespace mOpenCV {
   namespace cCvAvgComp {

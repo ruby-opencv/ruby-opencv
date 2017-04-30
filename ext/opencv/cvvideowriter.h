@@ -11,7 +11,11 @@
 #define RUBY_OPENCV_CVVIDEOWRITER_H
 
 #include <ruby.h>
-#include "opencv2/videoio/videoio_c.h"
+#ifdef IS_OPENCV2
+#  include "opencv2/highgui/highgui_c.h"
+#else
+#  include "opencv2/videoio/videoio_c.h"
+#endif
 
 namespace mOpenCV {
   namespace cCvVideoWriter {

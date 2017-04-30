@@ -9,14 +9,14 @@ include OpenCV
 class TestOpenCV < OpenCVTestCase
   def test_constants
     # OpenCV version
-    assert_equal('3.2.0', CV_VERSION)
-    assert_equal(3, CV_MAJOR_VERSION)
-    assert_equal(2, CV_MINOR_VERSION)
-    assert_equal(0, CV_SUBMINOR_VERSION)
+    assert(CV_VERSION =~ /\A\d+\.\d+\.\d+/)
+    assert(CV_MAJOR_VERSION.is_a? Integer)
+    assert(CV_MINOR_VERSION.is_a? Integer)
+    assert(CV_SUBMINOR_VERSION.is_a? Integer)
 
-    assert_equal(3, CV_VERSION_MAJOR)
-    assert_equal(2, CV_VERSION_MINOR)
-    assert_equal(0, CV_VERSION_REVISION)
+    assert(CV_VERSION_MAJOR.is_a? Integer)
+    assert(CV_VERSION_MINOR.is_a? Integer)
+    assert(CV_VERSION_REVISION.is_a? Integer)
 
     # Depths
     assert_equal(0, CV_8U)

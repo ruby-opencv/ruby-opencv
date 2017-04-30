@@ -42,6 +42,9 @@
  * and show "./doc/index.html"
  */
 #include "opencv2/photo/photo_c.h"
+#ifdef IS_OPENCV2
+#  include "opencv2/contrib/contrib.hpp"
+#endif
 
 #include "opencv.h"
 

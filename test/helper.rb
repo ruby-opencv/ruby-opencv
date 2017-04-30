@@ -20,6 +20,8 @@ class OpenCVTestCase < Test::Unit::TestCase
 
   DUMMY_OBJ = Digest::MD5.new # dummy object for argument type check test
 
+  IS_OPENCV2 = (CV_VERSION =~ /\A2\./)
+
   def snap(*images)
     n = -1
     images.map! { |val|

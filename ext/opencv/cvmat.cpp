@@ -11,8 +11,13 @@
 #include "opencv2/calib3d/calib3d.hpp"
 
 #include "opencv2/photo/photo_c.h"
-#include "opencv2/video/tracking_c.h"
-#include "opencv2/calib3d/calib3d_c.h"
+
+#ifdef IS_OPENCV2
+#  include "opencv2/contrib/contrib.hpp"
+#else
+#  include "opencv2/video/tracking_c.h"
+#  include "opencv2/calib3d/calib3d_c.h"
+#endif
 
 #include "cvmat.h"
 #include "opencv.h"
@@ -4636,7 +4641,7 @@ namespace mOpenCV {
       VALUE dest = Qnil;
       try {
 	CvSize original_size = cvGetSize(self_ptr);
-	CvSize size(original_size.width >> 1, original_size.height >> 1);
+	CvSize size = cvSize(original_size.width >> 1, original_size.height >> 1);
 	dest = new_mat_kind_object(size, self);
 	cvPyrDown(self_ptr, CVARR(dest), filter);
       }
@@ -4678,7 +4683,7 @@ namespace mOpenCV {
       VALUE dest = Qnil;
       try {
 	CvSize original_size = cvGetSize(self_ptr);
-	CvSize size(original_size.width << 1, original_size.height << 1);
+	CvSize size = cvSize(original_size.width << 1, original_size.height << 1);
 	dest = new_mat_kind_object(size, self);
 	cvPyrUp(self_ptr, CVARR(dest), filter);
       }
@@ -5454,7 +5459,11 @@ namespace mOpenCV {
 	cv::Mat w_mat = cv::cvarrToMat(CVMAT_WITH_CHECK(w));
 	cv::Mat mean_mat = cv::cvarrToMat(CVMAT_WITH_CHECK(mean));
 	cv::Mat self_mat = cv::cvarrToMat(CVMAT(self));
+#ifdef IS_OPENCV2
+	cv::Mat pmat = cv::subspaceProject(w_mat, mean_mat, self_mat);
+#else
 	cv::Mat pmat = cv::LDA::subspaceProject(w_mat, mean_mat, self_mat);
+#endif
 	projection = new_object(pmat.rows, pmat.cols, pmat.type());
 	CvMat tmp = pmat;
 	cvCopy(&tmp, CVMAT(projection));
@@ -5478,7 +5487,11 @@ namespace mOpenCV {
 	cv::Mat w_mat = cv::cvarrToMat(CVMAT_WITH_CHECK(w));
 	cv::Mat mean_mat = cv::cvarrToMat(CVMAT_WITH_CHECK(mean));
 	cv::Mat self_mat = cv::cvarrToMat(CVMAT(self));
+#ifdef IS_OPENCV2
+	cv::Mat rmat = cv::subspaceReconstruct(w_mat, mean_mat, self_mat);
+#else
 	cv::Mat rmat = cv::LDA::subspaceReconstruct(w_mat, mean_mat, self_mat);
+#endif
 	result = new_object(rmat.rows, rmat.cols, rmat.type());
 	CvMat tmp = rmat;
 	cvCopy(&tmp, CVMAT(result));

@@ -34,7 +34,11 @@ rb_name(VALUE self)
 {
   VALUE name = Qnil;
   try {
+#ifdef IS_OPENCV2
+    name = rb_str_new_cstr(ALGORITHM(self)->name().c_str());
+#else
     name = rb_str_new_cstr(ALGORITHM(self)->getDefaultName().c_str());
+#endif
   }
   catch (cv::Exception& e) {
     raise_cverror(e);

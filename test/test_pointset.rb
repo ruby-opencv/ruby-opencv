@@ -44,7 +44,8 @@ class TestPointSet < OpenCVTestCase
     angle = [box.angle, 180 - box.angle].min
     assert_in_delta(0, angle, 0.1)
 
-    assert_raise(CvStsAssert) {
+    ex = IS_OPENCV2 ? CvStsBadSize : CvStsAssert
+    assert_raise(ex) {
       @contour2.fit_ellipse2
     }
   end
@@ -106,9 +107,11 @@ class TestPointSet < OpenCVTestCase
     assert_in_delta(63.356, size.height, 0.001)
     assert_in_delta(-81.30, box.angle, 1.0)
 
-    assert_raise(CvStsAssert) {
-      @contour2.min_area_rect2
-    }
+    unless IS_OPENCV2
+      assert_raise(CvStsAssert) {
+        @contour2.min_area_rect2
+      }
+    end
   end
 
   def test_min_enclosing_circle

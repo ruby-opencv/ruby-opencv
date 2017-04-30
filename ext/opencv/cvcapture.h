@@ -11,7 +11,12 @@
 #define RUBY_OPENCV_CVCAPTURE_H
 
 #include <ruby.h>
-#include "opencv2/videoio/videoio_c.h"
+#ifdef IS_OPENCV2
+#  include "opencv2/highgui/highgui_c.h"
+#else
+#  include "opencv2/videoio/videoio_c.h"
+#endif
+
 #include "cvutils.h"
 
 namespace mOpenCV {
