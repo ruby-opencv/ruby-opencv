@@ -175,11 +175,20 @@ namespace mOpenCV {
       return object;
     }
 #else
-    VALUE rb_initialize(int argc, VALUE *argv, VALUE self)
+    VALUE
+    rb_allocate(VALUE klass)
     {
-      raise_opencv3_unsupported();
       return Qnil;
     }
+#  define rb_initialize raise_opencv3_unsupported_1
+#  define rb_get_hessian_threshold raise_opencv3_unsupported_n
+#  define rb_set_hessian_threshold raise_opencv3_unsupported_n
+#  define rb_get_extended raise_opencv3_unsupported_n
+#  define rb_set_extended raise_opencv3_unsupported_n
+#  define rb_get_n_octaves raise_opencv3_unsupported_n
+#  define rb_set_n_octaves raise_opencv3_unsupported_n
+#  define rb_get_n_octave_layers raise_opencv3_unsupported_n
+#  define rb_set_n_octave_layers raise_opencv3_unsupported_n
 #endif
 
     void
@@ -199,10 +208,8 @@ namespace mOpenCV {
        */
       VALUE opencv = rb_module_opencv();
       rb_klass = rb_define_class_under(opencv, "CvSURFParams", rb_cObject);
-      rb_define_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), -1);
-
-#ifdef IS_OPENCV2
       rb_define_alloc_func(rb_klass, rb_allocate);
+      rb_define_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), -1);
       rb_define_method(rb_klass, "hessian_threshold", RUBY_METHOD_FUNC(rb_get_hessian_threshold), 0);
       rb_define_method(rb_klass, "hessian_threshold=", RUBY_METHOD_FUNC(rb_set_hessian_threshold), 1);
       rb_define_method(rb_klass, "extended", RUBY_METHOD_FUNC(rb_get_extended), 0);
@@ -211,7 +218,6 @@ namespace mOpenCV {
       rb_define_method(rb_klass, "n_octaves=", RUBY_METHOD_FUNC(rb_set_n_octaves), 1);
       rb_define_method(rb_klass, "n_octave_layers", RUBY_METHOD_FUNC(rb_get_n_octave_layers), 0);
       rb_define_method(rb_klass, "n_octave_layers=", RUBY_METHOD_FUNC(rb_set_n_octave_layers), 1);
-#endif
     }
   }
 }

@@ -28,6 +28,7 @@
  */
 namespace mOpenCV {
   namespace cCvSURFPoint {
+
     VALUE rb_klass;
 
     VALUE
@@ -213,11 +214,21 @@ namespace mOpenCV {
     }
 #else
     VALUE
-    rb_initialize(VALUE self, VALUE pt, VALUE laplacian, VALUE size, VALUE dir, VALUE hessian)
+    rb_allocate(VALUE klass)
     {
-      raise_opencv3_unsupported();
       return Qnil;
     }
+#  define rb_initialize raise_opencv3_unsupported_1
+#  define rb_get_pt raise_opencv3_unsupported_n
+#  define rb_set_pt raise_opencv3_unsupported_n
+#  define rb_get_laplacian raise_opencv3_unsupported_n
+#  define rb_set_laplacian raise_opencv3_unsupported_n
+#  define rb_get_size raise_opencv3_unsupported_n
+#  define rb_set_size raise_opencv3_unsupported_n
+#  define rb_get_dir raise_opencv3_unsupported_n
+#  define rb_set_dir raise_opencv3_unsupported_n
+#  define rb_get_hessian raise_opencv3_unsupported_n
+#  define rb_set_hessian raise_opencv3_unsupported_n
 #endif
 
     void
@@ -237,10 +248,8 @@ namespace mOpenCV {
        */
       VALUE opencv = rb_module_opencv();
       rb_klass = rb_define_class_under(opencv, "CvSURFPoint", rb_cObject);
-      rb_define_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), 5);
-
-#ifdef IS_OPENCV2
       rb_define_alloc_func(rb_klass, rb_allocate);
+      rb_define_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), 5);
       rb_define_method(rb_klass, "pt", RUBY_METHOD_FUNC(rb_get_pt), 0);
       rb_define_method(rb_klass, "pt=", RUBY_METHOD_FUNC(rb_set_pt), 1);
       rb_define_method(rb_klass, "laplacian", RUBY_METHOD_FUNC(rb_get_laplacian), 0);
@@ -251,7 +260,6 @@ namespace mOpenCV {
       rb_define_method(rb_klass, "dir=", RUBY_METHOD_FUNC(rb_set_dir), 1);
       rb_define_method(rb_klass, "hessian", RUBY_METHOD_FUNC(rb_get_hessian), 0);
       rb_define_method(rb_klass, "hessian=", RUBY_METHOD_FUNC(rb_set_hessian), 1);
-#endif
     }
   }
 }
