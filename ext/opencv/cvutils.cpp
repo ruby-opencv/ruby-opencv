@@ -200,3 +200,8 @@ rb_get_option_table(VALUE klass, const char* table_name, VALUE option)
     return rb_funcall(table, rb_intern("merge"), 1, option);
 }
 
+void
+raise_opencv3_unsupported()
+{
+  rb_raise(rb_eNotImpError, "cannot use this function with OpenCV 3 or later.");
+}

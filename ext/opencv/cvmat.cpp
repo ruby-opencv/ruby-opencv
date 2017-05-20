@@ -43,6 +43,11 @@
 #include "cvfont.h"
 #include "pointset.h"
 
+#ifdef IS_OPENCV2
+#  include "cvsurfparams.h"
+#  include "cvsurfpoint.h"
+#endif
+
 /*
  * Document-class: OpenCV::CvMat
  *
@@ -5547,6 +5552,60 @@ namespace mOpenCV {
       return Qnil;
     }
 
+    /*
+     * Extracts Speeded Up Robust Features from an image
+     *
+     * @overload extract_surf(params, mask = nil) -> [cvseq(cvsurfpoint), array(float)]
+     *   @param params [CvSURFParams] Various algorithm parameters put to the structure CvSURFParams.
+     *   @param mask [CvMat] The optional input 8-bit mask. The features are only found
+     *     in the areas that contain more than 50% of non-zero mask pixels.
+     * @return [Array<CvSeq<CvSURFPoint>, Array<float>>] Output vector of keypoints and descriptors.
+     * @opencv_func cvExtractSURF
+     */
+    VALUE
+    rb_extract_surf(int argc, VALUE *argv, VALUE self)
+    {
+#ifdef IS_OPENCV2
+      VALUE _params, _mask;
+      rb_scan_args(argc, argv, "11", &_params, &_mask);
+
+      // Prepare arguments
+      CvSURFParams params = *CVSURFPARAMS_WITH_CHECK(_params);
+      CvMat* mask = MASK(_mask);
+      VALUE storage = cCvMemStorage::new_object();
+      CvSeq* keypoints = NULL;
+      CvSeq* descriptors = NULL;
+
+      // Compute SURF keypoints and descriptors
+      try {
+	cvExtractSURF(CVARR(self), mask, &keypoints, &descriptors, CVMEMSTORAGE(storage),
+		      params, 0);
+      }
+      catch (cv::Exception& e) {
+	raise_cverror(e);
+      }
+      VALUE _keypoints = cCvSeq::new_sequence(cCvSeq::rb_class(), keypoints, cCvSURFPoint::rb_class(), storage);
+
+      // Create descriptor array
+      const int DIM_SIZE = (params.extended) ? 128 : 64;
+      const int NUM_KEYPOINTS = keypoints->total;
+      VALUE _descriptors = rb_ary_new2(NUM_KEYPOINTS);
+      for (int m = 0; m < NUM_KEYPOINTS; ++m) {
+	VALUE elem = rb_ary_new2(DIM_SIZE);
+	float *descriptor = (float*)cvGetSeqElem(descriptors, m);
+	for (int n = 0; n < DIM_SIZE; ++n) {
+	  rb_ary_store(elem, n, rb_float_new(descriptor[n]));
+	}
+	rb_ary_store(_descriptors, m, elem);
+      }
+
+      return rb_assoc_new(_keypoints, _descriptors);
+#else
+      raise_opencv3_unsupported();
+      return Qnil;
+#endif
+    }
+
     void
     init_ruby_class()
     {
@@ -5808,6 +5867,8 @@ namespace mOpenCV {
 				 RUBY_METHOD_FUNC(rb_find_fundamental_mat), -1);
       rb_define_singleton_method(rb_klass, "compute_correspond_epilines",
 				 RUBY_METHOD_FUNC(rb_compute_correspond_epilines), 3);
+
+      rb_define_method(rb_klass, "extract_surf", RUBY_METHOD_FUNC(rb_extract_surf), -1);
 
       rb_define_method(rb_klass, "subspace_project", RUBY_METHOD_FUNC(rb_subspace_project), 2);
       rb_define_method(rb_klass, "subspace_reconstruct", RUBY_METHOD_FUNC(rb_subspace_reconstruct), 2);

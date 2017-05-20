@@ -28,6 +28,8 @@ IplConvKernel* rb_cvCreateStructuringElementEx(int cols, int rows, int anchorX, 
 CvMemStorage* rb_cvCreateMemStorage(int block_size);
 VALUE rb_get_option_table(VALUE klass, const char* table_name, VALUE option);
 
+void raise_opencv3_unsupported();
+
 // Ruby/OpenCV inline functions  
 inline CvArr*
 CVARR(VALUE object)

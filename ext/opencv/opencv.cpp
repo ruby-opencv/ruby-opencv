@@ -97,6 +97,10 @@
 #include "trackbar.h"
 #include "mouseevent.h"
 
+// Only for OpenCV 2
+#include "cvsurfparams.h"
+#include "cvsurfpoint.h"
+
 __NAMESPACE_BEGIN_OPENCV
 
 
@@ -848,6 +852,10 @@ extern "C" {
     mOpenCV::mGUI::cWindow::init_ruby_class();
     mOpenCV::mGUI::cTrackbar::init_ruby_class();
     mOpenCV::mGUI::cMouseEvent::init_ruby_class();
+
+    // Only for OpenCV 2
+    mOpenCV::cCvSURFPoint::init_ruby_class();
+    mOpenCV::cCvSURFParams::init_ruby_class();
 
 #ifdef HAVE_ML_H
     /* feature support.
