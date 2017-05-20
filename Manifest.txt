@@ -55,14 +55,10 @@ ext/opencv/cvconnectedcomp.cpp
 ext/opencv/cvconnectedcomp.h
 ext/opencv/cvcontour.cpp
 ext/opencv/cvcontour.h
-ext/opencv/cvcontourtree.cpp
-ext/opencv/cvcontourtree.h
 ext/opencv/cvconvexitydefect.cpp
 ext/opencv/cvconvexitydefect.h
 ext/opencv/cverror.cpp
 ext/opencv/cverror.h
-ext/opencv/cvfeaturetree.cpp
-ext/opencv/cvfeaturetree.h
 ext/opencv/cvfont.cpp
 ext/opencv/cvfont.h
 ext/opencv/cvhaarclassifiercascade.cpp
@@ -137,6 +133,7 @@ ext/opencv/window.h
 images/CvMat_sobel.png
 images/CvMat_sub_rect.png
 images/CvSeq_relationmap.png
+install-ruby-opencv-with-rubyinstaller-on-windows.md
 lib/opencv.rb
 lib/opencv/psyched_yaml.rb
 lib/opencv/version.rb
@@ -198,9 +195,7 @@ test/test_cvchain.rb
 test/test_cvcircle32f.rb
 test/test_cvconnectedcomp.rb
 test/test_cvcontour.rb
-test/test_cvcontourtree.rb
 test/test_cverror.rb
-test/test_cvfeaturetree.rb
 test/test_cvfont.rb
 test/test_cvhaarclassifiercascade.rb
 test/test_cvhistogram.rb
