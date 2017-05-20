@@ -81,6 +81,7 @@ if $warnflags
    '-Wno-tautological-compare'].each { |opt|
     $warnflags.slice!(opt)
   }
+  $warnflags.gsub!(/-Wsuggest-attribute=[^\s]+/, '')
 end
 
 # Create Makefile

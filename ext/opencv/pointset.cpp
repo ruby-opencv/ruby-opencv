@@ -253,7 +253,7 @@ namespace mOpenCV {
   VALUE_TO_POINT_SET(VALUE object)
   {
     CvSeq *seq = 0;
-    VALUE tmp, storage;
+    VALUE storage;
     int length;
     CvPoint2D32f p32;
     if (rb_obj_is_kind_of(object, cCvSeq::rb_class())) {
@@ -274,12 +274,12 @@ namespace mOpenCV {
       length = RARRAY_LEN(object);
       storage = cCvMemStorage::new_object();
       seq = cvCreateSeq(CV_SEQ_POINT_SET, sizeof(CvSeq), sizeof(CvPoint), CVMEMSTORAGE(storage));    
-      for (int i = 0; i < RARRAY_LEN(object); i++) {
+      for (int i = 0; i < length; i++) {
 	p32.x = NUM2DBL(rb_funcall(rb_ary_entry(object, i), rb_intern("x"), 0));
 	p32.y = NUM2DBL(rb_funcall(rb_ary_entry(object, i), rb_intern("y"), 0));
 	cvSeqPush(seq, &p32);
       }
-      tmp = cCvSeq::new_sequence(cCvSeq::rb_class(), seq, cCvPoint2D32f::rb_class(), storage);
+      cCvSeq::new_sequence(cCvSeq::rb_class(), seq, cCvPoint2D32f::rb_class(), storage);
       return seq;
     }
     else {

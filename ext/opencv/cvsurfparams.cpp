@@ -171,7 +171,7 @@ namespace mOpenCV {
     {
       VALUE object = rb_allocate(rb_klass);
       CvSURFParams *ptr = CVSURFPARAMS(object);
-      ptr = cvsurfparams;
+      *ptr = *cvsurfparams;
       return object;
     }
 #else

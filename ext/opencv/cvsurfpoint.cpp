@@ -209,7 +209,7 @@ namespace mOpenCV {
     {
       VALUE object = rb_allocate(rb_klass);
       CvSURFPoint *ptr = CVSURFPOINT(object);
-      ptr = cvsurfpoint;
+      *ptr = *cvsurfpoint;
       return object;
     }
 #else
