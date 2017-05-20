@@ -243,16 +243,17 @@ namespace mOpenCV {
       try {
 	switch (num_idx) {
 	case 1:
-	  value = (float)cvGetReal1D(self_ptr, idx[0]);
+	  // FIXME: cvQueryHistValue_*D are deprecated in OpenCV 3.
+	  value = (float)cvGetReal1D(self_ptr->bins, idx[0]);
 	  break;
 	case 2:
-	  value = (float)cvGetReal2D(self_ptr, idx[0], idx[1]);
+	  value = (float)cvGetReal2D(self_ptr->bins, idx[0], idx[1]);
 	  break;
 	case 3:
-	  value = (float)cvGetReal3D(self_ptr, idx[0], idx[1], idx[2]);
+	  value = (float)cvGetReal3D(self_ptr->bins, idx[0], idx[1], idx[2]);
 	  break;
 	default:
-	  value = (float)cvGetRealND(self_ptr, idx);
+	  value = (float)cvGetRealND(self_ptr->bins, idx);
 	  break;
 	}
       }
