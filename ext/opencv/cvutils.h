@@ -29,6 +29,8 @@ CvMemStorage* rb_cvCreateMemStorage(int block_size);
 VALUE rb_get_option_table(VALUE klass, const char* table_name, VALUE option);
 
 void raise_opencv3_unsupported();
+VALUE raise_opencv3_unsupported_n(VALUE, ...);
+VALUE raise_opencv3_unsupported_1(int, VALUE*, VALUE);
 
 // Ruby/OpenCV inline functions  
 inline CvArr*

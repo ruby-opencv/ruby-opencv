@@ -205,3 +205,15 @@ raise_opencv3_unsupported()
 {
   rb_raise(rb_eNotImpError, "cannot use this function with OpenCV 3 or later.");
 }
+
+VALUE raise_opencv3_unsupported_n(VALUE, ...)
+{
+  raise_opencv3_unsupported();
+  return Qnil;
+}
+
+VALUE raise_opencv3_unsupported_1(int, VALUE*, VALUE)
+{
+  raise_opencv3_unsupported();
+  return Qnil;
+}

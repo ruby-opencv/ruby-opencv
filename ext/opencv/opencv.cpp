@@ -101,6 +101,11 @@
 #include "cvsurfparams.h"
 #include "cvsurfpoint.h"
 
+#include "facerecognizer.h"
+#include "eigenfaces.h"
+#include "fisherfaces.h"
+#include "lbph.h"
+
 __NAMESPACE_BEGIN_OPENCV
 
 
@@ -856,6 +861,11 @@ extern "C" {
     // Only for OpenCV 2
     mOpenCV::cCvSURFPoint::init_ruby_class();
     mOpenCV::cCvSURFParams::init_ruby_class();
+
+    mOpenCV::cFaceRecognizer::init_ruby_class();
+    mOpenCV::cEigenFaces::init_ruby_class();
+    mOpenCV::cFisherFaces::init_ruby_class();
+    mOpenCV::cLBPH::init_ruby_class();
 
 #ifdef HAVE_ML_H
     /* feature support.
