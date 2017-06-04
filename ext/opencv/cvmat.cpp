@@ -14,6 +14,7 @@
 
 #ifdef IS_OPENCV2
 #  include "opencv2/contrib/contrib.hpp"
+#  include "opencv2/legacy/legacy.hpp"
 #else
 #  include "opencv2/video/tracking_c.h"
 #  include "opencv2/calib3d/calib3d_c.h"
@@ -5606,6 +5607,95 @@ namespace mOpenCV {
 #endif
     }
 
+    /*
+     * call-seq:
+     *   snake_image(points, alpha, beta, gamma, window, criteria[, calc_gradient = true]) -> array(pointset)
+     *
+     * Updates snake in order to minimize its total energy that is a sum of internal energy
+     * that depends on contour shape (the smoother contour is, the smaller internal energy is)
+     * and external energy that depends on the energy field and reaches minimum at the local energy
+     * extremums that correspond to the image edges in case of image gradient.
+
+     * The parameter criteria.epsilon is used to define the minimal number of points that must be moved
+     * during any iteration to keep the iteration process running.
+     *
+     * If at some iteration the number of moved points is less than criteria.epsilon or
+     * the function performed criteria.max_iter iterations, the function terminates.
+     *
+     * points
+     *   Contour points (snake).
+     * alpha
+     *   Weight[s] of continuity energy, single float or array of length floats, one per each contour point.
+     * beta
+     *   Weight[s] of curvature energy, similar to alpha.
+     * gamma
+     *   Weight[s] of image energy, similar to alpha.
+     * window
+     *   Size of neighborhood of every point used to search the minimum, both win.width and win.height must be odd.
+     * criteria
+     *  Termination criteria.
+     * calc_gradient
+     *  Gradient flag. If not 0, the function calculates gradient magnitude for every image pixel and consideres
+     *  it as the energy field, otherwise the input image itself is considered.
+     */
+    VALUE
+    rb_snake_image(int argc, VALUE *argv, VALUE self)
+    {
+#ifdef IS_OPENCV2
+      VALUE points, alpha, beta, gamma, window, criteria, calc_gradient;
+      rb_scan_args(argc, argv, "61", &points, &alpha, &beta, &gamma, &window, &criteria, &calc_gradient);
+      CvPoint *pointset = 0;
+      int length = CVPOINTS_FROM_POINT_SET(points, &pointset);
+      int coeff = (TYPE(alpha) == T_ARRAY && TYPE(beta) == T_ARRAY && TYPE(gamma) == T_ARRAY) ? CV_ARRAY : CV_VALUE;
+      float *a = 0, *b = 0, *c = 0;
+      IplImage stub;
+      int i;
+      if (coeff == CV_VALUE) {
+	float buff_a, buff_b, buff_c;
+	buff_a = (float)NUM2DBL(alpha);
+	buff_b = (float)NUM2DBL(beta);
+	buff_c = (float)NUM2DBL(gamma);
+	a = &buff_a;
+	b = &buff_b;
+	c = &buff_c;
+      }
+      else { // CV_ARRAY
+	if ((RARRAY_LEN(alpha) != length) ||
+	    (RARRAY_LEN(beta) != length) ||
+	    (RARRAY_LEN(gamma) != length))
+	  rb_raise(rb_eArgError, "alpha, beta, gamma should be same size of points");
+	a = ALLOCA_N(float, length);
+	b = ALLOCA_N(float, length);
+	c = ALLOCA_N(float, length);
+	for (i = 0; i < length; ++i) {
+	  a[i] = (float)NUM2DBL(RARRAY_PTR(alpha)[i]);
+	  b[i] = (float)NUM2DBL(RARRAY_PTR(beta)[i]);
+	  c[i] = (float)NUM2DBL(RARRAY_PTR(gamma)[i]);
+	}
+      }
+      CvSize win = VALUE_TO_CVSIZE(window);
+      CvTermCriteria tc = VALUE_TO_CVTERMCRITERIA(criteria);
+      try {
+	cvSnakeImage(cvGetImage(CVARR(self), &stub), pointset, length,
+		     a, b, c, coeff, win, tc, IF_BOOL(calc_gradient, 1, 0, 1));
+      }
+      catch (cv::Exception& e) {
+	if (pointset != NULL)
+	  cvFree(&pointset);
+	raise_cverror(e);
+      }
+      VALUE result = rb_ary_new2(length);
+      for (i = 0; i < length; ++i)
+	rb_ary_push(result, cCvPoint::new_object(pointset[i]));
+      cvFree(&pointset);
+
+      return result;
+#else
+      raise_opencv3_unsupported();
+      return Qnil;
+#endif
+    }
+
     void
     init_ruby_class()
     {
@@ -5862,6 +5952,7 @@ namespace mOpenCV {
 
       rb_define_method(rb_klass, "mean_shift", RUBY_METHOD_FUNC(rb_mean_shift), 2);
       rb_define_method(rb_klass, "cam_shift", RUBY_METHOD_FUNC(rb_cam_shift), 2);
+      rb_define_method(rb_klass, "snake_image", RUBY_METHOD_FUNC(rb_snake_image), -1);
 
       rb_define_singleton_method(rb_klass, "find_fundamental_mat",
 				 RUBY_METHOD_FUNC(rb_find_fundamental_mat), -1);

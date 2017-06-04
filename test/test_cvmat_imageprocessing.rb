@@ -225,7 +225,7 @@ class TestCvMat_imageprocessing < OpenCVTestCase
                 [39, 159], [79, 159], [119, 159], [159, 159]]
 
     refined_corners = mat.find_corner_sub_pix(corners, CvSize.new(3, 3), CvSize.new(-1, -1),
-                                                     CvTermCriteria.new(20, 0.03));
+                                              CvTermCriteria.new(20, 0.03));
     assert_equal(expected.size, refined_corners.size)
     assert(found)
     expected.zip(refined_corners).each { |e, a|
@@ -440,10 +440,10 @@ class TestCvMat_imageprocessing < OpenCVTestCase
 
   def test_get_perspective_transform
     from = [
-        OpenCV::CvPoint2D32f.new(540, 382),
-        OpenCV::CvPoint2D32f.new(802, 400),
-        OpenCV::CvPoint2D32f.new(850, 731),
-        OpenCV::CvPoint2D32f.new(540, 731),
+      OpenCV::CvPoint2D32f.new(540, 382),
+      OpenCV::CvPoint2D32f.new(802, 400),
+      OpenCV::CvPoint2D32f.new(850, 731),
+      OpenCV::CvPoint2D32f.new(540, 731),
     ]
     to = [
       OpenCV::CvPoint2D32f.new(0, 0),
@@ -1740,5 +1740,100 @@ class TestCvMat_imageprocessing < OpenCVTestCase
       assert_in_delta(0, mat_cv.match_shapes(mat_cv_rotated, method), 0.00001)
       assert_in_delta(0.0033327, mat_cv.match_shapes(mat_ov, method), 0.00001)
     }
+  end
+
+  def test_snake_image
+    omit_unless(IS_OPENCV2, 'CvMat#snake_image is not supported in OpenCV 3 or later')
+    radius = 40
+    center = CvPoint.new(128, 128)
+    mat = CvMat.new(center.y * 2, center.x * 2, :cv8u, 1).zero!
+    mat.circle!(center, radius, :color => CvColor::White, :thickness => -1)
+
+    num_points = 10
+    alpha = 0.05
+    beta = 0.05
+    gamma = 0.9
+
+    arr_alpha = [alpha] * num_points
+    arr_beta = [beta] * num_points
+    arr_gamma = [gamma] * num_points
+    size = CvSize.new(3, 3)
+    term_criteria = CvTermCriteria.new(100, num_points / 2)
+
+    # initialize contours
+    points = []
+    num_points.times { |i|
+      x = center.x * Math.cos(2 * Math::PI * i / num_points) + center.x
+      y = center.y * Math.sin(2 * Math::PI * i / num_points) + center.y
+      points << CvPoint.new(x, y)
+    }
+
+    acceptable_error = 50
+
+    # test snake_image
+    # calc_gradient = true
+    [mat.snake_image(points, alpha, beta, gamma, size, term_criteria),
+     mat.snake_image(points, alpha, beta, gamma, size, term_criteria, true),
+     mat.snake_image(points, arr_alpha, arr_beta, arr_gamma, size, term_criteria),
+     mat.snake_image(points, arr_alpha, arr_beta, arr_gamma, size, term_criteria, true)].each { |result|
+      assert_equal(num_points, result.size)
+      result.each { |pt|
+        x = pt.x - center.x
+        y = pt.y - center.y
+        error = Math.sqrt((x * x + y * y - radius * radius).abs)
+        assert(error < acceptable_error)
+      }
+    }
+
+    # calc_gradient = false
+    [mat.snake_image(points, alpha, beta, gamma, size, term_criteria, false),
+     mat.snake_image(points, arr_alpha, arr_beta, arr_gamma, size, term_criteria, false)].each { |result|
+      expected_points = [[149, 102], [139, 144], [95, 144], [56, 124], [17, 105],
+                         [25, 61], [63, 39], [101, 17], [145, 17], [158, 59]]
+      assert_equal(num_points, result.size)
+      result.each { |pt|
+        x = pt.x - center.x
+        y = pt.y - center.y
+        error = Math.sqrt((x * x + y * y - radius * radius).abs)
+        assert(error < acceptable_error)
+      }
+    }
+
+    # raise error
+    assert_raise(TypeError) {
+      mat.snake_image(DUMMY_OBJ, arr_alpha, arr_beta, arr_gamma, size, term_criteria)
+    }
+    assert_raise(TypeError) {
+      mat.snake_image(points, DUMMY_OBJ, arr_beta, arr_gamma, size, term_criteria)
+    }
+    assert_raise(TypeError) {
+      mat.snake_image(points, arr_alpha, DUMMY_OBJ, arr_gamma, size, term_criteria)
+    }
+    assert_raise(TypeError) {
+      mat.snake_image(points, arr_alpha, arr_beta, DUMMY_OBJ, size, term_criteria)
+    }
+    assert_raise(TypeError) {
+      mat.snake_image(points, arr_alpha, arr_beta, arr_gamma, DUMMY_OBJ, term_criteria)
+    }
+    assert_raise(TypeError) {
+      mat.snake_image(points, arr_alpha, arr_beta, arr_gamma, size, DUMMY_OBJ)
+    }
+    mat.snake_image(points, arr_alpha, arr_beta, arr_gamma, size, term_criteria, DUMMY_OBJ)
+
+    assert_raise(ArgumentError) {
+      mat.snake_image(points, arr_alpha[0 .. num_points / 2], arr_beta, arr_gamma, size, term_criteria)
+    }
+    assert_raise(CvBadNumChannels) {
+      CvMat.new(10, 10, :cv8u, 3).snake_image(points, alpha, beta, gamma, size, term_criteria)
+    }
+
+    # Uncomment the following lines to show the result
+    # result = mat.clone.GRAY2BGR
+    # pts = mat.snake_image(points, alpha, beta, gamma, size, term_criteria)
+    # w = GUI::Window.new('HoughCircle')
+    # result.poly_line!([pts], :color => CvColor::Red, :is_closed => true, :thickness => 2)
+    # result.poly_line!([points], :color => CvColor::Yellow, :is_closed => true, :thickness => 2)
+    # w.show result
+    # GUI::wait_key
   end
 end
