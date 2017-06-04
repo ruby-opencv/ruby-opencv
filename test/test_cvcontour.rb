@@ -155,4 +155,18 @@ class TestCvContour < OpenCVTestCase
       c1.match_shapes(c2, DUMMY_OBJ)
     }
   end
+
+  def test_create_tree
+    omit_unless(IS_OPENCV2, 'CvContour#create_tree is not supported in OpenCV 3 or later')
+    mat0 = create_cvmat(128, 128, :cv8u, 1) { |j, i|
+      (j - 64) ** 2 + (i - 64) ** 2 <= (32 ** 2) ? CvColor::White : CvColor::Black
+    }
+    contour = mat0.find_contours
+    tree = contour.create_tree
+    assert_equal(CvContourTree, tree.class)
+    assert_equal(34, tree.p1.x)
+    assert_equal(53, tree.p1.y)
+    assert_equal(0, tree.p2.x)
+    assert_equal(0, tree.p2.y)
+  end
 end

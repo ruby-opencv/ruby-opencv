@@ -8,6 +8,7 @@
 
 ************************************************************/
 #include "cvcontour.h"
+#include "cvcontourtree.h"
 #include "cvseq.h"
 #include "cvutils.h"
 #include "cvmemstorage.h"
@@ -316,6 +317,33 @@ namespace mOpenCV {
       return object;
     }
 
+#if IS_OPENCV2
+    /*
+     * Creates hierarchical representation of contour
+     * @overload create_tree(threshold = 0.0)
+     *   @param threshold [Number] If <= 0, the method creates full binary tree representation.
+     *     If > 0, the method creates representation with the precision threshold.
+     * @return [CvContourTree] Hierarchical representation of the contour
+     * @opencv_func cvCreateContourTree
+     */
+    VALUE
+    rb_create_tree(int argc, VALUE *argv, VALUE self)
+    {
+      VALUE threshold, storage;
+      rb_scan_args(argc, argv, "01", &threshold);
+      storage = cCvMemStorage::new_object();
+      CvContourTree *tree = NULL;
+      try {
+	tree = cvCreateContourTree(CVSEQ(self), CVMEMSTORAGE(storage), IF_DBL(threshold, 0.0));
+      }
+      catch (cv::Exception& e) {
+	raise_cverror(e);
+      }
+      return cCvSeq::new_sequence(cCvContourTree::rb_class(), (CvSeq*)tree, cCvPoint::rb_class(), storage);
+    }
+#else
+#  define rb_create_tree raise_opencv3_unsupported_1
+#endif
 
     void
     init_ruby_class()
@@ -356,6 +384,7 @@ namespace mOpenCV {
       rb_define_method(rb_klass, "approx_poly", RUBY_METHOD_FUNC(rb_approx_poly), -1);
       rb_define_alias(rb_klass, "approx", "approx_poly");
       rb_define_method(rb_klass, "bounding_rect", RUBY_METHOD_FUNC(rb_bounding_rect), 0);
+      rb_define_method(rb_klass, "create_tree", RUBY_METHOD_FUNC(rb_create_tree), -1);
       rb_define_method(rb_klass, "in?", RUBY_METHOD_FUNC(rb_in_q), 1);
       rb_define_method(rb_klass, "measure_distance", RUBY_METHOD_FUNC(rb_measure_distance), 1);
       rb_define_method(rb_klass, "point_polygon_test", RUBY_METHOD_FUNC(rb_point_polygon_test), 2);

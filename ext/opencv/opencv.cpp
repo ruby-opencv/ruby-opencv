@@ -74,6 +74,7 @@
 #include "pointset.h"
 #include "cvchain.h"
 #include "cvcontour.h"
+#include "cvcontourtree.h"
 
 #include "cvmat.h"
 #include "iplimage.h"
@@ -836,6 +837,7 @@ extern "C" {
     mOpenCV::mPointSet::init_ruby_module();
     mOpenCV::cCvChain::init_ruby_class();
     mOpenCV::cCvContour::init_ruby_class();
+    mOpenCV::cCvContourTree::init_ruby_class();
 
     mOpenCV::cCvMat::init_ruby_class();
     mOpenCV::cIplImage::init_ruby_class();
