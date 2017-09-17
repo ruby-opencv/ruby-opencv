@@ -18,7 +18,6 @@ namespace rubyopencv {
     size_t memsize_mat(const void *ptr);
 
     VALUE rb_klass = Qnil;
-    RubyMatAllocator allocator;
     rb_data_type_t opencv_mat_type = {
       "Mat",
       { 0, free_mat, memsize_mat, 0 },
