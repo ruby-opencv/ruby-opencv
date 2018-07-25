@@ -21,10 +21,10 @@ def cv_version_suffix(incdir)
   major + minor + subminor
 end
 
-incdir, libdir = dir_config("opencv", "/usr/local/include", "/usr/local/lib")
+incdir, _ = dir_config("opencv", "/usr/local/include", "/usr/local/lib")
 
-opencv_headers = ["opencv2/core.hpp", "opencv2/highgui.hpp", "opencv2/imgcodecs.hpp", "opencv2/imgproc.hpp", "opencv2/objdetect.hpp", "opencv2/videoio.hpp"]
-opencv_libraries = ["opencv_core", "opencv_highgui", "opencv_imgcodecs", "opencv_imgproc", "opencv_objdetect", "opencv_videoio"]
+opencv_headers = ["opencv2/core.hpp", "opencv2/highgui.hpp", "opencv2/imgcodecs.hpp", "opencv2/imgproc.hpp", "opencv2/objdetect.hpp", "opencv2/videoio.hpp", "opencv2/dnn.hpp"]
+opencv_libraries = ["opencv_core", "opencv_highgui", "opencv_imgcodecs", "opencv_imgproc", "opencv_objdetect", "opencv_videoio", "opencv_dnn"]
 
 puts ">> Check the required libraries..."
 if $mswin or $mingw

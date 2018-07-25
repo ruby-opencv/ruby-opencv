@@ -12,6 +12,7 @@
 #include "scalar.hpp"
 
 #include "cascadeclassifier.hpp"
+#include "dnn.hpp"
 #include "videocapture.hpp"
 
 #include "error.hpp"
@@ -92,6 +93,7 @@ namespace rubyopencv {
     Size::init();
     Scalar::init();
     CascadeClassifier::init();
+    Dnn::init();
     VideoCapture::init();
     Window::init();
     Trackbar::init();
