@@ -87,6 +87,32 @@ window.show(image)
 Cv::wait_key
 ```
 
+### Image Classification
+
+A samples to classify objects in an image.
+
+```ruby
+require 'opencv'
+
+classes = []
+File.open("./examples/synset_words.txt", "r") do |f|
+  f.each_line { |line|
+    _, value = line.strip.split(" ", 2)
+    classes << value.split(",", 2).first
+  }
+  f.close
+end
+
+net = Cv::Dnn.read_net_from_caffe("./examples/bvlc_googlenet.prototxt", "./examples/bvlc_googlenet.caffemodel")
+net.set_input(Cv::Dnn.blob_from_image(Cv.imread("./examples/images/stuff.jpg", Cv::IMREAD_UNCHANGED), size: Cv::Size.new(224, 224), mean: Cv::Scalar.new(104, 117, 123)))
+predictions = net.forward
+
+for i in 0..(predictions.cols - 1)
+  confidence = predictions.at(0, i)[0]
+  puts "#{classes[i]} #{confidence}" if confidence > 0.1
+end
+```
+
 For more samples, see examples/*.rb
 
 ## LICENSE:
@@ -94,4 +120,3 @@ For more samples, see examples/*.rb
 The MIT Liscense
 
 see LICENSE.txt
-
