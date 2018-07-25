@@ -13,7 +13,7 @@ namespace rubyopencv {
     VALUE rb_klass = Qnil;
     rb_data_type_t opencv_size_type = {
       "Size",
-      { 0, free_size, memsize_size, 0 },
+      { 0, free_size, memsize_size, },
       0,
       0,
       0

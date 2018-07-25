@@ -12,7 +12,7 @@ namespace rubyopencv {
     VALUE rb_klass = Qnil;
     rb_data_type_t opencv_point_type = {
       "Point",
-      { 0, free_point, memsize_point, 0 },
+      { 0, free_point, memsize_point, },
       0,
       0,
       0
@@ -169,4 +169,3 @@ namespace rubyopencv {
     }
   }
 }
-

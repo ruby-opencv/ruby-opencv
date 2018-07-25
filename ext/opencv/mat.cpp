@@ -20,7 +20,7 @@ namespace rubyopencv {
     VALUE rb_klass = Qnil;
     rb_data_type_t opencv_mat_type = {
       "Mat",
-      { 0, free_mat, memsize_mat, 0 },
+      { 0, free_mat, memsize_mat, },
       0,
       0,
       0
@@ -258,7 +258,7 @@ namespace rubyopencv {
 
       if (!NIL_P(params)) {
 	Check_Type(params, T_ARRAY);
-	int size = RARRAY_LEN(params);
+	long size = RARRAY_LEN(params);
 	for (long i = 0; i < size; i++) {
 	  VALUE n = rb_ary_entry(params, i);
 	  params_value.push_back(NUM2INT(n));
@@ -1218,7 +1218,7 @@ namespace rubyopencv {
       rb_define_alias(rb_klass, "height", "rows");
       rb_define_method(rb_klass, "cols", RUBY_METHOD_FUNC(rb_cols), 0);
       rb_define_alias(rb_klass, "width", "cols");
-      
+
       rb_define_method(rb_klass, "dims", RUBY_METHOD_FUNC(rb_dims), 0);
       rb_define_method(rb_klass, "depth", RUBY_METHOD_FUNC(rb_depth), 0);
       rb_define_method(rb_klass, "channels", RUBY_METHOD_FUNC(rb_channels), 0);
