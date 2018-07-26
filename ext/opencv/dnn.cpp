@@ -48,10 +48,10 @@ namespace rubyopencv {
 
     // Net readNetFromCaffe(const String &prototxt, const String &caffeModel = String());
     VALUE rb_read_net_from_caffe(VALUE self, VALUE prototxt, VALUE caffe_model) {
-      cv::dnn::experimental_dnn_v1::Net *net = NULL;
+      cv::dnn::Net *net = NULL;
 
       try {
-        net = new cv::dnn::experimental_dnn_v1::Net(cv::dnn::readNetFromCaffe(StringValueCStr(prototxt), StringValueCStr(caffe_model)));
+        net = new cv::dnn::Net(cv::dnn::readNetFromCaffe(StringValueCStr(prototxt), StringValueCStr(caffe_model)));
       } catch(cv::Exception& e) {
         delete net;
         Error::raise(e);
@@ -62,10 +62,10 @@ namespace rubyopencv {
 
     // Net readNetFromTorch(const String &model, bool isBinary)
     VALUE rb_read_net_from_tensorflow(VALUE self, VALUE model) {
-      cv::dnn::experimental_dnn_v1::Net *net = NULL;
+      cv::dnn::Net *net = NULL;
 
       try {
-        net = new cv::dnn::experimental_dnn_v1::Net(cv::dnn::readNetFromTensorflow(StringValueCStr(model)));
+        net = new cv::dnn::Net(cv::dnn::readNetFromTensorflow(StringValueCStr(model)));
       } catch(cv::Exception& e) {
         delete net;
         Error::raise(e);
@@ -76,10 +76,24 @@ namespace rubyopencv {
 
     // Net readNetFromTorch(const String &model, bool isBinary)
     VALUE rb_read_net_from_torch(VALUE self, VALUE model) {
-      cv::dnn::experimental_dnn_v1::Net *net = NULL;
+      cv::dnn::Net *net = NULL;
 
       try {
-        net = new cv::dnn::experimental_dnn_v1::Net(cv::dnn::readNetFromTorch(StringValueCStr(model)));
+        net = new cv::dnn::Net(cv::dnn::readNetFromTorch(StringValueCStr(model)));
+      } catch(cv::Exception& e) {
+        delete net;
+        Error::raise(e);
+      }
+
+      return Dnn::Net::net2obj(net);
+    }
+
+    // Net readNetFromDarknet(const String &cfgFile, const String &darknetModel /*= String()*/)
+    VALUE rb_read_net_from_darknet(VALUE self, VALUE cfg_file, VALUE darknet_model) {
+      cv::dnn::Net *net = NULL;
+
+      try {
+        net = new cv::dnn::Net(cv::dnn::readNetFromDarknet(StringValueCStr(cfg_file), StringValueCStr(darknet_model)));
       } catch(cv::Exception& e) {
         delete net;
         Error::raise(e);
@@ -97,6 +111,7 @@ namespace rubyopencv {
       rb_define_singleton_method(rb_module, "read_net_from_caffe", RUBY_METHOD_FUNC(rb_read_net_from_caffe), 2);
       rb_define_singleton_method(rb_module, "read_net_from_tensorflow", RUBY_METHOD_FUNC(rb_read_net_from_tensorflow), 1);
       rb_define_singleton_method(rb_module, "read_net_from_torch", RUBY_METHOD_FUNC(rb_read_net_from_torch), 1);
+      rb_define_singleton_method(rb_module, "read_net_from_darknet", RUBY_METHOD_FUNC(rb_read_net_from_darknet), 2);
 
       Dnn::Net::init(rb_module);
     }

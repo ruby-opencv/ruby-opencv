@@ -8,7 +8,7 @@ namespace rubyopencv {
   namespace Dnn {
     namespace Net {
       void init(VALUE rb_module);
-      VALUE net2obj(cv::dnn::experimental_dnn_v1::Net* ptr);
+      VALUE net2obj(cv::dnn::Net* ptr);
     }
   }
 }

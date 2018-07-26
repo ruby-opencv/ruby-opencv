@@ -10,29 +10,29 @@ namespace rubyopencv {
       VALUE rb_klass = Qnil;
 
       void free_net(void* ptr) {
-        delete (cv::dnn::experimental_dnn_v1::Net*)ptr;
+        delete (cv::dnn::Net*)ptr;
       }
 
       size_t memsize_net(const void* ptr) {
-        return sizeof(cv::dnn::experimental_dnn_v1::Net);
+        return sizeof(cv::dnn::Net);
       }
 
       rb_data_type_t opencv_net_type = {
         "Dnn::Net", { 0, free_net, memsize_net, }, 0, 0, 0
       };
 
-      VALUE net2obj(cv::dnn::experimental_dnn_v1::Net* ptr) {
+      VALUE net2obj(cv::dnn::Net* ptr) {
         return TypedData_Wrap_Struct(rb_klass, &opencv_net_type, ptr);
       }
 
-      cv::dnn::experimental_dnn_v1::Net* obj2net(VALUE obj) {
-        cv::dnn::experimental_dnn_v1::Net* ptr = NULL;
-        TypedData_Get_Struct(obj, cv::dnn::experimental_dnn_v1::Net, &opencv_net_type, ptr);
+      cv::dnn::Net* obj2net(VALUE obj) {
+        cv::dnn::Net* ptr = NULL;
+        TypedData_Get_Struct(obj, cv::dnn::Net, &opencv_net_type, ptr);
         return ptr;
       }
 
       VALUE rb_allocate(VALUE klass) {
-        cv::dnn::experimental_dnn_v1::Net* ptr = new cv::dnn::experimental_dnn_v1::Net();
+        cv::dnn::Net* ptr = new cv::dnn::Net();
         return TypedData_Wrap_Struct(klass, &opencv_net_type, ptr);
       }
 
@@ -45,7 +45,7 @@ namespace rubyopencv {
         VALUE blob, name;
         rb_scan_args(argc, argv, "11", &blob, &name);
 
-        cv::dnn::experimental_dnn_v1::Net* selfptr = obj2net(self);
+        cv::dnn::Net* selfptr = obj2net(self);
 
         cv::Mat *m = Mat::obj2mat(blob);
 
@@ -68,7 +68,7 @@ namespace rubyopencv {
         VALUE output_name;
         rb_scan_args(argc, argv, "01", &output_name);
 
-        cv::dnn::experimental_dnn_v1::Net* selfptr = obj2net(self);
+        cv::dnn::Net* selfptr = obj2net(self);
 
         cv::Mat* m = NULL;
 
@@ -92,7 +92,7 @@ namespace rubyopencv {
 
       // bool empty() const
       VALUE rb_empty(VALUE self) {
-        cv::dnn::experimental_dnn_v1::Net* selfptr = obj2net(self);
+        cv::dnn::Net* selfptr = obj2net(self);
         return selfptr->empty() ? Qtrue : Qfalse;
       }
 
