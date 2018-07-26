@@ -1,6 +1,7 @@
 // -*- mode: c++; coding: utf-8 -*-
 #include "ruby.h"
 #include "opencv2/core.hpp"
+#include "opencv2/dnn.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
@@ -318,7 +319,7 @@ namespace rubyopencv {
     rb_define_const(rb_module, "BORDER_REFLECT101", INT2FIX(cv::BORDER_REFLECT101));
     rb_define_const(rb_module, "BORDER_DEFAULT", INT2FIX(cv::BORDER_DEFAULT));
     rb_define_const(rb_module, "BORDER_ISOLATED", INT2FIX(cv::BORDER_ISOLATED));
-    
+
     rb_define_const(rb_module, "EVENT_MOUSEMOVE", INT2FIX(cv::EVENT_MOUSEMOVE));
     rb_define_const(rb_module, "EVENT_LBUTTONDOWN", INT2FIX(cv::EVENT_LBUTTONDOWN));
     rb_define_const(rb_module, "EVENT_RBUTTONDOWN", INT2FIX(cv::EVENT_RBUTTONDOWN));
@@ -386,6 +387,15 @@ namespace rubyopencv {
     rb_define_const(rb_module, "THRESH_MASK", INT2FIX(cv::THRESH_MASK));
     rb_define_const(rb_module, "THRESH_OTSU", INT2FIX(cv::THRESH_OTSU));
     rb_define_const(rb_module, "THRESH_TRIANGLE", INT2FIX(cv::THRESH_TRIANGLE));
+
+    rb_define_const(rb_module, "DNN_BACKEND_DEFAULT", INT2FIX(cv::dnn::DNN_BACKEND_DEFAULT));
+    rb_define_const(rb_module, "DNN_BACKEND_INFERENCE_ENGINE", INT2FIX(cv::dnn::DNN_BACKEND_INFERENCE_ENGINE));
+    rb_define_const(rb_module, "DNN_BACKEND_OPENCV", INT2FIX(cv::dnn::DNN_BACKEND_OPENCV));
+    rb_define_const(rb_module, "DNN_BACKEND_HALIDE", INT2FIX(cv::dnn::DNN_BACKEND_HALIDE));
+
+    rb_define_const(rb_module, "DNN_TARGET_CPU", INT2FIX(cv::dnn::DNN_TARGET_CPU));
+    rb_define_const(rb_module, "DNN_TARGET_OPENCL", INT2FIX(cv::dnn::DNN_TARGET_OPENCL));
+    rb_define_const(rb_module, "DNN_TARGET_OPENCL_FP16", INT2FIX(cv::dnn::DNN_TARGET_OPENCL_FP16));
 
     rb_define_const(rb_module, "ADAPTIVE_THRESH_MEAN_C", INT2FIX(cv::ADAPTIVE_THRESH_MEAN_C));
     rb_define_const(rb_module, "ADAPTIVE_THRESH_GAUSSIAN_C", INT2FIX(cv::ADAPTIVE_THRESH_GAUSSIAN_C));

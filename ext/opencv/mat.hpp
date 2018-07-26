@@ -9,8 +9,8 @@
 namespace rubyopencv {
   namespace Mat {
     void init();
-    VALUE rb_imread(VALUE self, VALUE filename, VALUE flags);
-    VALUE rb_imdecode(VALUE self, VALUE buf, VALUE flags);
+    VALUE rb_imread(int argc, VALUE *argv, VALUE self);
+    VALUE rb_imdecode(int argc, VALUE *argv, VALUE self);
     VALUE rb_imwrite_internal(VALUE filename, VALUE img, VALUE params);
     VALUE rb_clone(VALUE self);
     VALUE rb_add_weighted(int argc, VALUE *argv, VALUE self);
@@ -21,7 +21,7 @@ namespace rubyopencv {
     cv::Mat* obj2mat(VALUE obj);
     VALUE mat2obj(cv::Mat* ptr);
     VALUE mat2obj(cv::Mat* ptr, VALUE klass);
-    
+
     class RubyMatAllocator: public cv::MatAllocator {
     public:
       RubyMatAllocator() {}

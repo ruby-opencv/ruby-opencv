@@ -2,6 +2,7 @@
 #include <sstream>
 #include "opencv2/highgui.hpp"
 
+#include "opencv.hpp"
 #include "mat.hpp"
 #include "mat_imgproc.hpp"
 #include "mat_drawing.hpp"
@@ -246,8 +247,10 @@ namespace rubyopencv {
      *   @return [Mat] Loaded image
      * @opencv_func cv::imread
      */
-    VALUE rb_imread(VALUE self, VALUE filename, VALUE flags) {
-      return rb_imread_internal(self, filename, flags, rb_klass);
+    VALUE rb_imread(int argc, VALUE *argv, VALUE self) {
+      VALUE filename, flags;
+      rb_scan_args(argc, argv, "11", &filename, &flags);
+      return rb_imread_internal(self, filename, NUM2INT_DEFAULT(flags, cv::IMREAD_UNCHANGED), rb_klass);
     }
 
     VALUE rb_imread_as(VALUE self, VALUE filename, VALUE flags, VALUE klass) {
@@ -366,8 +369,10 @@ namespace rubyopencv {
      *   @return [CvMat] Loaded matrix
      * @opencv_func cv::imdecode
      */
-    VALUE rb_imdecode(VALUE self, VALUE buf, VALUE flags) {
-      return rb_imdecode_internal(self, buf, flags, rb_klass);
+    VALUE rb_imdecode(int argc, VALUE *argv, VALUE self) {
+      VALUE buf, flags;
+      rb_scan_args(argc, argv, "11", &buf, &flags);
+      return rb_imdecode_internal(self, buf, NUM2INT_DEFAULT(flags, cv::IMREAD_UNCHANGED), rb_klass);
     }
 
     VALUE rb_imdecode_as(VALUE self, VALUE buf, VALUE flags, VALUE klass) {
