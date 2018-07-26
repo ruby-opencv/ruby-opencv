@@ -6,6 +6,7 @@
 #include "mat_imgproc.hpp"
 #include "mat_drawing.hpp"
 #include "scalar.hpp"
+#include "size.hpp"
 #include "rect.hpp"
 #include "error.hpp"
 
@@ -415,6 +416,20 @@ namespace rubyopencv {
     VALUE rb_depth(VALUE self) {
       const cv::Mat* dataptr = obj2mat(self);
       return INT2NUM(dataptr->depth());
+    }
+
+    VALUE rb_size(int argc, VALUE *argv, VALUE self) {
+      VALUE i;
+      rb_scan_args(argc, argv, "01", &i);
+
+      const cv::Mat* dataptr = obj2mat(self);
+
+      if (NIL_P(i)) {
+        cv::Size *s = new cv::Size(dataptr->size());
+        return Size::size2obj(s);
+      } else {
+        return INT2NUM(dataptr->size[NUM2INT(i)]);
+      }
     }
 
     /*
@@ -1222,6 +1237,7 @@ namespace rubyopencv {
       rb_define_method(rb_klass, "dims", RUBY_METHOD_FUNC(rb_dims), 0);
       rb_define_method(rb_klass, "depth", RUBY_METHOD_FUNC(rb_depth), 0);
       rb_define_method(rb_klass, "channels", RUBY_METHOD_FUNC(rb_channels), 0);
+      rb_define_method(rb_klass, "size", RUBY_METHOD_FUNC(rb_size), -1);
 
       rb_define_method(rb_klass, "[]", RUBY_METHOD_FUNC(rb_aref), -2);
       rb_define_alias(rb_klass, "at", "[]");

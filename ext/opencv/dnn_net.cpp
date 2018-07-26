@@ -71,7 +71,6 @@ namespace rubyopencv {
         cv::dnn::experimental_dnn_v1::Net* selfptr = obj2net(self);
 
         cv::Mat* m = NULL;
-        // cv::Mat m;
 
         try {
           cv::Mat r;
@@ -82,34 +81,13 @@ namespace rubyopencv {
             r = selfptr->forward(StringValueCStr(output_name));
           }
 
-          m = new cv::Mat(r.reshape(1, 1));
-          // m = r;
+          m = new cv::Mat(r);
         } catch(cv::Exception& e) {
           delete m;
           Error::raise(e);
         }
 
-        // int indxCls[4] = { 0, 0, 401, 1 };
-        // int cls = m->at<float>(indxCls);
-
         return Mat::mat2obj(m);
-
-        // const long size = m->size[2];
-        // return(ULL2NUM(m.size[2]));
-        // VALUE detected_objects = rb_ary_new_capa(size);
-        // for (long i = 0; i < size; i++) {
-        //   int indxCls[4] = { 0, 0, i, 1 };
-        //   int cls = m->at<float>(indxCls);
-        // 	rb_ary_store(detected_objects, i, INT2NUM(cls));
-        // }
-        //
-        // return detected_objects;
-
-        // cv::Point classIdPoint;
-        // double confidence;
-        // cv::minMaxLoc(m.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
-        // int classId = classIdPoint.x;
-        // return(INT2NUM(classId));
       }
 
       // bool empty() const
