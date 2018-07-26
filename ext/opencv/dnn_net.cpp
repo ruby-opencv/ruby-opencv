@@ -96,15 +96,34 @@ namespace rubyopencv {
         return selfptr->empty() ? Qtrue : Qfalse;
       }
 
+      VALUE rb_get_layer_names(VALUE self) {
+        cv::dnn::Net* selfptr = obj2net(self);
+
+        std::vector<cv::String> v = selfptr->getLayerNames();
+        const long size = v.size();
+
+        VALUE layer_names = rb_ary_new_capa(size);
+        for (long i = 0; i < size; i++) {
+          VALUE layer_name = rb_str_new_cstr(v[i].c_str());
+          rb_ary_store(layer_names, i, layer_name);
+        }
+
+        return layer_names;
+      }
+
       void init(VALUE rb_module) {
         rb_klass = rb_define_class_under(rb_module, "Net", rb_cData);
         rb_define_alloc_func(rb_klass, rb_allocate);
 
         rb_define_private_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), 0);
 
-        rb_define_method(rb_klass, "set_input", RUBY_METHOD_FUNC(rb_set_input), -1);
+        rb_define_method(rb_klass, "input=", RUBY_METHOD_FUNC(rb_set_input), -1);
+        rb_define_alias(rb_klass, "set_input", "input=");
+
         rb_define_method(rb_klass, "forward", RUBY_METHOD_FUNC(rb_forward), -1);
         rb_define_method(rb_klass, "empty?", RUBY_METHOD_FUNC(rb_empty), 0);
+
+        rb_define_method(rb_klass, "get_layer_names", RUBY_METHOD_FUNC(rb_get_layer_names), 0);
       }
     }
   }

@@ -31,10 +31,23 @@ namespace rubyopencv {
           Check_Type(options, T_HASH);
 
           double scale_factor = NUM2DBL_DEFAULT(HASH_LOOKUP(options, "scale_factor"), 1.0);
-          cv::Size *s = Size::obj2size(HASH_LOOKUP(options, "size"));
-          cv::Scalar *sc = Scalar::obj2scalar(HASH_LOOKUP(options, "mean"));;
+          cv::Size size;
+          cv::Scalar mean;
+          bool swap_rb = RTEST_DEFAULT(HASH_LOOKUP(options, "swap_rb"), true);
+          bool crop = RTEST_DEFAULT(HASH_LOOKUP(options, "crop"), true);
+      	  VALUE tmp = Qnil;
 
-          r = cv::dnn::blobFromImage(*m, scale_factor, *s, *sc);
+      	  tmp = HASH_LOOKUP(options, "size");
+      	  if (!NIL_P(tmp)) {
+      	    size = *(Size::obj2size(tmp));
+      	  }
+
+      	  tmp = HASH_LOOKUP(options, "mean");
+      	  if (!NIL_P(tmp)) {
+      	    mean = *(Scalar::obj2scalar(tmp));
+      	  }
+
+          r = cv::dnn::blobFromImage(*m, scale_factor, size, mean, swap_rb, crop);
         }
 
         b = new cv::Mat(r);
