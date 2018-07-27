@@ -59,11 +59,11 @@ namespace rubyopencv {
 
       rb_define_singleton_method(rb_module, "blob_from_image", RUBY_METHOD_FUNC(rb_blob_from_image), -1);
 
-      rb_define_singleton_method(rb_module, "read_net", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net), -1);
-      rb_define_singleton_method(rb_module, "read_net_from_caffe", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_caffe), 2);
-      rb_define_singleton_method(rb_module, "read_net_from_tensorflow", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_tensorflow), 1);
-      rb_define_singleton_method(rb_module, "read_net_from_torch", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_torch), 1);
-      rb_define_singleton_method(rb_module, "read_net_from_darknet", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_darknet), 2);
+      rb_define_singleton_method(rb_module, "read_net", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net), -1); // in ext/opencv/dnn_net.cpp
+      rb_define_singleton_method(rb_module, "read_net_from_caffe", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_caffe), 2); // in ext/opencv/dnn_net.cpp
+      rb_define_singleton_method(rb_module, "read_net_from_tensorflow", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_tensorflow), 1); // in ext/opencv/dnn_net.cpp
+      rb_define_singleton_method(rb_module, "read_net_from_torch", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_torch), 1); // in ext/opencv/dnn_net.cpp
+      rb_define_singleton_method(rb_module, "read_net_from_darknet", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_darknet), 2); // in ext/opencv/dnn_net.cpp
 
       Dnn::Net::init(rb_module);
       Dnn::Layer::init(rb_module);
