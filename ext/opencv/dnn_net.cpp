@@ -70,17 +70,14 @@ namespace rubyopencv {
 
       // void setInput(const Mat &blob, const String& name = "")
       VALUE rb_set_input(int argc, VALUE *argv, VALUE self) {
-        VALUE blob, name, options;
-        rb_scan_args(argc, argv, "12", &blob, &name, &options);
+        VALUE blob, name;
+        rb_scan_args(argc, argv, "11", &blob, &name);
 
         cv::dnn::Net* selfptr = obj2net(self);
 
-        cv::Mat *m = Mat::obj2mat(blob);
-
         try {
-          selfptr->setInput(*m, CSTR_DEFAULT(name, ""));
+          selfptr->setInput(*Mat::obj2mat(blob), CSTR_DEFAULT(name, ""));
         } catch(cv::Exception& e) {
-          delete m;
           Error::raise(e);
         }
 
