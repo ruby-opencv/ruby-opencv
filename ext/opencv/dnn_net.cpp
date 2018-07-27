@@ -37,41 +37,48 @@ namespace rubyopencv {
         return TypedData_Wrap_Struct(klass, &opencv_net_type, ptr);
       }
 
+      cv::dnn::Net* rb_read_net_internal(VALUE model, VALUE config, VALUE framework) {
+        cv::dnn::Net* dataptr = NULL;
+
+        try {
+          cv::dnn::Net net = cv::dnn::readNet(StringValueCStr(model), CSTR_DEFAULT(config, ""), CSTR_DEFAULT(framework, ""));
+          dataptr = new cv::dnn::Net(net);
+        } catch(cv::Exception& e) {
+          delete dataptr;
+          Error::raise(e);
+        }
+
+        return dataptr;
+      }
+
       VALUE rb_initialize(int argc, VALUE *argv, VALUE self) {
         VALUE model, config, framework;
         rb_scan_args(argc, argv, "03", &model, &config, &framework);
 
-        if (!NIL_P(model)) {
-          cv::dnn::Net* dataptr = NULL;
-
-          try {
-            cv::dnn::Net net = cv::dnn::readNet(StringValueCStr(model), CSTR_DEFAULT(config, ""), CSTR_DEFAULT(framework, ""));
-            cv::dnn::Net* dataptr = new cv::dnn::Net(net);
-            RTYPEDDATA_DATA(self) = dataptr;
-          } catch(cv::Exception& e) {
-            delete dataptr;
-            Error::raise(e);
-          }
+        if (argc > 0) {
+          RTYPEDDATA_DATA(self) = rb_read_net_internal(model, config, framework);
         }
 
         return self;
       }
 
+      VALUE rb_read_net(int argc, VALUE *argv, VALUE self) {
+        VALUE model, config, framework;
+        rb_scan_args(argc, argv, "12", &model, &config, &framework);
+        return net2obj(rb_read_net_internal(model, config, framework));
+      }
+
       // void setInput(const Mat &blob, const String& name = "")
       VALUE rb_set_input(int argc, VALUE *argv, VALUE self) {
-        VALUE blob, name;
-        rb_scan_args(argc, argv, "11", &blob, &name);
+        VALUE blob, name, options;
+        rb_scan_args(argc, argv, "12", &blob, &name, &options);
 
         cv::dnn::Net* selfptr = obj2net(self);
 
         cv::Mat *m = Mat::obj2mat(blob);
 
         try {
-          if (NIL_P(name)) {
-            selfptr->setInput(*m);
-          } else {
-            selfptr->setInput(*m, StringValueCStr(name));
-          }
+          selfptr->setInput(*m, CSTR_DEFAULT(name, ""));
         } catch(cv::Exception& e) {
           delete m;
           Error::raise(e);
@@ -107,12 +114,12 @@ namespace rubyopencv {
       VALUE rb_get_layers(VALUE self) {
         cv::dnn::Net* selfptr = obj2net(self);
 
-        std::vector<cv::String> v = selfptr->getLayerNames();
-        const long size = v.size();
+        std::vector<cv::String> layer_names = selfptr->getLayerNames();
+        const long size = layer_names.size();
 
         VALUE layers = rb_ary_new_capa(size);
         for (long i = 0; i < size; i++) {
-          VALUE layer = Dnn::Layer::layer2obj(selfptr->getLayer(v[i]));
+          VALUE layer = Dnn::Layer::layer2obj(selfptr->getLayer(layer_names[i]));
           rb_ary_store(layers, i, layer);
         }
 
@@ -135,6 +142,62 @@ namespace rubyopencv {
         cv::dnn::Net* selfptr = obj2net(self);
         selfptr->setPreferableTarget(NUM2INT(target_id));
         return self;
+      }
+
+      // Net readNetFromCaffe(const String &prototxt, const String &caffeModel = String());
+      VALUE rb_read_net_from_caffe(VALUE self, VALUE prototxt, VALUE caffe_model) {
+        cv::dnn::Net *net = NULL;
+
+        try {
+          net = new cv::dnn::Net(cv::dnn::readNetFromCaffe(StringValueCStr(prototxt), StringValueCStr(caffe_model)));
+        } catch(cv::Exception& e) {
+          delete net;
+          Error::raise(e);
+        }
+
+        return net2obj(net);
+      }
+
+      // Net readNetFromTorch(const String &model, bool isBinary)
+      VALUE rb_read_net_from_tensorflow(VALUE self, VALUE model) {
+        cv::dnn::Net *net = NULL;
+
+        try {
+          net = new cv::dnn::Net(cv::dnn::readNetFromTensorflow(StringValueCStr(model)));
+        } catch(cv::Exception& e) {
+          delete net;
+          Error::raise(e);
+        }
+
+        return net2obj(net);
+      }
+
+      // Net readNetFromTorch(const String &model, bool isBinary)
+      VALUE rb_read_net_from_torch(VALUE self, VALUE model) {
+        cv::dnn::Net *net = NULL;
+
+        try {
+          net = new cv::dnn::Net(cv::dnn::readNetFromTorch(StringValueCStr(model)));
+        } catch(cv::Exception& e) {
+          delete net;
+          Error::raise(e);
+        }
+
+        return net2obj(net);
+      }
+
+      // Net readNetFromDarknet(const String &cfgFile, const String &darknetModel /*= String()*/)
+      VALUE rb_read_net_from_darknet(VALUE self, VALUE cfg_file, VALUE darknet_model) {
+        cv::dnn::Net *net = NULL;
+
+        try {
+          net = new cv::dnn::Net(cv::dnn::readNetFromDarknet(StringValueCStr(cfg_file), StringValueCStr(darknet_model)));
+        } catch(cv::Exception& e) {
+          delete net;
+          Error::raise(e);
+        }
+
+        return net2obj(net);
       }
 
       void init(VALUE rb_module) {
