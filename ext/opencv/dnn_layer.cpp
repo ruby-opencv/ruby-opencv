@@ -11,16 +11,8 @@ namespace rubyopencv {
     namespace Layer {
       VALUE rb_klass = Qnil;
 
-      void free_layer(void* ptr) {
-        delete (cv::dnn::Layer*)ptr;
-      }
-
-      size_t memsize_layer(const void* ptr) {
-        return sizeof(cv::dnn::Layer);
-      }
-
       rb_data_type_t opencv_layer_type = {
-        "Dnn::Layer", { 0, free_layer, memsize_layer, }, 0, 0, 0
+        "Dnn::Layer", { 0, 0, 0, }, 0, 0, 0
       };
 
       VALUE layer2obj(cv::dnn::Layer* ptr) {
