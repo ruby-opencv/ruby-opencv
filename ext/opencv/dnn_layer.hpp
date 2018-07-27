@@ -7,7 +7,7 @@
 namespace rubyopencv {
   namespace Dnn {
     namespace Layer {
-      void init(VALUE rb_module);
+      void init();
       VALUE layer2obj(cv::dnn::Layer* ptr);
     }
   }

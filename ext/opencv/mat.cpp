@@ -235,7 +235,7 @@ namespace rubyopencv {
     /*
      * Loads an image from a file.
      *
-     * @overload imread(filename, flags)
+     * @overload imread(filename, flags = IMREAD_UNCHANGED)
      *   @param filename [String] Name of file to be loaded.
      *   @param flags [Integer] Flags specifying the color type of a loaded image:
      *     - CV_LOAD_IMAGE_ANYDEPTH - If set, return 16-bit/32-bit image when the input has the corresponding depth, otherwise convert it to 8-bit.

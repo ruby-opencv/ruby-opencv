@@ -93,7 +93,7 @@ namespace rubyopencv {
     Size::init();
     Scalar::init();
     CascadeClassifier::init();
-    Dnn::init(rb_module);
+    Dnn::init();
     VideoCapture::init();
     Window::init();
     Trackbar::init();

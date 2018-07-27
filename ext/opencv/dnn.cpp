@@ -8,11 +8,26 @@
 #include "dnn_layer.hpp"
 #include "error.hpp"
 
+/*
+ * Document-class: Cv::Dnn
+ */
 namespace rubyopencv {
   namespace Dnn {
     VALUE rb_module = Qnil;
 
-    // Mat blobFromImage(const Mat& image, double scalefactor=1.0, const Size& size = Size(), const Scalar& mean = Scalar(), bool swapRB=true)
+    /*
+     * Creates 4-dimensional blob from image. Optionally resizes and crops image from center, subtract mean values, scales values by scalefactor, swap Blue and Red channels.
+     *
+     * @overload blob_from_image(image, options = {})
+     *   @param image [Mat] Input image (with 1-, 3- or 4-channels)
+     *   @param options [Hash] Options
+     *   @option options [Number] :scale_factor (1.0) Multiplier for image values
+     *   @option options [Mat] :size Spatial size for output image
+     *   @option options [Scalar] :mean Scalar with mean values which are subtracted from channels – values are intended to be in (mean-R, mean-G, mean-B) order if image has BGR ordering and swap_rb is true
+     *   @option options [Boolean] :swap_rb (true) Indicates that swap first and last channels in 3-channel image is necessary
+     *   @option options [Boolean] :crop (true) Indicates whether image will be cropped after resize or not
+     * @return [Mat] 4-dimensional Mat with NCHW dimensions order
+     */
     VALUE rb_blob_from_image(int argc, VALUE *argv, VALUE self) {
       VALUE image, options;
       rb_scan_args(argc, argv, "11", &image, &options);
@@ -54,19 +69,20 @@ namespace rubyopencv {
       return Mat::mat2obj(b);
     }
 
-    void init(VALUE opencv) {
+    void init() {
+      VALUE opencv = rb_define_module("Cv");
       rb_module = rb_define_module_under(opencv, "Dnn");
 
       rb_define_singleton_method(rb_module, "blob_from_image", RUBY_METHOD_FUNC(rb_blob_from_image), -1);
 
       rb_define_singleton_method(rb_module, "read_net", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net), -1); // in ext/opencv/dnn_net.cpp
       rb_define_singleton_method(rb_module, "read_net_from_caffe", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_caffe), 2); // in ext/opencv/dnn_net.cpp
-      rb_define_singleton_method(rb_module, "read_net_from_tensorflow", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_tensorflow), 1); // in ext/opencv/dnn_net.cpp
-      rb_define_singleton_method(rb_module, "read_net_from_torch", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_torch), 1); // in ext/opencv/dnn_net.cpp
+      rb_define_singleton_method(rb_module, "read_net_from_tensorflow", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_tensorflow), 2); // in ext/opencv/dnn_net.cpp
+      rb_define_singleton_method(rb_module, "read_net_from_torch", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_torch), -1); // in ext/opencv/dnn_net.cpp
       rb_define_singleton_method(rb_module, "read_net_from_darknet", RUBY_METHOD_FUNC(Dnn::Net::rb_read_net_from_darknet), 2); // in ext/opencv/dnn_net.cpp
 
-      Dnn::Net::init(rb_module);
-      Dnn::Layer::init(rb_module);
+      Dnn::Net::init();
+      Dnn::Layer::init();
     }
   }
 }

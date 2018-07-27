@@ -3,6 +3,9 @@
 #include "opencv.hpp"
 #include "error.hpp"
 
+/*
+ * Document-class: Cv::Dnn::Layer
+ */
 namespace rubyopencv {
   namespace Dnn {
     namespace Layer {
@@ -39,18 +42,31 @@ namespace rubyopencv {
         return self;
       }
 
+      /*
+       * Returns the layer name
+       * @overload name
+       * @return [String] Layer name
+       */
       VALUE rb_name(VALUE self) {
         cv::dnn::Layer* selfptr = obj2layer(self);
         return rb_str_new_cstr(selfptr->name.c_str());
       }
 
+      /*
+       * Returns the layer type
+       *
+       * @overload type
+       * @return [String] Layer type
+       */
       VALUE rb_type(VALUE self) {
         cv::dnn::Layer* selfptr = obj2layer(self);
         return rb_str_new_cstr(selfptr->type.c_str());
       }
 
-      void init(VALUE rb_module) {
-        rb_klass = rb_define_class_under(rb_module, "Layer", rb_cData);
+      void init() {
+        VALUE opencv = rb_define_module("Cv");
+        VALUE dnn = rb_define_module_under(opencv, "Dnn");
+        rb_klass = rb_define_class_under(dnn, "Layer", rb_cData);
         rb_define_alloc_func(rb_klass, rb_allocate);
 
         rb_define_private_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), 0);

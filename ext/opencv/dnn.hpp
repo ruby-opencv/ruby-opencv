@@ -6,7 +6,7 @@
  */
 namespace rubyopencv {
   namespace Dnn {
-    void init(VALUE opencv);
+    void init();
   }
 }
 
