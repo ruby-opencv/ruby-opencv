@@ -7,6 +7,7 @@
 namespace rubyopencv {
   namespace Dnn {
     void init();
+    VALUE rb_module_dnn();
   }
 }
 

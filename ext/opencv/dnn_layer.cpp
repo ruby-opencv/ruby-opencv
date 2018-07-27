@@ -73,6 +73,11 @@ namespace rubyopencv {
 
         rb_define_method(rb_klass, "name", RUBY_METHOD_FUNC(rb_name), 0);
         rb_define_method(rb_klass, "type", RUBY_METHOD_FUNC(rb_type), 0);
+
+        #if 0
+        rb_define_attr(rb_klass, "name", 1, 0);
+        rb_define_attr(rb_klass, "type", 1, 0);
+        #endif
       }
     }
   }

@@ -78,20 +78,7 @@ namespace rubyopencv {
         return self;
       }
 
-      /*
-       * Sets the new input value for the network
-       *
-       * @overload input=(blob)
-       *   @param blob [Mat] A blob of CV_32F or CV_8U depth
-       * @overload input(blob, name = nil)
-       *   @param blob [Mat] A blob of CV_32F or CV_8U depth
-       *   @param name [String] Name of an input layer
-       * @return [void]
-       */
-      VALUE rb_set_input(int argc, VALUE *argv, VALUE self) {
-        VALUE blob, name;
-        rb_scan_args(argc, argv, "11", &blob, &name);
-
+      void rb_set_input_internal(VALUE self, VALUE blob, VALUE name) {
         cv::dnn::Net* selfptr = obj2net(self);
 
         try {
@@ -99,8 +86,33 @@ namespace rubyopencv {
         } catch(cv::Exception& e) {
           Error::raise(e);
         }
+      }
 
+      /*
+       * Sets the new input value for the network
+       *
+       * @overload input=(blob)
+       * @param blob [Mat] A blob of CV_32F or CV_8U depth
+       * @return [nil]
+       */
+      VALUE rb_set_input_equals(VALUE self, VALUE blob) {
+        rb_set_input_internal(self, blob, Qnil);
         return Qnil;
+      }
+
+      /*
+       * Sets the new input value for the network
+       *
+       * @overload input(blob, name = nil)
+       *   @param blob [Mat] A blob of CV_32F or CV_8U depth
+       *   @param name [String] Name of an input layer
+       * @return [Net] The current network
+       */
+      VALUE rb_set_input(int argc, VALUE *argv, VALUE self) {
+        VALUE blob, name;
+        rb_scan_args(argc, argv, "11", &blob, &name);
+        rb_set_input_internal(self, blob, name);
+        return self;
       }
 
       /*
@@ -305,8 +317,8 @@ namespace rubyopencv {
 
         rb_define_method(rb_klass, "initialize", RUBY_METHOD_FUNC(rb_initialize), -1);
 
-        rb_define_method(rb_klass, "input=", RUBY_METHOD_FUNC(rb_set_input), -1);
-        rb_define_alias(rb_klass, "input", "input=");
+        rb_define_method(rb_klass, "input=", RUBY_METHOD_FUNC(rb_set_input_equals), 1);
+        rb_define_method(rb_klass, "input", RUBY_METHOD_FUNC(rb_set_input), -1);
         rb_define_method(rb_klass, "fusion=", RUBY_METHOD_FUNC(rb_enable_fusion), 1);
         rb_define_method(rb_klass, "preferable_backend=", RUBY_METHOD_FUNC(rb_set_preferable_backend), 1);
         rb_define_method(rb_klass, "preferable_target=", RUBY_METHOD_FUNC(rb_set_preferable_target), 1);
@@ -314,6 +326,14 @@ namespace rubyopencv {
         rb_define_method(rb_klass, "forward", RUBY_METHOD_FUNC(rb_forward), -1);
         rb_define_method(rb_klass, "empty?", RUBY_METHOD_FUNC(rb_empty), 0);
         rb_define_method(rb_klass, "layers", RUBY_METHOD_FUNC(rb_get_layers), 0);
+
+        #if 0
+        rb_define_attr(rb_klass, "layers", 1, 0);
+        rb_define_attr(rb_klass, "input", 0, 1);
+        rb_define_attr(rb_klass, "fusion", 0, 1);
+        rb_define_attr(rb_klass, "preferable_backend", 0, 1);
+        rb_define_attr(rb_klass, "preferable_target", 0, 1);
+        #endif
       }
     }
   }

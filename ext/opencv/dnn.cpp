@@ -15,6 +15,10 @@ namespace rubyopencv {
   namespace Dnn {
     VALUE rb_module = Qnil;
 
+    VALUE rb_module_dnn() {
+      return rb_module;
+    }
+
     /*
      * Creates 4-dimensional blob from image. Optionally resizes and crops image from center, subtract mean values, scales values by scalefactor, swap Blue and Red channels.
      *
