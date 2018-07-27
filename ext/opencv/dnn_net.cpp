@@ -147,12 +147,10 @@ namespace rubyopencv {
       VALUE rb_get_layers(VALUE self) {
         cv::dnn::Net* selfptr = obj2net(self);
 
-        std::vector<cv::String> layer_names = selfptr->getLayerNames();
-        const long size = layer_names.size();
-
+        long size = selfptr->getLayerNames().size();
         VALUE layers = rb_ary_new_capa(size);
         for (long i = 0; i < size; i++) {
-          VALUE layer = Dnn::Layer::layer2obj(selfptr->getLayer(layer_names[i]));
+          VALUE layer = Dnn::Layer::layer2obj(selfptr->getLayer((int)i + 1));
           rb_ary_store(layers, i, layer);
         }
 

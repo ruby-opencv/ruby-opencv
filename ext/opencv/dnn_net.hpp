@@ -12,7 +12,7 @@ namespace rubyopencv {
       VALUE rb_read_net(int argc, VALUE *argv, VALUE self);
       VALUE rb_read_net_from_caffe(VALUE self, VALUE prototxt, VALUE caffe_model);
       VALUE rb_read_net_from_tensorflow(VALUE self, VALUE model, VALUE config);
-      VALUE rb_read_net_from_torch(VALUE self, VALUE model);
+      VALUE rb_read_net_from_torch(int argc, VALUE *argv, VALUE self);
       VALUE rb_read_net_from_darknet(VALUE self, VALUE cfg_file, VALUE darknet_model);
     }
   }
