@@ -11,7 +11,7 @@ namespace rubyopencv {
     VALUE rb_klass = Qnil;
     rb_data_type_t opencv_scalar_type = {
       "Scalar",
-      { 0, free_scalar, memsize_scalar, 0 },
+      { 0, free_scalar, memsize_scalar, },
       0,
       0,
       0
@@ -28,7 +28,7 @@ namespace rubyopencv {
     VALUE klass() {
       return rb_klass;
     }
-    
+
     cv::Scalar* obj2scalar(VALUE obj) {
       cv::Scalar* ptr = NULL;
       TypedData_Get_Struct(obj, cv::Scalar, &opencv_scalar_type, ptr);
@@ -114,7 +114,7 @@ namespace rubyopencv {
       return rb_ary_new3(4, rb_aref(self, INT2FIX(0)), rb_aref(self, INT2FIX(1)),
 			 rb_aref(self, INT2FIX(2)), rb_aref(self, INT2FIX(3)));
     }
-    
+
     void init() {
       VALUE opencv = rb_define_module("Cv");
 

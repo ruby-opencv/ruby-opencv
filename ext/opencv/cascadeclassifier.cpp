@@ -17,7 +17,7 @@ namespace rubyopencv {
     VALUE rb_klass = Qnil;
     rb_data_type_t opencv_cascadeclassifier_type = {
       "CascadeClassifier",
-      { 0, free_cascadeclassifier, memsize_cascadeclassifier, 0 },
+      { 0, free_cascadeclassifier, memsize_cascadeclassifier, },
       0,
       0,
       0

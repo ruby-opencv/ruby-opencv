@@ -12,6 +12,7 @@
 #include "scalar.hpp"
 
 #include "cascadeclassifier.hpp"
+#include "dnn.hpp"
 #include "videocapture.hpp"
 
 #include "error.hpp"
@@ -92,6 +93,7 @@ namespace rubyopencv {
     Size::init();
     Scalar::init();
     CascadeClassifier::init();
+    Dnn::init();
     VideoCapture::init();
     Window::init();
     Trackbar::init();
@@ -99,9 +101,9 @@ namespace rubyopencv {
 
     rb_define_module_function(rb_module, "build_information", RUBY_METHOD_FUNC(rb_build_information), 0);
 
-    rb_define_singleton_method(rb_module, "imread", RUBY_METHOD_FUNC(Mat::rb_imread), 2); // in ext/opencv/mat.cpp
+    rb_define_singleton_method(rb_module, "imread", RUBY_METHOD_FUNC(Mat::rb_imread), -1); // in ext/opencv/mat.cpp
     rb_define_singleton_method(rb_module, "imwrite", RUBY_METHOD_FUNC(rb_imwrite), -1);
-    rb_define_singleton_method(rb_module, "imdecode", RUBY_METHOD_FUNC(Mat::rb_imdecode), 2); // in ext/opencv/mat.cpp
+    rb_define_singleton_method(rb_module, "imdecode", RUBY_METHOD_FUNC(Mat::rb_imdecode), -1); // in ext/opencv/mat.cpp
     rb_define_singleton_method(rb_module, "wait_key", RUBY_METHOD_FUNC(Window::rb_wait_key), -1); // in ext/opencv/window.cpp
 
     rb_define_singleton_method(rb_module, "add_weighted", RUBY_METHOD_FUNC(Mat::rb_add_weighted), -1); // in ext/opencv/mat.cpp

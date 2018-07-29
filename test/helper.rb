@@ -12,6 +12,8 @@ class OpenCVTestCase < Test::Unit::TestCase
   FILENAME_LENA32x32 = SAMPLE_DIR + 'lena-32x32.jpg'
   FILENAME_GIRLS_PLAY_AND_PLANT_FLOWERS_IN_THE_PARK = SAMPLE_DIR + 'girls-play-and-plant-flowers-in-the-park-725x480.jpg'
   HAARCASCADE_FRONTALFACE_ALT = SAMPLE_DIR + 'haarcascade_frontalface_alt.xml'
+  BVLC_GOOGLENET_CAFFEMODEL = SAMPLE_DIR + 'bvlc_googlenet.caffemodel'
+  BVLC_GOOGLENET_PROTXT = SAMPLE_DIR + 'bvlc_googlenet.prototxt'
   AVI_SAMPLE = SAMPLE_DIR + 'movie_sample.avi'
 
   DUMMY_OBJ = Digest::MD5.new # dummy object for argument type check test
@@ -102,4 +104,3 @@ class OpenCVTestCase < Test::Unit::TestCase
     end
   end
 end
-

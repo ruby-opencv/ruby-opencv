@@ -15,7 +15,7 @@ namespace rubyopencv {
     VALUE rb_klass = Qnil;
     rb_data_type_t opencv_rect_type = {
       "Rect",
-      { 0, free_rect, memsize_rect, 0 },
+      { 0, free_rect, memsize_rect, },
       0,
       0,
       0

@@ -15,6 +15,14 @@ namespace rubyopencv {
     return NIL_P(value) ? (default_value) : NUM2DBL(value);
   }
 
+  inline std::string CSTR_DEFAULT(VALUE value, std::string default_value) {
+    return NIL_P(value) ? (default_value) : StringValueCStr(value);
+  }
+
+  inline double RTEST_DEFAULT(VALUE value, bool default_value) {
+    return NIL_P(value) ? (default_value) : (RTEST(value) ? true : false);
+  }
+
   inline VALUE HASH_LOOKUP(VALUE hash, std::string key) {
     return rb_hash_lookup(hash, ID2SYM(rb_intern(key.c_str())));
   }

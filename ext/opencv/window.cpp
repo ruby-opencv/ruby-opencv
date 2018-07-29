@@ -12,7 +12,7 @@ namespace rubyopencv {
     VALUE rb_klass;
     rb_data_type_t opencv_window_type = {
       "Window",
-      { mark_window, free_window, 0, 0 },
+      { mark_window, free_window, 0, },
       0,
       0,
       0
@@ -43,7 +43,7 @@ namespace rubyopencv {
       window_t* w = obj2window(obj);
       return StringValueCStr(w->name);
     }
-    
+
     /*
      * Creates a window.
      *
@@ -63,8 +63,8 @@ namespace rubyopencv {
       char* name_str = StringValueCStr(name);
       if (cvGetWindowHandle(name_str) != NULL) {
 	rb_raise(rb_eStandardError, "window name should be unique.");
-      }      
-  
+      }
+
       int mode = CV_WINDOW_AUTOSIZE;
       if (argc == 2) {
 	Check_Type(flags, T_FIXNUM);

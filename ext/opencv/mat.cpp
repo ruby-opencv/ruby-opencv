@@ -2,10 +2,12 @@
 #include <sstream>
 #include "opencv2/highgui.hpp"
 
+#include "opencv.hpp"
 #include "mat.hpp"
 #include "mat_imgproc.hpp"
 #include "mat_drawing.hpp"
 #include "scalar.hpp"
+#include "size.hpp"
 #include "rect.hpp"
 #include "error.hpp"
 
@@ -20,7 +22,7 @@ namespace rubyopencv {
     VALUE rb_klass = Qnil;
     rb_data_type_t opencv_mat_type = {
       "Mat",
-      { 0, free_mat, memsize_mat, 0 },
+      { 0, free_mat, memsize_mat, },
       0,
       0,
       0
@@ -233,7 +235,7 @@ namespace rubyopencv {
     /*
      * Loads an image from a file.
      *
-     * @overload imread(filename, flags)
+     * @overload imread(filename, flags = IMREAD_UNCHANGED)
      *   @param filename [String] Name of file to be loaded.
      *   @param flags [Integer] Flags specifying the color type of a loaded image:
      *     - CV_LOAD_IMAGE_ANYDEPTH - If set, return 16-bit/32-bit image when the input has the corresponding depth, otherwise convert it to 8-bit.
@@ -245,8 +247,10 @@ namespace rubyopencv {
      *   @return [Mat] Loaded image
      * @opencv_func cv::imread
      */
-    VALUE rb_imread(VALUE self, VALUE filename, VALUE flags) {
-      return rb_imread_internal(self, filename, flags, rb_klass);
+    VALUE rb_imread(int argc, VALUE *argv, VALUE self) {
+      VALUE filename, flags;
+      rb_scan_args(argc, argv, "11", &filename, &flags);
+      return rb_imread_internal(self, filename, NUM2INT_DEFAULT(flags, cv::IMREAD_UNCHANGED), rb_klass);
     }
 
     VALUE rb_imread_as(VALUE self, VALUE filename, VALUE flags, VALUE klass) {
@@ -258,7 +262,7 @@ namespace rubyopencv {
 
       if (!NIL_P(params)) {
 	Check_Type(params, T_ARRAY);
-	int size = RARRAY_LEN(params);
+	long size = RARRAY_LEN(params);
 	for (long i = 0; i < size; i++) {
 	  VALUE n = rb_ary_entry(params, i);
 	  params_value.push_back(NUM2INT(n));
@@ -365,8 +369,10 @@ namespace rubyopencv {
      *   @return [CvMat] Loaded matrix
      * @opencv_func cv::imdecode
      */
-    VALUE rb_imdecode(VALUE self, VALUE buf, VALUE flags) {
-      return rb_imdecode_internal(self, buf, flags, rb_klass);
+    VALUE rb_imdecode(int argc, VALUE *argv, VALUE self) {
+      VALUE buf, flags;
+      rb_scan_args(argc, argv, "11", &buf, &flags);
+      return rb_imdecode_internal(self, buf, NUM2INT_DEFAULT(flags, cv::IMREAD_UNCHANGED), rb_klass);
     }
 
     VALUE rb_imdecode_as(VALUE self, VALUE buf, VALUE flags, VALUE klass) {
@@ -415,6 +421,20 @@ namespace rubyopencv {
     VALUE rb_depth(VALUE self) {
       const cv::Mat* dataptr = obj2mat(self);
       return INT2NUM(dataptr->depth());
+    }
+
+    VALUE rb_size(int argc, VALUE *argv, VALUE self) {
+      VALUE i;
+      rb_scan_args(argc, argv, "01", &i);
+
+      const cv::Mat* dataptr = obj2mat(self);
+
+      if (NIL_P(i)) {
+        cv::Size *s = new cv::Size(dataptr->size());
+        return Size::size2obj(s);
+      } else {
+        return INT2NUM(dataptr->size[NUM2INT(i)]);
+      }
     }
 
     /*
@@ -1218,10 +1238,11 @@ namespace rubyopencv {
       rb_define_alias(rb_klass, "height", "rows");
       rb_define_method(rb_klass, "cols", RUBY_METHOD_FUNC(rb_cols), 0);
       rb_define_alias(rb_klass, "width", "cols");
-      
+
       rb_define_method(rb_klass, "dims", RUBY_METHOD_FUNC(rb_dims), 0);
       rb_define_method(rb_klass, "depth", RUBY_METHOD_FUNC(rb_depth), 0);
       rb_define_method(rb_klass, "channels", RUBY_METHOD_FUNC(rb_channels), 0);
+      rb_define_method(rb_klass, "size", RUBY_METHOD_FUNC(rb_size), -1);
 
       rb_define_method(rb_klass, "[]", RUBY_METHOD_FUNC(rb_aref), -2);
       rb_define_alias(rb_klass, "at", "[]");

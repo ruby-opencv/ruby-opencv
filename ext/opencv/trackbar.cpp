@@ -14,7 +14,7 @@ namespace rubyopencv {
     VALUE rb_klass = Qnil;
     rb_data_type_t opencv_trackbar_type = {
       "Trackbar",
-      { mark_trackbar, free_trackbar, 0, 0 },
+      { mark_trackbar, free_trackbar, 0, },
       0,
       0,
       0
