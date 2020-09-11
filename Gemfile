@@ -5,5 +5,7 @@ group :development do
   gem "hoe-gemspec"
   gem "rake-compiler"
   gem "yard"
+  gem "minitest"
+  gem "test-unit"
 end
 

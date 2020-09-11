@@ -11,7 +11,7 @@ end
 
 require "mkmf"
 
-def cv_version_suffix(incdir)
+def _cv_version_suffix(incdir)
   major, minor, subminor = nil, nil, nil
   open("#{incdir}/opencv2/core/version.hpp", 'r') { |f|
     f.read.lines.each { |line|
@@ -20,7 +20,16 @@ def cv_version_suffix(incdir)
       subminor = $1.to_s if line =~ /\A#define\s+(?:CV_VERSION_MINOR|CV_SUBMINOR_VERSION)\s+(\d+)\s*\Z/
     }
   }
+end
+
+def cv_version_suffix(incdir)
+  major, minor, subminor = _cv_version_suffix(incdir)
   major + minor + subminor
+end
+
+def cv_version_major(incdir)
+  major, minor, subminor = _cv_version_suffix(incdir)
+  major
 end
 
 # Quick fix for 2.0.0
@@ -28,6 +37,10 @@ end
 @libdir_basename ||= 'lib'
 incdir, libdir = dir_config("opencv", "/usr/local/include", "/usr/local/lib")
 dir_config("libxml2", "/usr/include", "/usr/lib")
+
+if cv_version_suffix(incdir) == "3" 
+  raise "not ready for ", cv_version_suffix(incdir), "yet\n"
+end
 
 opencv_headers = ["opencv2/core/core_c.h", "opencv2/core/core.hpp", "opencv2/imgproc/imgproc_c.h",
                   "opencv2/imgproc/imgproc.hpp", "opencv2/video/tracking.hpp", "opencv2/features2d/features2d.hpp",
